@@ -24,7 +24,14 @@ pip install -r pip_requirements.txt
 ### How to use the library
 Tell us how the code is arranged, any explanations goes here.
 
+data: 
+- data/raw: raw files given from the CMU movie dataset
+- data/processed: relevant files put in csv format, including column headers as specified by dataset README
 
+src:
+- src/data: scripts to load and process the data 
+  - src/data/load_data.py: functions to load raw files from data/raw and save into correct format into data/processed
+  - src/data/process_data.py: functions to pre-process data and extract meaningful information e.g. values from FreebaseID:name tuples
 
 ## Project Structure
 
@@ -32,9 +39,12 @@ The directory structure of new project looks like this:
 
 ```
 ├── data                        <- Project data files
-│
+│   ├── processed                       <- Files in csv format with headers 
+│   ├── raw                             <- Raw data files from CMU dataset
 ├── src                         <- Source code
 │   ├── data                            <- Data directory
+│   │   ├── load_data.py 
+│   │   ├── process_data.py 
 │   ├── models                          <- Model directory
 │   ├── utils                           <- Utility directory
 │   ├── scripts                         <- Shell scripts
