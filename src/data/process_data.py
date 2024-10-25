@@ -29,7 +29,7 @@ def extract_tuples_freebase_ids(json_string):
 def get_sorted_counts(list_of_values, cut_off = None, bigger = True):
     """
     From list of values, return the values and their counts in decreasing order
-    If a cut off is specified, only return values bigger or smaller (depending on bigger parameter) than the cutoff
+    If a cut-off is specified, only return values bigger or smaller (depending on bigger parameter) than the cutoff
     By default, there is no cutoff, and if it is specified, the default is to return values bigger than it
     """
     if cut_off is not None and bigger:
