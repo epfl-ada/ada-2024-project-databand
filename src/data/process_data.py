@@ -26,6 +26,10 @@ def extract_tuples_freebase_ids(json_string):
     keys_list = list(dictionary.keys())
     return keys_list
 
+def extract_cols_values(df, column_names):
+    for col in column_names:
+        df[col] = df[col].apply(extract_tuples_values)
+
 def get_sorted_counts(list_of_values, cut_off = None, bigger = True):
     """
     From list of values, return the values and their counts in decreasing order

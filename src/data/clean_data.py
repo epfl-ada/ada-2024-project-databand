@@ -1,6 +1,7 @@
 import re
 import os
 import numpy as np
+import pandas as pd
 
 current_folder = os.path.dirname(__file__)
 data_folder = os.path.join(current_folder, '../../data')
@@ -56,9 +57,25 @@ def clean_movie_genres(genres: list[str]) -> list[str]:
 
     return np.unique(clean).tolist()
 
-def clean_dates(date):
-    pass
+def get_date_year(date):
+    # Attempt to parse the date in 'YYYY-MM-DD' format
+    year = pd.to_datetime(date, format='%Y-%m-%d', errors='coerce')
+
+    if pd.notna(year):
+        return year.year
+
+    # Attempt to parse in 'YYYY' format
+    year = pd.to_datetime(date, format='%Y', errors='coerce')
+
+    if pd.notna(year):
+        return year.year
+
+    return None
 
 def clean_language(lang):
+    '''
+    Create a dict mapping to replace some languages in the data to correct version
+    e.g. France -> French
+    '''
     pass
 
