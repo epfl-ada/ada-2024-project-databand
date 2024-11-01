@@ -1,0 +1,7 @@
+Things to analyse:
+Trend of movie releases after certain events: e.g. German vs US movies after WW2
+Languages spoken, production countries
+We focus on war movies but we could do a quick analysis of the major types of movies that come out in different
+countries based on the event e.g. more romance or family movies with an escapism goal?
+Should include movie reviews to do sentiment analysis of viewers
+Sentiment analysis of movie plots
