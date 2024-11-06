@@ -10,13 +10,16 @@ CHARACTER_HEADERS = ["Wikipedia movie ID", "Freebase movie ID", "Movie release d
                      "Freebase character ID", "Freebase actor ID"]
 PLOT_HEADERS = ["Wikipedia movie ID", "Summary"]
 
-def load_raw_data(filename, sep, headers):
+ROOT_DIR = './'
+DATA_DIR = os.path.join(ROOT_DIR, 'data')
+
+def load_raw_data(filename):#, sep):
     '''
     (str, str) -> pd.DataFrame
     Loads raw data, with fields separated by sep, into a dataframe
     '''
-    df = pd.read_csv(filename, sep=sep)
-    df.columns = headers
+    df = pd.read_csv(filename)#, sep=sep)
+    # df.columns = headers
     return df
 
 def save_csv_data(df, filename):
@@ -24,21 +27,20 @@ def save_csv_data(df, filename):
     df.to_csv(filename, index=False)
 
 
-if __name__ == "__main__":
-    # Define file paths
-    files = ["movie.metadata.tsv", "character.metadata.tsv", "plot_summaries.txt"]
-    csv_files = ["movies.csv", "characters.csv", "plot_summaries.csv"]
+# if __name__ == "__main__":
+#     # Define file paths
+#     files = ["movie.metadata.tsv", "character.metadata.tsv", "plot_summaries.txt"]
+#     csv_files = ["movies.csv", "characters.csv", "plot_summaries.csv"]
 
-    current_dir = os.path.dirname(__file__)
 
-    for file, headers, csv_file in zip(files, [MOVIE_HEADERS, CHARACTER_HEADERS, PLOT_HEADERS], csv_files):
-        raw_data_path = os.path.join(current_dir, '../../data/raw/' + file)
-        processed_data_path = os.path.join(current_dir, '../../data/processed/' + csv_file)
+#     for file, headers, csv_file in zip(files, [MOVIE_HEADERS, CHARACTER_HEADERS, PLOT_HEADERS], csv_files):
+#         raw_data_path = os.path.join(DATA_DIR, 'raw', file)
+#         processed_data_path = os.path.join(DATA_DIR, 'processed',csv_file)
 
-        # Load raw data
-        raw_data = load_raw_data(raw_data_path, '\t', headers)
+#         # Load raw data
+#         raw_data = load_raw_data(raw_data_path, '\t', headers)
 
-        # Save the csv data
-        save_csv_data(raw_data, processed_data_path)
+#         # Save the csv data
+#         save_csv_data(raw_data, processed_data_path)
 
-        print(f"Cleaned data saved to {processed_data_path}")
+#         print(f"Cleaned data saved to {processed_data_path}")
