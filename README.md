@@ -58,3 +58,17 @@ The directory structure of new project looks like this:
 └── README.md
 ```
 
+# <Project title>
+
+Abstract
+
+## Additional datasets
+- TMDB 1M Movies
+- DVD sales
+
+## Methods
+
+## Timeline & Milestones
+
+## Questions for TA
+
