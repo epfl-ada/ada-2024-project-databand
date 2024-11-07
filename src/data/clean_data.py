@@ -1,8 +1,11 @@
 import re
 import os
 import numpy as np
+import sys
 import pandas as pd
-from ..utils.load_data import load_raw_data, save_csv_data
+from pathlib import Path
+sys.path.append(str(Path().resolve()  / 'src' / 'utils'))
+from load_data import load_raw_data, save_csv_data
 
 # ROOT_DIR = './' 
 # DATA_DIR = os.path.join(ROOT_DIR, 'data')
@@ -18,18 +21,25 @@ class DataCleaner:
     def __init__(self):
         self.required_columns = [
             'title', 'status', 'release_date', 'revenue', 
-            'runtime', 'budget', 'overview', 'genres',
-            'production_companies', 'production_countries', 'keywords']
+            'runtime', 'budget', 'original_language', 'overview', 'genres',
+            'production_companies', 'production_countries', 'spoken_languages', 'keywords']
+
+        self.list_columns = [
+            'genres', 'production_companies', 'production_countries', 'spoken_languages', 'keywords'
+        ]
     
     def clean_status(self, df):
         """The movies must be released"""
         return df[df['status'] == 'Released']
+
+    def select_columns(self, df):
+        return df[self.required_columns]
     
     def clean_release_date(self, df):
         """Check if dates are in YYYY-MM-DD format"""
         
-        df = pd.to_datetime(df['release_date'])
-        df.dropna(inplace=True)
+        df['release_date'] = pd.to_datetime(df['release_date'])
+        df['release_date'].dropna(inplace=True)
         return df
     
     def clean_numeric_columns(self, df):
@@ -37,21 +47,32 @@ class DataCleaner:
         numeric_columns = ['revenue', 'runtime', 'budget']
         df[numeric_columns] = df[numeric_columns].astype(int)
         for col in numeric_columns:
-            df[col] = df[df[col]>=0]
+            df = df[df[col]>=0]
         return df
 
     def remove_duplicates(self, df):
         """Remove duplicate entries based on title and release_date"""
         return df.drop_duplicates(subset=['title', 'release_date'])
+
+
+    def clean_string_to_list(self, df):
+        for col in self.list_columns:
+            df[col] = df[col].str.split(", ")
+        return df
     
     def clean_dataset(self, input_path, output_path):
-
         df = load_raw_data(input_path)
-        
+        df = self.select_columns(df)
+        print(f"inital size {df.shape}")
         df = self.clean_status(df)
+        print(f"after cleaning status {df.shape}")
         df = self.clean_release_date(df)
+        print(f"after cleaning release date {df.shape}")
         df = self.clean_numeric_columns(df)
+        print(f"after cleaning numerical columns  {df.shape}")
         df = self.remove_duplicates(df)
+        print(f"after removing duplicates {df.shape}")
+        df = self.clean_string_to_list(df)
         
         save_csv_data(df, output_path)
         return df
