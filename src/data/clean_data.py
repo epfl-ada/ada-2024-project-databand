@@ -52,6 +52,7 @@ class DataCleaner:
     
     def clean_numeric_columns(self, df):
         """Clean numeric columns (revenue, runtime, budget) to ensure no negative values"""
+        df[self.numeric_columns] = df[self.numeric_columns].fillna(0)
         df[self.numeric_columns] = df[self.numeric_columns].astype(int)
         for col in self.numeric_columns:
             df = df[df[col]>=0]
@@ -62,9 +63,10 @@ class DataCleaner:
         return df.drop_duplicates(subset=['title', 'release_year'])
 
     def clean_string_to_list(self, df):
-        #make N/a into empty list
         for col in self.string_columns:
+            df[col] = df[col].fillna('')
             df[col] = df[col].str.split(", ")
+            df[col] = df[col].apply(lambda x: [] if x == [''] else x)  # Make empty string list to empty list
         return df
 
     def clean_genre(self, genre: str) -> list[str]:
@@ -107,8 +109,10 @@ class DataCleaner:
     def select_columns(self, df):
         return df[self.required_columns]
 
-    def clean_dataset(self, input_path, output_path):
-        df = load_raw_data(input_path)
+    def clean_dataset(self, input_path, output_path, sep=',', headers=[]):
+        print('sep',sep)
+        print('headers',headers)
+        df = load_raw_data(input_path, sep, headers)
         print("original df shape", df.shape)
         if 'status' in df.columns:
             df = self.clean_status(df)
@@ -125,13 +129,14 @@ class DataCleaner:
         df = self.clean_string_to_list(df)
         print("after string to list", df.shape)
 
-        clean_genres = []
-        for genres in df['genres']:
-            clean_genres.extend(self.clean_movie_genres(genres))
-        df['genres'] = np.unique(clean_genres).tolist()
-        print("after genres", df.shape)
+        # clean_genres = []
+        # for genres in df['genres']:
+        #     clean_genres.extend(self.clean_movie_genres(genres))
+        # df['genres'] = np.unique(clean_genres).tolist()
+        # print("after genres", df.shape)
 
         df = self.select_columns(df)
+        print("after select columns", df.shape)
         
         save_csv_data(df, output_path)
         return df
@@ -144,13 +149,19 @@ def main():
     TMDB_string_columns = ['genres', 'production_companies', 'production_countries', 'keywords']
     TMDB_numeric_columns = ['revenue', 'runtime', 'budget']
 
+    CMU_movie_headers = ["wikipedia_movie_id", "freebase_ID", "title", "release_year", "revenue",
+                         "runtime", "languages", "countries",  "genres"]
 
-    CMU_movie_required_columns_movie = ["wikipedia_movie_id",  "title", "release_date", "revenue", "runtime", "genres"]
+    CMU_movie_required_columns_movie = ["wikipedia_movie_id",  "title", "release_year", "revenue", "runtime", "genres"]
     CMU_string_columns_movie = ['genres']
     CMU_numeric_columns_movie = ['revenue', 'runtime']
 
-    cleaner = DataCleaner(TMDB_required_columns, TMDB_string_columns, TMDB_numeric_columns)
-    cleaner.clean_dataset('data/TMDB_movie_dataset_v11.csv', 'data/processed/TMDB_clean')
+    # cleaner = DataCleaner(TMDB_required_columns, TMDB_string_columns, TMDB_numeric_columns)
+    # cleaner.clean_dataset('data/TMDB_movie_dataset_v11.csv', 'data/processed/TMDB_clean')
+
+    cleaner = DataCleaner(CMU_movie_required_columns_movie, CMU_string_columns_movie, CMU_numeric_columns_movie)
+    cleaner.clean_dataset('data/raw/movie.metadata.tsv', 'data/processed/movies.csv', sep = '\t', headers = CMU_movie_headers)
+    
 
 if __name__ == "__main__":
     main()

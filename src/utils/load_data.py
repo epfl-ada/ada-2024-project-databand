@@ -13,13 +13,14 @@ PLOT_HEADERS = ["Wikipedia movie ID", "Summary"]
 ROOT_DIR = './'
 DATA_DIR = os.path.join(ROOT_DIR, 'data')
 
-def load_raw_data(filename):#, sep):
+def load_raw_data(filename, sep=',', headers = []):
     '''
     (str, str) -> pd.DataFrame
     Loads raw data, with fields separated by sep, into a dataframe
     '''
-    df = pd.read_csv(filename)#, sep=sep)
-    # df.columns = headers
+    df = pd.read_csv(filename, sep=sep)
+    if headers != []:
+        df.columns = headers
     return df
 
 def save_csv_data(df, filename):
