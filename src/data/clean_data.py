@@ -116,10 +116,10 @@ class DataCleaner:
         if 'release_date' in df.columns:
             df = self.clean_release_date(df)
         print("after release date", df.shape)
-        df = self.remove_duplicates(df)
-        print("after duplicates", df.shape)
         df = self.clean_release_year(df)
         print("after release year", df.shape)
+        df = self.remove_duplicates(df)
+        print("after duplicates", df.shape)
         df = self.clean_numeric_columns(df)
         print("after numeric columns", df.shape)
         df = self.clean_string_to_list(df)
@@ -150,7 +150,7 @@ def main():
     CMU_numeric_columns_movie = ['revenue', 'runtime']
 
     cleaner = DataCleaner(TMDB_required_columns, TMDB_string_columns, TMDB_numeric_columns)
-    cleaner.clean_dataset('data/processed/TMDB_movie_dataset_v11.csv', 'data/processed/TMDB_clean')
+    cleaner.clean_dataset('data/TMDB_movie_dataset_v11.csv', 'data/processed/TMDB_clean')
 
 if __name__ == "__main__":
     main()
