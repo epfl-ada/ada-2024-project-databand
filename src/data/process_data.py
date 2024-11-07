@@ -47,3 +47,40 @@ def get_sorted_counts(list_of_values, cut_off = None, bigger = True):
     values, counts = zip(*sorted_counts)
 
     return values, counts
+
+def combine_dataframes(df_movies, df_plots, df_tmdb, common_columns):
+    """
+    For CMU, combine movie and plot summaries dataframes
+    Given CMU and TMDB dataframes, perform an inner merge based on the movie title name and year of release
+    Then combine "duplicate" columns from common_columns
+    """
+    # combine movie and plot dataframes based on wikiID, then remove that column
+    df_cmu = pd.merge(df_movies, df_plots, on='wikipedia_movie_id')
+    df_cmu.drop('wikipedia_movie_id', axis=1, inplace=True)
+
+    # for CMU and TMDB movies merge based on movie title in lowercase and release date
+    df_cmu['clean_title'] = df_cmu['title'].str.lower().str.strip()
+    df_tmdb['clean_title'] = df_tmdb['title'].str.lower().str.strip()
+    df_combined = pd.merge(df_cmu, df_tmdb, on=['clean_title', 'release_year'], suffixes=("_cmu", "_tmdb"))
+
+
+    for column in common_columns:
+        # create a column with combined values
+        df_combined[column] = df_combined[column + "_cmu"] + df_combined[column + "_tmdb"]
+
+        # remove the other separate columns from the dataframes
+        df_combined.drop(column + "_cmu", axis=1, inplace=True)
+        df_combined.drop(column + "_tmdb", axis=1, inplace=True)
+
+    # clean column names
+    colnames = [str(x).replace('_tmdb', '') for x in df_combined.columns.tolist()]
+    colnames = [str(x).replace('_cmu', '') for x in colnames]
+    df_combined.columns = colnames
+
+    # we complement our dataset with movies from 2016 onwards with TMDB dataset
+    df_tmdb_post2016 = df_tmdb[df_tmdb['release_year'] >= 2016]
+    df_tmdb_post2016['summary'] = df_tmdb_post2016['overview']
+
+    df_combined = pd.concat([df_combined, df_tmdb_post2016], axis=1)
+
+    return df_combined
