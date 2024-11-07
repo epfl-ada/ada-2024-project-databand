@@ -16,76 +16,56 @@ from load_data import load_raw_data, save_csv_data
 # genres_to_split = [line.strip() for line in lines]
 
 
-class TMDBDataCleaner:
-    def __init__(self):
-        self.required_columns = [
-            'title', 'status', 'release_date', 'revenue', 
-            'runtime', 'budget', 'original_language', 'overview', 'genres',
-            'production_companies', 'production_countries', 'spoken_languages', 'keywords']
 
-        self.list_columns = [
-            'genres', 'production_companies', 'production_countries', 'spoken_languages', 'keywords'
-        ]
+# character_headers = ["Wikipedia movie ID", "Freebase movie ID", "Movie release date", "Character name",
+#                              "Actor DoB", "Actor gender", "Actor height (m)", "Actor ethnicity (Freebase ID)",
+#                              "Actor name", "Actor age at movie release", "Freebase character/actor map ID",
+#                              "Freebase character ID", "Freebase actor ID"]
+plot_headers = ["Wikipedia movie ID", "Summary"]
+
+class DataCleaner:
+    def __init__(self, required_columns, string_columns, numeric_columns):
+        self.required_columns = required_columns
+        self.string_columns = string_columns
+        self.numeric_columns = numeric_columns
     
     def clean_status(self, df):
         """The movies must be released"""
         return df[df['status'] == 'Released']
-
-    def select_columns(self, df):
-        return df[self.required_columns]
     
     def clean_release_date(self, df):
         """Check if dates are in YYYY-MM-DD format"""
         
         df['release_date'] = pd.to_datetime(df['release_date'])
         df['release_date'].dropna(inplace=True)
+        df = df[df['release_date']>='1976-01-01'] # We want to keep movies from 1976 onwards, after the appearance of the VHS
         return df
+    
+    def clean_release_year(self, df):
+        if 'release_year' not in df.columns:
+            df['release_year'] = df['release_date'].apply(lambda x: str(x)[:4] if pd.notnull(x) else None)
+        
+        df['release_year'] = df['release_year'].astype(str).str[:4]
+        df = df[df['release_year']>='1976']
+        return df
+
     
     def clean_numeric_columns(self, df):
         """Clean numeric columns (revenue, runtime, budget) to ensure no negative values"""
-        numeric_columns = ['revenue', 'runtime', 'budget']
-        df[numeric_columns] = df[numeric_columns].astype(int)
-        for col in numeric_columns:
+        df[self.numeric_columns] = df[self.numeric_columns].astype(int)
+        for col in self.numeric_columns:
             df = df[df[col]>=0]
         return df
 
     def remove_duplicates(self, df):
         """Remove duplicate entries based on title and release_date"""
-        return df.drop_duplicates(subset=['title', 'release_date'])
-
+        return df.drop_duplicates(subset=['title', 'release_year'])
 
     def clean_string_to_list(self, df):
-        for col in self.list_columns:
+        #make N/a into empty list
+        for col in self.string_columns:
             df[col] = df[col].str.split(", ")
         return df
-    
-    def clean_dataset(self, input_path, output_path):
-        df = load_raw_data(input_path)
-        df = self.select_columns(df)
-        print(f"inital size {df.shape}")
-        df = self.clean_status(df)
-        print(f"after cleaning status {df.shape}")
-        df = self.clean_release_date(df)
-        print(f"after cleaning release date {df.shape}")
-        df = self.clean_numeric_columns(df)
-        print(f"after cleaning numerical columns  {df.shape}")
-        df = self.remove_duplicates(df)
-        print(f"after removing duplicates {df.shape}")
-        df = self.clean_string_to_list(df)
-        
-        save_csv_data(df, output_path)
-        return df
-
-
-class CMUDataCleaner:
-    def __init__(self):
-        movie_headers = ["Wikipedia movie ID", "Freebase ID", "Movie name", "Release date", "Box office revenue",
-                         "Runtime", "Languages", "Countries", "Genres"]
-        character_headers = ["Wikipedia movie ID", "Freebase movie ID", "Movie release date", "Character name",
-                             "Actor DoB", "Actor gender", "Actor height (m)", "Actor ethnicity (Freebase ID)",
-                             "Actor name", "Actor age at movie release", "Freebase character/actor map ID",
-                             "Freebase character ID", "Freebase actor ID"]
-        plot_headers = ["Wikipedia movie ID", "Summary"]
 
     def clean_genre(self, genre: str) -> list[str]:
         # remove Film, film, Movies
@@ -119,17 +99,58 @@ class CMUDataCleaner:
         if genre in genres_to_split:
             return genre.split(" ")
         else:
+        # If they are not in the list of genres to split, then it's one genre and not mutilple
             return [] if genre == "" else [genre.strip()]
 
-    def clean_movie_genres(self, genres: list[str]) -> list[str]:
-        """
-        Given list of genre names, return a clean version
-        """
-        clean = []
-        for genre in genres:
-             clean.extend(self.clean_genre(genre))
-
-        return np.unique(clean).tolist()
 
 
+    def select_columns(self, df):
+        return df[self.required_columns]
 
+    def clean_dataset(self, input_path, output_path):
+        df = load_raw_data(input_path)
+        print("original df shape", df.shape)
+        if 'status' in df.columns:
+            df = self.clean_status(df)
+        print("after status", df.shape)
+        if 'release_date' in df.columns:
+            df = self.clean_release_date(df)
+        print("after release date", df.shape)
+        df = self.remove_duplicates(df)
+        print("after duplicates", df.shape)
+        df = self.clean_release_year(df)
+        print("after release year", df.shape)
+        df = self.clean_numeric_columns(df)
+        print("after numeric columns", df.shape)
+        df = self.clean_string_to_list(df)
+        print("after string to list", df.shape)
+
+        clean_genres = []
+        for genres in df['genres']:
+            clean_genres.extend(self.clean_movie_genres(genres))
+        df['genres'] = np.unique(clean_genres).tolist()
+        print("after genres", df.shape)
+
+        df = self.select_columns(df)
+        
+        save_csv_data(df, output_path)
+        return df
+
+
+def main():
+    TMDB_required_columns = ['title', 'release_date', 'revenue', 'runtime', 'budget', 'original_language', 'overview', 'genres',
+            'production_companies', 'production_countries', 'keywords']
+
+    TMDB_string_columns = ['genres', 'production_companies', 'production_countries', 'keywords']
+    TMDB_numeric_columns = ['revenue', 'runtime', 'budget']
+
+
+    CMU_movie_required_columns_movie = ["wikipedia_movie_id",  "title", "release_date", "revenue", "runtime", "genres"]
+    CMU_string_columns_movie = ['genres']
+    CMU_numeric_columns_movie = ['revenue', 'runtime']
+
+    cleaner = DataCleaner(TMDB_required_columns, TMDB_string_columns, TMDB_numeric_columns)
+    cleaner.clean_dataset('data/processed/TMDB_movie_dataset_v11.csv', 'data/processed/TMDB_clean')
+
+if __name__ == "__main__":
+    main()
