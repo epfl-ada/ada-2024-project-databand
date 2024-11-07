@@ -1,9 +1,8 @@
-import re
-import os
-import numpy as np
 import sys
-import pandas as pd
 from pathlib import Path
+import numpy as np
+import pandas as pd
+import re
 sys.path.append(str(Path().resolve()  / 'src' / 'utils'))
 from load_data import load_raw_data, save_csv_data
 
@@ -17,7 +16,7 @@ from load_data import load_raw_data, save_csv_data
 # genres_to_split = [line.strip() for line in lines]
 
 
-class DataCleaner:
+class TMDBDataCleaner:
     def __init__(self):
         self.required_columns = [
             'title', 'status', 'release_date', 'revenue', 
@@ -77,52 +76,60 @@ class DataCleaner:
         save_csv_data(df, output_path)
         return df
 
-    
 
+class CMUDataCleaner:
+    def __init__(self):
+        movie_headers = ["Wikipedia movie ID", "Freebase ID", "Movie name", "Release date", "Box office revenue",
+                         "Runtime", "Languages", "Countries", "Genres"]
+        character_headers = ["Wikipedia movie ID", "Freebase movie ID", "Movie release date", "Character name",
+                             "Actor DoB", "Actor gender", "Actor height (m)", "Actor ethnicity (Freebase ID)",
+                             "Actor name", "Actor age at movie release", "Freebase character/actor map ID",
+                             "Freebase character ID", "Freebase actor ID"]
+        plot_headers = ["Wikipedia movie ID", "Summary"]
 
-# def clean_genre(genre: str) -> list[str]:
-#     # remove Film, film, Movies
-#     replacements = {
-#         r'\s*(Film|Movie|Films|Movies)$': '',  # Remove Film, Movie, Films, Movies at the end
-#         '/': ' ',
-#         'and ': '',
-#         '& ': '',
-#         "comdedy": "comedy",
-#         "documetary": "documentary",
-#         "-": " ",
-#         "animated": "animation",
-#         "biographical": "biography",
-#         "children's": 'children',
-#         "docudrama": "documentary drama",
-#         "educational": "education",
-#         "pornographic": "pornography",
-#         "sci fi": "scifi",
-#         "post apocalyptic": "postapocalyptic",
-#         " oriented": "",
-#         " themed": "",
-#         "fairy tale": "fairytale",
-#         "science fiction": "scifi",
-#     }
+    def clean_genre(self, genre: str) -> list[str]:
+        # remove Film, film, Movies
+        replacements = {
+            r'\s*(Film|Movie|Films|Movies)$': '',  # Remove Film, Movie, Films, Movies at the end
+            '/': ' ',
+            'and ': '',
+            '& ': '',
+            "comdedy": "comedy",
+            "documetary": "documentary",
+            "-": " ",
+            "animated": "animation",
+            "biographical": "biography",
+            "children's": 'children',
+            "docudrama": "documentary drama",
+            "educational": "education",
+            "pornographic": "pornography",
+            "sci fi": "scifi",
+            "post apocalyptic": "postapocalyptic",
+            " oriented": "",
+            " themed": "",
+            "fairy tale": "fairytale",
+            "science fiction": "scifi",
+        }
 
-#     # Apply regular expression replacements
-#     for pattern, replacement in replacements.items():
-#         genre = re.sub(pattern, replacement, genre, flags=re.IGNORECASE)
+        # Apply regular expression replacements
+        for pattern, replacement in replacements.items():
+            genre = re.sub(pattern, replacement, genre, flags=re.IGNORECASE)
 
-#     # split multigenres
-#     if genre in genres_to_split:
-#         return genre.split(" ")
-#     else:
-#         return [] if genre == "" else [genre.strip()]
+        # split multigenres
+        if genre in genres_to_split:
+            return genre.split(" ")
+        else:
+            return [] if genre == "" else [genre.strip()]
 
-# def clean_movie_genres(genres: list[str]) -> list[str]:
-#     """
-#     Given list of genre names, return a clean version
-#     """
-#     clean = []
-#     for genre in genres:
-#          clean.extend(clean_genre(genre))
+    def clean_movie_genres(self, genres: list[str]) -> list[str]:
+        """
+        Given list of genre names, return a clean version
+        """
+        clean = []
+        for genre in genres:
+             clean.extend(self.clean_genre(genre))
 
-#     return np.unique(clean).tolist()
+        return np.unique(clean).tolist()
 
 
 
