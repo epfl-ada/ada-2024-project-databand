@@ -84,3 +84,15 @@ def combine_dataframes(df_movies, df_plots, df_tmdb, common_columns):
     df_combined = pd.concat([df_combined, df_tmdb_post2016], axis=1)
 
     return df_combined
+
+def get_dvd_era(release_year, start_year_decline, end_year_decline):
+    if release_year < start_year_decline:
+        return 'pre'
+    elif release_year < end_year_decline:
+        return 'during'
+    else:
+        return 'post'
+
+def annotate_dvd_era(df):
+    df['dvd_era'] = df['release_year'].apply(get_dvd_era, args=(2008,2018))
+    return df
