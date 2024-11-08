@@ -47,3 +47,64 @@ def get_sorted_counts(list_of_values, cut_off = None, bigger = True):
     values, counts = zip(*sorted_counts)
 
     return values, counts
+
+def combine_dataframes(df_movies, df_plots, df_tmdb, common_columns, cutoffyear):
+    """
+    For CMU, combine movie and plot summaries dataframes
+    Given CMU and TMDB dataframes, perform an inner merge based on the movie title name and year of release
+    Then combine "duplicate" columns from common_columns
+    """
+    # combine movie and plot dataframes based on wikiID, then remove that column
+    df_cmu = pd.merge(df_movies, df_plots, on='wikipedia_movie_id')
+    df_cmu.drop('wikipedia_movie_id', axis=1, inplace=True)
+
+    # for CMU and TMDB movies merge based on movie title in lowercase and release date
+    df_cmu['clean_title'] = df_cmu['title'].str.lower().str.strip()
+    df_tmdb['clean_title'] = df_tmdb['title'].str.lower().str.strip()
+    df_combined = pd.merge(df_cmu, df_tmdb, on=['clean_title', 'release_year'], suffixes=("_cmu", "_tmdb"))
+
+    for column in common_columns:
+        # create a column with combined values
+        df_combined[column] = df_combined[column + "_cmu"] + df_combined[column + "_tmdb"]
+
+        # remove the other separate columns from the dataframes
+        df_combined.drop(column + "_cmu", axis=1, inplace=True)
+        df_combined.drop(column + "_tmdb", axis=1, inplace=True)
+
+    # clean column names
+    colnames = [str(x).replace('_tmdb', '') for x in df_combined.columns.tolist()]
+    colnames = [str(x).replace('_cmu', '') for x in colnames]
+    df_combined.columns = colnames
+    df_combined['overview'] = df_combined['overview'].fillna(df_combined['summary'])
+
+    # we complement our dataset with movies from cutoff onwards with TMDB dataset
+    df_tmdb_post2016 = df_tmdb[df_tmdb['release_year'] >= cutoffyear].copy()
+    df_tmdb_post2016.loc[:, 'summary'] = df_tmdb_post2016['overview']
+
+    df_combined = pd.concat([df_combined, df_tmdb_post2016], axis=0)
+    df_combined.drop('clean_title', axis=1, inplace=True)
+
+    return df_combined
+
+def get_dvd_era(release_year, start_year, end_year):
+    if release_year < start_year:
+        return 'pre'
+    elif release_year < end_year:
+        return 'during'
+    else:
+        return 'post'
+
+def annotate_dvd_era(df):
+    df['dvd_era'] = df['release_year'].apply(get_dvd_era, args=(1999,2008))
+    return df
+
+def create_cmu_tmdb_dataset(cmu_movies_path, plots_path, tmdb_path):
+    df_movies = pd.read_csv('data/processed/movies.csv')
+    df_plots = pd.read_csv('data/processed/plot_summaries.csv')
+    df_tmdb = pd.read_csv('data/processed/TMDB_clean.csv')
+    common_columns = list(set(df_movies.columns.tolist()) & set(df_tmdb.columns.tolist()))
+    common_columns.remove('release_year')
+    df_combined = combine_dataframes(df_movies=df_movies, df_plots=df_plots, df_tmdb=df_tmdb,
+                                     common_columns=common_columns, cutoffyear=2012)
+    df_combined = annotate_dvd_era(df_combined)
+    return df_combined
