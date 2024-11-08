@@ -21,7 +21,7 @@ from load_data import load_raw_data, save_csv_data
 #                              "Actor DoB", "Actor gender", "Actor height (m)", "Actor ethnicity (Freebase ID)",
 #                              "Actor name", "Actor age at movie release", "Freebase character/actor map ID",
 #                              "Freebase character ID", "Freebase actor ID"]
-plot_headers = ["Wikipedia movie ID", "Summary"]
+plot_headers = ["wikipedia_movie_id", "summary"]
 
 class DataCleaner:
     def __init__(self, required_columns, string_columns, numeric_columns):
@@ -39,6 +39,7 @@ class DataCleaner:
         df['release_date'] = pd.to_datetime(df['release_date'])
         df['release_date'].dropna(inplace=True)
         df = df[df['release_date']>='1976-01-01'] # We want to keep movies from 1976 onwards, after the appearance of the VHS
+        df = df[df['release_date'] <= '2024-01-01']  # We want to keep movies until 2024
         return df
     
     def clean_release_year(self, df):
@@ -47,6 +48,7 @@ class DataCleaner:
         
         df['release_year'] = df['release_year'].astype(str).str[:4]
         df = df[df['release_year']>='1976']
+        df = df[df['release_year'] <= '2024']
         return df
 
     
@@ -144,20 +146,20 @@ class DataCleaner:
 
 def main():
     TMDB_required_columns = ['title', 'release_date', 'revenue', 'runtime', 'budget', 'original_language', 'overview', 'genres',
-            'production_companies', 'production_countries', 'keywords']
+            'production_companies', 'production_countries', 'spoken_languages', 'keywords', 'release_year']
 
-    TMDB_string_columns = ['genres', 'production_companies', 'production_countries', 'keywords']
+    TMDB_string_columns = ['genres', 'production_companies', 'production_countries', 'spoken_languages', 'keywords']
     TMDB_numeric_columns = ['revenue', 'runtime', 'budget']
 
     CMU_movie_headers = ["wikipedia_movie_id", "freebase_ID", "title", "release_year", "revenue",
                          "runtime", "languages", "countries",  "genres"]
 
-    CMU_movie_required_columns_movie = ["wikipedia_movie_id",  "title", "release_year", "revenue", "runtime", "genres"]
-    CMU_string_columns_movie = ['genres']
+    CMU_movie_required_columns_movie = ["wikipedia_movie_id",  "title", "release_year", "revenue", "runtime"] #, "genres"]
+    CMU_string_columns_movie = [] #['genres']
     CMU_numeric_columns_movie = ['revenue', 'runtime']
 
-    # cleaner = DataCleaner(TMDB_required_columns, TMDB_string_columns, TMDB_numeric_columns)
-    # cleaner.clean_dataset('data/TMDB_movie_dataset_v11.csv', 'data/processed/TMDB_clean')
+    cleaner = DataCleaner(TMDB_required_columns, TMDB_string_columns, TMDB_numeric_columns)
+    cleaner.clean_dataset('data/TMDB_movie_dataset_v11.csv', 'data/processed/TMDB_clean.csv')
 
     cleaner = DataCleaner(CMU_movie_required_columns_movie, CMU_string_columns_movie, CMU_numeric_columns_movie)
     cleaner.clean_dataset('data/raw/movie.metadata.tsv', 'data/processed/movies.csv', sep = '\t', headers = CMU_movie_headers)

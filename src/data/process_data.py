@@ -48,7 +48,7 @@ def get_sorted_counts(list_of_values, cut_off = None, bigger = True):
 
     return values, counts
 
-def combine_dataframes(df_movies, df_plots, df_tmdb, common_columns):
+def combine_dataframes(df_movies, df_plots, df_tmdb, common_columns, cutoffyear):
     """
     For CMU, combine movie and plot summaries dataframes
     Given CMU and TMDB dataframes, perform an inner merge based on the movie title name and year of release
@@ -63,7 +63,7 @@ def combine_dataframes(df_movies, df_plots, df_tmdb, common_columns):
     df_tmdb['clean_title'] = df_tmdb['title'].str.lower().str.strip()
     df_combined = pd.merge(df_cmu, df_tmdb, on=['clean_title', 'release_year'], suffixes=("_cmu", "_tmdb"))
 
-
+    print(df_combined.columns)
     for column in common_columns:
         # create a column with combined values
         df_combined[column] = df_combined[column + "_cmu"] + df_combined[column + "_tmdb"]
@@ -77,22 +77,23 @@ def combine_dataframes(df_movies, df_plots, df_tmdb, common_columns):
     colnames = [str(x).replace('_cmu', '') for x in colnames]
     df_combined.columns = colnames
 
-    # we complement our dataset with movies from 2016 onwards with TMDB dataset
-    df_tmdb_post2016 = df_tmdb[df_tmdb['release_year'] >= 2016]
-    df_tmdb_post2016['summary'] = df_tmdb_post2016['overview']
+    # we complement our dataset with movies from cutoff onwards with TMDB dataset
+    df_tmdb_post2016 = df_tmdb[df_tmdb['release_year'] >= cutoffyear].copy()
+    df_tmdb_post2016.loc[:, 'summary'] = df_tmdb_post2016['overview']
 
-    df_combined = pd.concat([df_combined, df_tmdb_post2016], axis=1)
+    df_combined = pd.concat([df_combined, df_tmdb_post2016], axis=0)
+    df_combined.drop('clean_title', axis=1, inplace=True)
 
     return df_combined
 
-def get_dvd_era(release_year, start_year_decline, end_year_decline):
-    if release_year < start_year_decline:
+def get_dvd_era(release_year, start_year, end_year):
+    if release_year < start_year:
         return 'pre'
-    elif release_year < end_year_decline:
+    elif release_year < end_year:
         return 'during'
     else:
         return 'post'
 
 def annotate_dvd_era(df):
-    df['dvd_era'] = df['release_year'].apply(get_dvd_era, args=(2008,2018))
+    df['dvd_era'] = df['release_year'].apply(get_dvd_era, args=(1999,2008))
     return df
