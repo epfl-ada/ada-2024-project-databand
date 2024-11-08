@@ -159,7 +159,7 @@ def main():
     CMU_numeric_columns_movie = ['revenue', 'runtime']
 
     cleaner = DataCleaner(TMDB_required_columns, TMDB_string_columns, TMDB_numeric_columns)
-    cleaner.clean_dataset('data/TMDB_movie_dataset_v11.csv', 'data/processed/TMDB_clean.csv')
+    cleaner.clean_dataset('data/raw/TMDB_movie_dataset_v11.csv', 'data/processed/TMDB_clean.csv')
 
     cleaner = DataCleaner(CMU_movie_required_columns_movie, CMU_string_columns_movie, CMU_numeric_columns_movie)
     cleaner.clean_dataset('data/raw/movie.metadata.tsv', 'data/processed/movies.csv', sep = '\t', headers = CMU_movie_headers)
