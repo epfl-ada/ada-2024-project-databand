@@ -39,7 +39,7 @@ class DataCleaner:
         df['release_date'] = pd.to_datetime(df['release_date'])
         df['release_date'].dropna(inplace=True)
         df = df[df['release_date']>='1976-01-01'] # We want to keep movies from 1976 onwards, after the appearance of the VHS
-        df = df[df['release_date'] <= '2024-01-01']  # We want to keep movies until 2024
+        df = df[df['release_date'] < '2024-01-01']  # We want to keep movies until 2024
         return df
     
     def clean_release_year(self, df):
@@ -48,7 +48,7 @@ class DataCleaner:
         
         df['release_year'] = df['release_year'].astype(str).str[:4]
         df = df[df['release_year']>='1976']
-        df = df[df['release_year'] <= '2024']
+        df = df[df['release_year'] < '2024']
         return df
 
     
