@@ -63,7 +63,6 @@ def combine_dataframes(df_movies, df_plots, df_tmdb, common_columns, cutoffyear)
     df_tmdb['clean_title'] = df_tmdb['title'].str.lower().str.strip()
     df_combined = pd.merge(df_cmu, df_tmdb, on=['clean_title', 'release_year'], suffixes=("_cmu", "_tmdb"))
 
-    print(df_combined.columns)
     for column in common_columns:
         # create a column with combined values
         df_combined[column] = df_combined[column + "_cmu"] + df_combined[column + "_tmdb"]
@@ -76,6 +75,7 @@ def combine_dataframes(df_movies, df_plots, df_tmdb, common_columns, cutoffyear)
     colnames = [str(x).replace('_tmdb', '') for x in df_combined.columns.tolist()]
     colnames = [str(x).replace('_cmu', '') for x in colnames]
     df_combined.columns = colnames
+    df_combined['overview'] = df_combined['overview'].fillna(df_combined['summary'])
 
     # we complement our dataset with movies from cutoff onwards with TMDB dataset
     df_tmdb_post2016 = df_tmdb[df_tmdb['release_year'] >= cutoffyear].copy()
@@ -97,3 +97,14 @@ def get_dvd_era(release_year, start_year, end_year):
 def annotate_dvd_era(df):
     df['dvd_era'] = df['release_year'].apply(get_dvd_era, args=(1999,2008))
     return df
+
+def create_cmu_tmdb_dataset(cmu_movies_path, plots_path, tmdb_path):
+    df_movies = pd.read_csv('data/processed/movies.csv')
+    df_plots = pd.read_csv('data/processed/plot_summaries.csv')
+    df_tmdb = pd.read_csv('data/processed/TMDB_clean.csv')
+    common_columns = list(set(df_movies.columns.tolist()) & set(df_tmdb.columns.tolist()))
+    common_columns.remove('release_year')
+    df_combined = combine_dataframes(df_movies=df_movies, df_plots=df_plots, df_tmdb=df_tmdb,
+                                     common_columns=common_columns, cutoffyear=2012)
+    df_combined = annotate_dvd_era(df_combined)
+    return df_combined

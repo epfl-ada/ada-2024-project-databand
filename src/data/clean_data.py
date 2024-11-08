@@ -163,7 +163,9 @@ def main():
 
     cleaner = DataCleaner(CMU_movie_required_columns_movie, CMU_string_columns_movie, CMU_numeric_columns_movie)
     cleaner.clean_dataset('data/raw/movie.metadata.tsv', 'data/processed/movies.csv', sep = '\t', headers = CMU_movie_headers)
-    
+
+    df = load_raw_data('data/raw/plot_summaries.txt', sep='\t', headers=['wikipedia_movie_id', 'summary'])
+    save_csv_data(df, 'data/processed/plot_summaries.csv')
 
 if __name__ == "__main__":
     main()
