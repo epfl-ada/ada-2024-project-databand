@@ -58,7 +58,7 @@ def get_sorted_counts(list_of_values, cut_off = None, bigger = True):
 
     return values, counts
 
-def combine_dataframes(df_movies, df_plots, df_tmdb, common_columns, cutoffyear):
+def combine_dataframes(df_movies, df_plots, df_tmdb, common_columns, cutoffyear, how_merge):
     """
     For CMU, combine movie and plot summaries dataframes
     Given CMU and TMDB dataframes, perform an inner merge based on the movie title name and year of release
@@ -71,7 +71,7 @@ def combine_dataframes(df_movies, df_plots, df_tmdb, common_columns, cutoffyear)
     # for CMU and TMDB movies merge based on movie title in lowercase and release date
     df_cmu['clean_title'] = df_cmu['title'].str.lower().str.strip()
     df_tmdb['clean_title'] = df_tmdb['title'].str.lower().str.strip()
-    df_combined = pd.merge(df_cmu, df_tmdb, on=['clean_title', 'release_year'], suffixes=("_cmu", "_tmdb"))
+    df_combined = pd.merge(df_cmu, df_tmdb, on=['clean_title', 'release_year'], suffixes=("_cmu", "_tmdb"), how=how_merge)
 
     for column in common_columns:
         # create a column with combined values
@@ -108,14 +108,14 @@ def annotate_dvd_era(df):
     df['dvd_era'] = df['release_year'].apply(get_dvd_era, args=(1999,2008))
     return df
 
-def create_cmu_tmdb_dataset(cmu_movies_path, plots_path, tmdb_path):
-    df_movies = pd.read_csv('data/processed/movies.csv')
-    df_plots = pd.read_csv('data/processed/plot_summaries.csv')
-    df_tmdb = pd.read_csv('data/processed/TMDB_clean.csv')
+def create_cmu_tmdb_dataset(cmu_movies_path, plots_path, tmdb_path, how_merge):
+    df_movies = pd.read_csv(cmu_movies_path)
+    df_plots = pd.read_csv(plots_path)
+    df_tmdb = pd.read_csv(tmdb_path)
     df_tmdb = clean_string_to_list(df_tmdb, TMDB_string_columns)
     common_columns = list(set(df_movies.columns.tolist()) & set(df_tmdb.columns.tolist()))
     common_columns.remove('release_year')
     df_combined = combine_dataframes(df_movies=df_movies, df_plots=df_plots, df_tmdb=df_tmdb,
-                                     common_columns=common_columns, cutoffyear=2012)
+                                     common_columns=common_columns, cutoffyear=2012, how_merge=how_merge)
     df_combined = annotate_dvd_era(df_combined)
     return df_combined
