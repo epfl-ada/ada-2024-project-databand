@@ -2,6 +2,16 @@ import json
 import pandas as pd
 from collections import Counter
 
+TMDB_string_columns = ['genres', 'production_companies', 'production_countries', 'spoken_languages', 'keywords']
+
+
+def clean_string_to_list(df, string_columns):
+    for col in string_columns:
+        df[col] = df[col].fillna('')
+        df[col] = df[col].str.split(", ")
+        df[col] = df[col].apply(lambda x: [] if x == [''] else x)  # Make empty string list to empty list
+    return df
+
 def extract_tuples_values(json_string):
     """
     Given a json string, return the list of values in the dict
@@ -102,6 +112,7 @@ def create_cmu_tmdb_dataset(cmu_movies_path, plots_path, tmdb_path):
     df_movies = pd.read_csv('data/processed/movies.csv')
     df_plots = pd.read_csv('data/processed/plot_summaries.csv')
     df_tmdb = pd.read_csv('data/processed/TMDB_clean.csv')
+    df_tmdb = clean_string_to_list(df_tmdb, TMDB_string_columns)
     common_columns = list(set(df_movies.columns.tolist()) & set(df_tmdb.columns.tolist()))
     common_columns.remove('release_year')
     df_combined = combine_dataframes(df_movies=df_movies, df_plots=df_plots, df_tmdb=df_tmdb,

@@ -128,8 +128,8 @@ class DataCleaner:
         print("after duplicates", df.shape)
         df = self.clean_numeric_columns(df)
         print("after numeric columns", df.shape)
-        df = self.clean_string_to_list(df)
-        print("after string to list", df.shape)
+        #df = self.clean_string_to_list(df)
+        #print("after string to list", df.shape)
 
         # clean_genres = []
         # for genres in df['genres']:
