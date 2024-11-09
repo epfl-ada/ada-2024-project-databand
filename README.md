@@ -63,12 +63,31 @@ The directory structure of new project looks like this:
 Abstract
 
 ## Additional datasets
-- TMDB 1M Movies
+- [TMDB 1M Movies](https://www.kaggle.com/datasets/asaniczka/tmdb-movies-dataset-2023-930k-movies): This dataset 
+contains information about 1 million movies, such as release date, revenue, budget, genre, runtime, companies and countries of productions,
+movie plots, and languages spoken in the movie. It contains movies between 1976 and 2023, which is particularly useful 
+as it allows us to do an analysis of movies that were released pre-DVD era (<1990), during the DVD era (1990-2008), and post-DVD era (>2008).
 - DVD sales
 
+## Research questions 
+1. Money - budget & revenue: 
+2. Genres:
+3. Themes per genre: are there shifts in major themes within genres between the different DVD eras? For instance, does
+the release of DVDs allow for more niche themes? Does the decline of DVD sales lead to more universal themes in blockbuster movies? 
+4. Production: 
+
 ## Methods
+1. Budget analysis
+2. Revenue analysis 
+3. Production analysis
+4. Genre analysis
+5. Common themes analysis: for each of the pre-DVD, during-DVD, and post-DVD eras, movie plots from the top genres will 
+be extracted and analyzed. First, pre-processing will be performed by removing stopwords and through lemmatization to 
+reduce words to their base form. Then, we will use word clouds to display the most common words in movie plots for each
+genre-era, giving an indication of common themes. 
 
 ## Timeline & Milestones
+20.12.2024: P3 Deadline 
 
 ## Questions for TA
 
