@@ -3,6 +3,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 import re
+from tqdm.notebook import tqdm, trange
 sys.path.append(str(Path().resolve()  / 'src' / 'utils'))
 from load_data import load_raw_data, save_csv_data
 
@@ -23,6 +24,8 @@ from load_data import load_raw_data, save_csv_data
 #                              "Freebase character ID", "Freebase actor ID"]
 plot_headers = ["wikipedia_movie_id", "summary"]
 
+import pdb 
+
 class DataCleaner:
     def __init__(self, required_columns, string_columns, numeric_columns):
         self.required_columns = required_columns
@@ -32,6 +35,10 @@ class DataCleaner:
     def clean_status(self, df):
         """The movies must be released"""
         return df[df['status'] == 'Released']
+    
+    def clean_adult(self, df):
+        """Remove adult movies"""
+        return df[df['adult'] == False]
     
     def clean_release_date(self, df):
         """Check if dates are in YYYY-MM-DD format"""
@@ -63,52 +70,45 @@ class DataCleaner:
     def clean_runtime(self, df):
         """Remove movies that have a runtime larger than 500 minutes"""
         return df[df['runtime'] <= 500]
-
+    
     def remove_duplicates(self, df):
         """Remove duplicate entries based on title and release_date"""
         return df.drop_duplicates(subset=['title', 'release_year'])
 
-    def clean_string_to_list(self, df):
-        for col in self.string_columns:
-            df[col] = df[col].fillna('')
-            df[col] = df[col].str.split(", ")
-            df[col] = df[col].apply(lambda x: [] if x == [''] else x)  # Make empty string list to empty list
-        return df
+    # def clean_genre(self, genre: str) -> list[str]:
+    #     # remove Film, film, Movies
+    #     replacements = {
+    #         r'\s*(Film|Movie|Films|Movies)$': '',  # Remove Film, Movie, Films, Movies at the end
+    #         '/': ' ',
+    #         'and ': '',
+    #         '& ': '',
+    #         "comdedy": "comedy",
+    #         "documetary": "documentary",
+    #         "-": " ",
+    #         "animated": "animation",
+    #         "biographical": "biography",
+    #         "children's": 'children',
+    #         "docudrama": "documentary drama",
+    #         "educational": "education",
+    #         "pornographic": "pornography",
+    #         "sci fi": "scifi",
+    #         "post apocalyptic": "postapocalyptic",
+    #         " oriented": "",
+    #         " themed": "",
+    #         "fairy tale": "fairytale",
+    #         "science fiction": "scifi",
+    #     }
 
-    def clean_genre(self, genre: str) -> list[str]:
-        # remove Film, film, Movies
-        replacements = {
-            r'\s*(Film|Movie|Films|Movies)$': '',  # Remove Film, Movie, Films, Movies at the end
-            '/': ' ',
-            'and ': '',
-            '& ': '',
-            "comdedy": "comedy",
-            "documetary": "documentary",
-            "-": " ",
-            "animated": "animation",
-            "biographical": "biography",
-            "children's": 'children',
-            "docudrama": "documentary drama",
-            "educational": "education",
-            "pornographic": "pornography",
-            "sci fi": "scifi",
-            "post apocalyptic": "postapocalyptic",
-            " oriented": "",
-            " themed": "",
-            "fairy tale": "fairytale",
-            "science fiction": "scifi",
-        }
+    #     # Apply regular expression replacements
+    #     for pattern, replacement in replacements.items():
+    #         genre = re.sub(pattern, replacement, genre, flags=re.IGNORECASE)
 
-        # Apply regular expression replacements
-        for pattern, replacement in replacements.items():
-            genre = re.sub(pattern, replacement, genre, flags=re.IGNORECASE)
-
-        # split multigenres
-        if genre in genres_to_split:
-            return genre.split(" ")
-        else:
-        # If they are not in the list of genres to split, then it's one genre and not mutilple
-            return [] if genre == "" else [genre.strip()]
+    #     # split multigenres
+    #     if genre in genres_to_split:
+    #         return genre.split(" ")
+    #     else:
+    #     # If they are not in the list of genres to split, then it's one genre and not mutilple
+    #         return [] if genre == "" else [genre.strip()]
 
 
 
@@ -116,16 +116,19 @@ class DataCleaner:
         return df[self.required_columns]
 
     def clean_dataset(self, input_path, output_path, sep=',', headers=[]):
-        print('sep',sep)
-        print('headers',headers)
+        # with tqdm(total=1, desc="Loading data") as pbar:
         df = load_raw_data(input_path, sep, headers)
+            # pbar.update(1)
         print("original df shape", df.shape)
         if 'status' in df.columns:
             df = self.clean_status(df)
-        print("after status", df.shape)
+            print("after status", df.shape)
+        if 'adult' in df.columns:
+            df = self.clean_adult(df)
+            print("after adult", df.shape)
         if 'release_date' in df.columns:
             df = self.clean_release_date(df)
-        print("after release date", df.shape)
+            print("after release date", df.shape)
         df = self.clean_release_year(df)
         print("after release year", df.shape)
         df = self.clean_runtime(df)
@@ -134,15 +137,6 @@ class DataCleaner:
         print("after duplicates", df.shape)
         df = self.clean_numeric_columns(df)
         print("after numeric columns", df.shape)
-        #df = self.clean_string_to_list(df)
-        #print("after string to list", df.shape)
-
-        # clean_genres = []
-        # for genres in df['genres']:
-        #     clean_genres.extend(self.clean_movie_genres(genres))
-        # df['genres'] = np.unique(clean_genres).tolist()
-        # print("after genres", df.shape)
-
         df = self.select_columns(df)
         print("after select columns", df.shape)
         

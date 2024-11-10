@@ -18,6 +18,7 @@ def load_raw_data(filename, sep=',', headers = []):
     (str, str) -> pd.DataFrame
     Loads raw data, with fields separated by sep, into a dataframe
     '''
+    print(f"Loading data from {filename}...")
     df = pd.read_csv(filename, sep=sep)
     if headers != []:
         df.columns = headers
