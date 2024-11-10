@@ -60,15 +60,41 @@ The directory structure of new project looks like this:
 
 # <Project title>
 
-Abstract
+The emergence of DVDs in the 1990s had a major impact on the film industry by providing a wider accessibility to movies 
+and a shift in revenue streams, reducing the reliance on profitable theatrical releases. Then, the shift away from physical 
+media to digital streaming in the late 2000s reshaped the industry again, pushing studios to focus on streaming licenses 
+and successful theatrical runs with blockbusters. In this project, we aim to characterize the impact of the rise 
+and fall of the DVD on the movie industry using the TMDB database. Considering three distinct phases - pre-DVD, during the 
+DVD era, and post-DVD, we first examine shifts in key financial aspects like budget and revenue, alongside shifts in the 
+types of productions. We then analyze how genre and theme preferences evolved across time. Ultimately, we aim to understand 
+how changes in distribution models influenced the business and creative sides of filmmaking. 
 
 ## Additional datasets
-- TMDB 1M Movies
+- [TMDB 1M Movies](https://www.kaggle.com/datasets/asaniczka/tmdb-movies-dataset-2023-930k-movies): This dataset 
+contains information about 1 million movies, such as release date, revenue, budget, genre, runtime, companies and countries of productions,
+movie plots, and languages spoken in the movie. It contains movies between 1976 and 2023, which is particularly useful 
+as it allows us to do an analysis of movies that were released pre-DVD era (<1990), during the DVD era (1990-2008), and post-DVD era (>2008).
 - DVD sales
 
+## Research questions 
+1. Money - budget & revenue: 
+2. Genres:
+3. Themes per genre: are there shifts in major themes within genres between the different DVD eras? For instance, does
+the release of DVDs allow for more niche themes? Does the decline of DVD sales lead to more universal themes in blockbuster movies? 
+4. Production: 
+
 ## Methods
+1. Budget analysis
+2. Revenue analysis 
+3. Production analysis
+4. Genre analysis
+5. Common themes analysis: for each of the pre-DVD, during-DVD, and post-DVD eras, movie plots from the top genres will 
+be extracted and analyzed. First, pre-processing will be performed by removing stopwords and through lemmatization to 
+reduce words to their base form. Then, word clouds will be used to display the most common words in movie plots for each
+genre-era, giving an indication of common themes. 
 
 ## Timeline & Milestones
+20.12.2024: P3 Deadline 
 
 ## Questions for TA
 
