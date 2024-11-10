@@ -90,7 +90,7 @@ the release of DVDs allow for more niche themes? Does the decline of DVD sales l
 4. Genre analysis
 5. Common themes analysis: for each of the pre-DVD, during-DVD, and post-DVD eras, movie plots from the top genres will 
 be extracted and analyzed. First, pre-processing will be performed by removing stopwords and through lemmatization to 
-reduce words to their base form. Then, we will use word clouds to display the most common words in movie plots for each
+reduce words to their base form. Then, word clouds will be used to display the most common words in movie plots for each
 genre-era, giving an indication of common themes. 
 
 ## Timeline & Milestones
