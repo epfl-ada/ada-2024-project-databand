@@ -60,7 +60,14 @@ The directory structure of new project looks like this:
 
 # <Project title>
 
-Abstract
+The emergence of DVDs in the 1990s had a major impact on the film industry by providing a wider accessibility to movies 
+and a shift in revenue streams, reducing the reliance on profitable theatrical releases. Then, the shift away from physical 
+media to digital streaming in the late 2000s reshaped the industry again, pushing studios to focus on streaming licenses 
+and successful theatrical runs with blockbusters. In this project, we aim to characterize the impact of the rise 
+and fall of the DVD on the movie industry using the TMDB database. Considering three distinct phases - pre-DVD, during the 
+DVD era, and post-DVD, we first examine shifts in key financial aspects like budget and revenue, alongside shifts in the 
+types of productions. We then analyze how genre and theme preferences evolved across time. Ultimately, we aim to understand 
+how changes in distribution models influenced the business and creative sides of filmmaking. 
 
 ## Additional datasets
 - [TMDB 1M Movies](https://www.kaggle.com/datasets/asaniczka/tmdb-movies-dataset-2023-930k-movies): This dataset 
