@@ -112,7 +112,7 @@ def create_cmu_tmdb_dataset(cmu_movies_path, plots_path, tmdb_path, how_merge):
     df_movies = pd.read_csv(cmu_movies_path)
     df_plots = pd.read_csv(plots_path)
     df_tmdb = pd.read_csv(tmdb_path)
-    # df_tmdb = clean_string_to_list(df_tmdb, TMDB_string_columns)
+    df_tmdb = clean_string_to_list(df_tmdb, TMDB_string_columns)
     common_columns = list(set(df_movies.columns.tolist()) & set(df_tmdb.columns.tolist()))
     common_columns.remove('release_year')
     common_columns.remove('title')
@@ -123,5 +123,5 @@ def create_cmu_tmdb_dataset(cmu_movies_path, plots_path, tmdb_path, how_merge):
 
 def create_tmdb_dataset(tmdb_path):
     df_tmdb = pd.read_csv(tmdb_path)
-    # df_tmdb = clean_string_to_list(df_tmdb, TMDB_string_columns)
+    df_tmdb = clean_string_to_list(df_tmdb, TMDB_string_columns)
     return annotate_dvd_era(df_tmdb)
