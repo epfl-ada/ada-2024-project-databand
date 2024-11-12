@@ -2,6 +2,8 @@ import pandas as pd
 from wordcloud import WordCloud
 import nltk
 from nltk.corpus import stopwords
+import string
+import re
 
 # Download stopwords
 nltk.download('stopwords')
@@ -57,3 +59,19 @@ def wordcloud_per_genre(df, genre, additional_stop_words):
         wordcloud = create_wordcloud(year_texts, additional_stop_words)
         wordclouds.append(wordcloud)
     return wordclouds
+
+def get_movies_for_genre(df, genre):
+    return df[df['genres'].apply(lambda x: genre in x)]
+
+def get_movie_plots(df, genre, era):
+    df_genre = get_movies_for_genre(df, genre)
+    text_data = df_genre[(df_genre['dvd_era'] == era) & (df_genre['clean_overview'])]['clean_overview'].apply(lambda x: str(x)).explode().tolist()
+    return text_data
+
+def clean_text(text):
+    text = str(text)
+    text = text.lower()
+    text = text.translate(str.maketrans('', '', string.punctuation))
+    text = re.sub(r'\W+', ' ', text)
+    return " ".join([word for word in str(text).split() if word not in stop_words])
+
