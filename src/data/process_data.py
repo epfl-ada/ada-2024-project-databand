@@ -105,7 +105,7 @@ def get_dvd_era(release_year, start_year, end_year):
         return 'post'
 
 def annotate_dvd_era(df):
-    df['dvd_era'] = df['release_year'].apply(get_dvd_era, args=(1999,2008))
+    df['dvd_era'] = df['release_year'].apply(get_dvd_era, args=(1997,2008))
     return df
 
 def remove_genres(df, genres):
