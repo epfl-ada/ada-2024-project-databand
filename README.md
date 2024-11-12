@@ -84,10 +84,14 @@ as it allows us to do an analysis of movies that were released pre-DVD era (<199
 3. Themes per genre: are there shifts in major themes within genres between the different DVD eras? For instance, does
 the release of DVDs allow for more niche themes? Does the decline of DVD sales lead to more universal themes in blockbuster movies? 
 4. Production: Are major franchise production companies more successful in the post-DVD era? Are we seeing more of the same productions companies (for example Marvel Studios) or are new players still entering the market ?
-5. How does the way we consume movies (cinema, DVD, Netflix) influences the way they are made (budget, genre) ?
+5. How does the DVD rise and downfall influenced the way movies are produced ? *Hypothesis 1* : DVD emergence allowed smaller budget films to gain feasability as people could consume them outside cinemas (which were costly and therefore encouraged people to chose well-known high-budget movies). *Hypothesis 2* : the DVD downfall due to streaming killed both smaller budget movies (that would not be good enough to be bought by streaming services) and superproductions (that would be too costly to be bought by streaming services).
 
 ## Methods
-1. Budget analysis : For each era, computed the mean, median, and standard deviation of movie budgets. Additionally, plot histograms to visualize the distribution of budgets across these eras ; this is done in a cross-era manner to visualize the shifts in budget distribution. To further understand the trends, calculate the rolling discrete derivative of the mean budget with a window of three years, providing insights into the rate of change in movie budgets over time. Problems of the analysis : unexplained drop after 2010 (because of TMDB ?).
+1. Budget analysis : this analysis relies heavily on plots (graphical assessment).
+- Compute the mean of movie budgets and plot it accross time, corected for inflation or not
+- Plot histograms to visualize the distribution of budgets across these eras ; this is done in a cross-era manner to visualize the shifts in budget distribution. 
+- Calculate the rolling discrete derivative of the mean budget with a window of three years, providing insights into the rate of change in movie budgets over time. 
+- Display the proportion of tiny, small, big and superproductions (for budgets ranging in [0, 0.2], [0.2, 1], [1, 5] and [5, ..] times the average).
 2. Revenue analysis 
 3. Production analysis
 4. Genre analysis
