@@ -68,8 +68,8 @@ class DataCleaner:
         return df
 
     def clean_runtime(self, df):
-        """Remove movies that have a runtime larger than 500 minutes"""
-        return df[df['runtime'] <= 500]
+        """Remove movies that have a runtime between 45 & 500 minutes"""
+        return df[((df['runtime'] <= 500) & (df['runtime'] > 45)) | (df['runtime'] == 0)]
     
     def remove_duplicates(self, df):
         """Remove duplicate entries based on title and release_date"""

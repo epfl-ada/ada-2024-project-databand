@@ -73,7 +73,7 @@ how changes in distribution models influenced the business and creative sides of
 - [TMDB 1M Movies](https://www.kaggle.com/datasets/asaniczka/tmdb-movies-dataset-2023-930k-movies): This dataset 
 contains information about 1 million movies, such as release date, revenue, budget, genre, runtime, companies and countries of productions,
 movie plots, and languages spoken in the movie. It contains movies between 1976 and 2023, which is particularly useful 
-as it allows us to do an analysis of movies that were released pre-DVD era (<1990), during the DVD era (1990-2008), and post-DVD era (>2008).
+as it allows us to do an analysis of movies that were released pre-DVD era (<1997), during the DVD era (1997-2008), and post-DVD era (>2008).
 - DVD sales
 
 ## Research questions 
@@ -96,11 +96,17 @@ the release of DVDs allow for more niche themes? Does the decline of DVD sales l
 3. Production analysis
 4. Genre analysis
 5. Common themes analysis: for each of the pre-DVD, during-DVD, and post-DVD eras, movie plots from the top genres will 
-be extracted and analyzed. First, pre-processing will be performed by removing stopwords and through lemmatization to 
-reduce words to their base form. Then, word clouds will be used to display the most common words in movie plots for each
-genre-era, giving an indication of common themes. 
+be extracted and analyzed. First, pre-processing will be performed by removing stopwords and special characters. 
+Then, with the Latent Dirichlet Allocation model from the `gensim` library, the most common topics will be extracted 
+from movie plots for each genre-era. 
 
-## Timeline & Milestones
+## Timeline & Deadlines
+- Milestone 1 (15-29 Nov): Perform all analyses from methods section
+- Milestone 2 (29 Nov - 6 Dec): Select most relevant findings for data story
+- Milestone 3 (6-13 Dec): 
+  - 3a: Compose data story
+  - 3b: Create github.io report template with figures 
+- Milestone 4 (13-20 Dec): Combine data story and figures in report
 20.12.2024: P3 Deadline 
 
 ## Questions for TA
