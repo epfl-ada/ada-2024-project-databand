@@ -81,7 +81,7 @@ as it allows us to do an analysis of movies that were released pre-DVD era (<199
 ?? Are movied more expensive to make today??
 1. Money - budget & revenue: 
 2. Genres: How did the rise and fall of the DVD era influence the emergence of new genres and the decline of older ones? Hypothesis 1: The DVD era encouraged new, niche genres due to increased accessibility at home. Hypothesis 2: The shift to streaming favored mainstream genres, causing niche genres to decline.
-How did the distribution of high-revenue movies within each genre change from the pre-DVD era to the post-DVD era? Hypothesis 1: The DVD era spread high-revenue success across more genres due to repeat home viewings. Hypothesis 2: The streaming era concentrated high-revenue movies in blockbuster genres like action and superhero films.
+How did the distribution of high-revenue movies within each genre change from the pre-DVD era to the post-DVD era? Hypothesis 1: The DVD era spread high-revenue success across more genres due to repeat home viewings. Hypothesis 2: The streaming era concentrated high-revenue movies in blockbuster genres like action and adventure films.
 4. Themes per genre: are there shifts in major themes within genres between the different DVD eras? For instance, does
 the release of DVDs allow for more niche themes? Does the decline of DVD sales lead to more universal themes in blockbuster movies? 
 5. Production: Are major franchise production companies more successful in the post-DVD era? Are we seeing more of the same productions companies (for example Marvel Studios) or are new players still entering the market ?
@@ -95,7 +95,9 @@ the release of DVDs allow for more niche themes? Does the decline of DVD sales l
 - Display the proportion of tiny, small, big and superproductions (for budgets ranging in [0, 0.2], [0.2, 1], [1, 5] and [5, ..] times the average).
 2. Revenue analysis 
 3. Production analysis
-4. Genre analysis
+4. Genre analysis 1) Genre Emergence and Decline Analysis:
+We will calculate the number of movies per genre in each DVD era (pre, during, and post) to track genre popularity over time. Line and area charts will visualize these trends, and a chi-square test will assess the statistical significance of genre distribution shifts. Clustering will be applied to identify patterns in genre emergence and decline across eras. 2) High-Revenue Movie Distribution Analysis:
+High-revenue films (top 10% by revenue) within each genre and era will be identified. We will visualize the revenue distribution using stacked bar charts, showing each genre’s contribution to total revenue. Percentage change analysis will reveal how the share of high-revenue films per genre shifted from pre-DVD to post-DVD eras.
 5. Common themes analysis: for each of the pre-DVD, during-DVD, and post-DVD eras, movie plots from the top genres will 
 be extracted and analyzed. First, pre-processing will be performed by removing stopwords and special characters. 
 Then, with the Latent Dirichlet Allocation model from the `gensim` library, the most common topics will be extracted 
