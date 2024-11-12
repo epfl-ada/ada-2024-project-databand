@@ -108,6 +108,11 @@ def annotate_dvd_era(df):
     df['dvd_era'] = df['release_year'].apply(get_dvd_era, args=(1999,2008))
     return df
 
+def remove_genres(df, genres):
+    for genre in genres:
+        df = df[df['genres'].apply(lambda x: genre not in x)]
+    return df
+
 def create_cmu_tmdb_dataset(cmu_movies_path, plots_path, tmdb_path, how_merge):
     df_movies = pd.read_csv(cmu_movies_path)
     df_plots = pd.read_csv(plots_path)
@@ -124,4 +129,6 @@ def create_cmu_tmdb_dataset(cmu_movies_path, plots_path, tmdb_path, how_merge):
 def create_tmdb_dataset(tmdb_path):
     df_tmdb = pd.read_csv(tmdb_path)
     df_tmdb = clean_string_to_list(df_tmdb, TMDB_string_columns)
+    df_tmdb = df_tmdb[(df_tmdb['runtime'] == 0) | (df_tmdb['runtime'] > 45)]
+    df_tmdb = df_tmdb[df_tmdb['genres'].apply(lambda x: 'Documentary' not in x)]
     return annotate_dvd_era(df_tmdb)
