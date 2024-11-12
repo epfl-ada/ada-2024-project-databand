@@ -84,9 +84,10 @@ as it allows us to do an analysis of movies that were released pre-DVD era (<199
 3. Themes per genre: are there shifts in major themes within genres between the different DVD eras? For instance, does
 the release of DVDs allow for more niche themes? Does the decline of DVD sales lead to more universal themes in blockbuster movies? 
 4. Production: Are major franchise production companies more successful in the post-DVD era? Are we seeing more of the same productions companies (for example Marvel Studios) or are new players still entering the market ?
+5. How does the way we consume movies (cinema, DVD, Netflix) influences the way they are made (budget, genre) ?
 
 ## Methods
-1. Budget analysis
+1. Budget analysis : For each era, computed the mean, median, and standard deviation of movie budgets. Additionally, plot histograms to visualize the distribution of budgets across these eras ; this is done in a cross-era manner to visualize the shifts in budget distribution. To further understand the trends, calculate the rolling discrete derivative of the mean budget with a window of three years, providing insights into the rate of change in movie budgets over time. Problems of the analysis : unexplained drop after 2010 (because of TMDB ?).
 2. Revenue analysis 
 3. Production analysis
 4. Genre analysis
