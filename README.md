@@ -77,11 +77,13 @@ as it allows us to do an analysis of movies that were released pre-DVD era (<199
 - DVD sales
 
 ## Research questions 
+
+?? Are movied more expensive to make today??
 1. Money - budget & revenue: 
 2. Genres:
 3. Themes per genre: are there shifts in major themes within genres between the different DVD eras? For instance, does
 the release of DVDs allow for more niche themes? Does the decline of DVD sales lead to more universal themes in blockbuster movies? 
-4. Production: 
+4. Production: Are major franchise production companies more successful in the post-DVD era? Are we seeing more of the same productions companies (for example Marvel Studios) or are new players still entering the market ?
 
 ## Methods
 1. Budget analysis
