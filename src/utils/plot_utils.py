@@ -17,3 +17,12 @@ def plot_top_proportions_per_era(top_k_df, column, k):
 
     plt.tight_layout()
     plt.show()
+
+def plot_wordclouds_per_genre(wordclouds, genre):
+    f, axes = plt.subplots(1, 3, figsize=(20, 20))
+    eras = ['pre', 'during', 'post']
+    for i in range(len(wordclouds)):
+        axes[i].imshow(wordclouds[i], interpolation='bilinear')
+        axes[i].axis('off')
+        axes[i].title.set_text(f'{genre} movies - {eras[i]} DVD era')
+    plt.show()
