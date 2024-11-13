@@ -88,28 +88,40 @@ the release of DVDs allow for more niche themes? Does the decline of DVD sales l
 6. How does the DVD rise and downfall influenced the way movies are produced ? *Hypothesis 1* : DVD emergence allowed smaller budget films to gain feasability as people could consume them outside cinemas (which were costly and therefore encouraged people to chose well-known high-budget movies). *Hypothesis 2* : the DVD downfall due to streaming killed both smaller budget movies (that would not be good enough to be bought by streaming services) and superproductions (that would be too costly to be bought by streaming services).
 
 ## Methods
-1. Budget analysis : this analysis relies heavily on plots (graphical assessment).
-- Compute the mean of movie budgets and plot it accross time, corected for inflation or not
-- Plot histograms to visualize the distribution of budgets across these eras ; this is done in a cross-era manner to visualize the shifts in budget distribution. 
+**Task 1: Budget analysis** 
+
+This analysis relies heavily on plots (graphical assessment).
+- Compute the mean of movie budgets and plot it across time, corrected for inflation or not
+- Plot histograms to visualize the distribution of budgets across DVD eras ; this is done in a cross-era manner to visualize the shifts in budget distribution. 
 - Calculate the rolling discrete derivative of the mean budget with a window of three years, providing insights into the rate of change in movie budgets over time. 
-- Display the proportion of tiny, small, big and superproductions (for budgets ranging in [0, 0.2], [0.2, 1], [1, 5] and [5, ..] times the average).
-2. Revenue analysis:
-  
-  A DVD rental dataset of 600 movies was used to visualise the distribution of DVD rental/sales over the years between 1990 and 2016.
-The movies were categorized into three distinct eras based on their release dates:
-Pre-DVD Era: Before DVDs were mainstream (typically before the mid-1990s).
-DVD Peak Era: When DVDs were at their peak popularity (mid-1990s to mid-2000s).
-Post-DVD Era: After DVDs started declining, and digital streaming began 
-We thenn vizualised revenue distribution using Seaborn
+- Display the proportion of tiny, small, big and super-productions (for budgets ranging in [0, 0.2], [0.2, 1], [1, 5] and [5, ..] times the budget average). 
+
+**Task 2: Revenue analysis**
+
+A DVD rental dataset of 600 movies is used to visualise the distribution of DVD rental/sales over the years between 1990 and 2016.
+Movies were categorized into three distinct eras based on their release dates:
+- Pre-DVD Era: Before DVDs were mainstream (typically before the mid-1990s).
+- Peak DVD Era: When DVDs were at their peak popularity (mid-1990s to mid-2000s).
+- Post-DVD Era: After DVDs started declining, and digital streaming began 
+We then visualize revenue distribution using Seaborn
 We applied a logarithmic scale to the x-axis to handle the wide range of revenue values and make the visualization clearer.
 palette: A color scheme ('viridis') was used to differentiate the eras visually.
 The x-axis was set to a logarithmic scale using log_scale=True to better represent the wide range of revenue values. This scale helps compress the values so that both low and high revenues can be visualized together without skewing the distribution.
 
-3. Production analysis
-4. Genre analysis 1) Genre Emergence and Decline Analysis:
-We will calculate the number of movies per genre in each DVD era (pre, during, and post) to track genre popularity over time. Line and area charts will visualize these trends, and a chi-square test will assess the statistical significance of genre distribution shifts. Clustering will be applied to identify patterns in genre emergence and decline across eras. 2) High-Revenue Movie Distribution Analysis:
-High-revenue films (top 10% by revenue) within each genre and era will be identified. We will visualize the revenue distribution using stacked bar charts, showing each genre’s contribution to total revenue. Percentage change analysis will reveal how the share of high-revenue films per genre shifted from pre-DVD to post-DVD eras.
-5. Common themes analysis: for each of the pre-DVD, during-DVD, and post-DVD eras, movie plots from the top genres will 
+**Task 3: Production analysis**
+
+**Task 4: Genre analysis**
+- Genre Emergence and Decline Analysis:
+We will calculate the number of movies per genre in each DVD era (pre, during, and post) to track genre popularity over time. 
+Line and area charts will visualize these trends, and a chi-square test will assess the statistical significance of genre 
+distribution shifts. Clustering will be applied to identify patterns in genre emergence and decline across eras. 
+- High-Revenue Movie Distribution Analysis:
+High-revenue films (top 10% by revenue) within each genre and era will be identified. We will visualize the revenue distribution 
+using stacked bar charts, showing each genre’s contribution to total revenue. Percentage change analysis will reveal how the 
+share of high-revenue films per genre shifted from pre-DVD to post-DVD eras.
+
+**Task 5: Common themes per genre**
+For each of the pre-DVD, during-DVD, and post-DVD eras, movie plots from the top genres will 
 be extracted and analyzed. First, pre-processing will be performed by removing stopwords and special characters. 
 Then, with the Latent Dirichlet Allocation model from the `gensim` library, the most common topics will be extracted 
 from movie plots for each genre-era. 
