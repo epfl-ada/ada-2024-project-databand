@@ -88,15 +88,7 @@ the release of DVDs allow for more niche themes? Does the decline of DVD sales l
 6. How does the DVD rise and downfall influenced the way movies are produced ? *Hypothesis 1* : DVD emergence allowed smaller budget films to gain feasability as people could consume them outside cinemas (which were costly and therefore encouraged people to chose well-known high-budget movies). *Hypothesis 2* : the DVD downfall due to streaming killed both smaller budget movies (that would not be good enough to be bought by streaming services) and superproductions (that would be too costly to be bought by streaming services).
 
 ## Methods
-**Task 1: Budget analysis** 
-
-This analysis relies heavily on plots (graphical assessment).
-- Compute the mean of movie budgets and plot it across time, corrected for inflation or not
-- Plot histograms to visualize the distribution of budgets across DVD eras ; this is done in a cross-era manner to visualize the shifts in budget distribution. 
-- Calculate the rolling discrete derivative of the mean budget with a window of three years, providing insights into the rate of change in movie budgets over time. 
-- Display the proportion of tiny, small, big and super-productions (for budgets ranging in [0, 0.2], [0.2, 1], [1, 5] and [5, ..] times the budget average). 
-
-**Task 2: Revenue analysis**
+**Task 1: Revenue analysis**
 
 A DVD rental dataset of 600 movies is used to visualise the distribution of DVD rental/sales over the years between 1990 and 2016.
 Movies were categorized into three distinct eras based on their release dates:
@@ -107,6 +99,14 @@ We then visualize revenue distribution using Seaborn
 We applied a logarithmic scale to the x-axis to handle the wide range of revenue values and make the visualization clearer.
 palette: A color scheme ('viridis') was used to differentiate the eras visually.
 The x-axis was set to a logarithmic scale using log_scale=True to better represent the wide range of revenue values. This scale helps compress the values so that both low and high revenues can be visualized together without skewing the distribution.
+
+**Task 2: Budget analysis** 
+
+This analysis relies heavily on plots (graphical assessment).
+- Compute the mean of movie budgets and plot it across time, corrected for inflation or not
+- Plot histograms to visualize the distribution of budgets across DVD eras ; this is done in a cross-era manner to visualize the shifts in budget distribution. 
+- Calculate the rolling discrete derivative of the mean budget with a window of three years, providing insights into the rate of change in movie budgets over time. 
+- Display the proportion of tiny, small, big and super-productions (for budgets ranging in [0, 0.2], [0.2, 1], [1, 5] and [5, ..] times the budget average). 
 
 **Task 3: Production analysis**
 
