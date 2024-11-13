@@ -112,9 +112,7 @@ This analysis relies heavily on plots (graphical assessment).
 
 **Task 5: Genre analysis**
 - Genre Emergence and Decline Analysis:
-We will calculate the number of movies per genre in each DVD era (pre, during, and post) to track genre popularity over time. 
-Line and area charts will visualize these trends, and a chi-square test will assess the statistical significance of genre 
-distribution shifts. Clustering will be applied to identify patterns in genre emergence and decline across eras. 
+We will analyze genre popularity over time by calculating the proportion of movies per genre in each DVD era (pre, during, and post), rather than just the count. This will account for the unequal number of movies across eras. Line and area charts will visualize these trends, showing the relative share of each genre in each era. A chi-square test will assess the statistical significance of shifts in genre distribution, and clustering techniques will help identify patterns of genre emergence and decline across eras.
 - High-Revenue Movie Distribution Analysis:
 We will identify the top 10% of high-revenue films by genre and era, then calculate the mean revenue for each genre, corrected for inflation. Stacked bar charts will visualize genre contributions to total revenue, and percentage change analysis will track how the share of high-revenue films shifted from the pre-DVD to post-DVD era.
 
