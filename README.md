@@ -116,9 +116,7 @@ We will calculate the number of movies per genre in each DVD era (pre, during, a
 Line and area charts will visualize these trends, and a chi-square test will assess the statistical significance of genre 
 distribution shifts. Clustering will be applied to identify patterns in genre emergence and decline across eras. 
 - High-Revenue Movie Distribution Analysis:
-High-revenue films (top 10% by revenue) within each genre and era will be identified. We will visualize the revenue distribution 
-using stacked bar charts, showing each genre’s contribution to total revenue. Percentage change analysis will reveal how the 
-share of high-revenue films per genre shifted from pre-DVD to post-DVD eras.
+We will identify the top 10% of high-revenue films by genre and era, then calculate the mean revenue for each genre, corrected for inflation. Stacked bar charts will visualize genre contributions to total revenue, and percentage change analysis will track how the share of high-revenue films shifted from the pre-DVD to post-DVD era.
 
 **Task 6: Common themes per genre**
 For each of the pre-DVD, during-DVD, and post-DVD eras, movie plots from the top genres will 
