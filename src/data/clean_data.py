@@ -3,7 +3,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 import re
-from tqdm.notebook import tqdm, trange
+from tqdm import tqdm
 sys.path.append(str(Path().resolve()  / 'src' / 'utils'))
 from load_data import load_raw_data, save_csv_data
 
@@ -58,7 +58,6 @@ class DataCleaner:
         df = df[df['release_year'] < '2024']
         return df
 
-    
     def clean_numeric_columns(self, df):
         """Clean numeric columns (revenue, runtime, budget) to ensure no negative values"""
         df[self.numeric_columns] = df[self.numeric_columns].fillna(0)
@@ -66,7 +65,40 @@ class DataCleaner:
         for col in self.numeric_columns:
             df = df[df[col]>=0]
         return df
+    
+    def clean_string_columns(self, df):
+        # MAYBE MORE CLEANING?
+        """Clean string columns to lower case"""
+        for col in self.string_columns:
+            df[col] = df[col].str.lower()
+        return df
+    
+    def clean_prod_companies(self, companies_list):
+        if not isinstance(companies_list, list):
+            return companies_list
+        
+        cleaned_companies = []
+        for company in companies_list:
+            if isinstance(company, str):
+                cleaned = (company.strip()
+                     .replace('films', '')
+                     .replace('film', '')
+                     .replace('pictures', '')
+                     .replace('picture', '')
+                     .replace('productions', '')
+                     .replace('production', '')
+                     .replace('entertainment', '')
+                     .replace('media', '')
+                     .replace('cinema', ''))
+                cleaned = ' '.join(cleaned.split())
+                cleaned_companies.append(cleaned.strip())
+            else:
+                cleaned_companies.append(company)
+            
+        return cleaned_companies
 
+
+    
     def clean_runtime(self, df):
         """Remove movies that have a runtime between 45 & 500 minutes"""
         return df[((df['runtime'] <= 500) & (df['runtime'] > 45)) | (df['runtime'] == 0)]
@@ -75,50 +107,15 @@ class DataCleaner:
         """Remove duplicate entries based on title and release_date"""
         return df.drop_duplicates(subset=['title', 'release_year'])
 
-    # def clean_genre(self, genre: str) -> list[str]:
-    #     # remove Film, film, Movies
-    #     replacements = {
-    #         r'\s*(Film|Movie|Films|Movies)$': '',  # Remove Film, Movie, Films, Movies at the end
-    #         '/': ' ',
-    #         'and ': '',
-    #         '& ': '',
-    #         "comdedy": "comedy",
-    #         "documetary": "documentary",
-    #         "-": " ",
-    #         "animated": "animation",
-    #         "biographical": "biography",
-    #         "children's": 'children',
-    #         "docudrama": "documentary drama",
-    #         "educational": "education",
-    #         "pornographic": "pornography",
-    #         "sci fi": "scifi",
-    #         "post apocalyptic": "postapocalyptic",
-    #         " oriented": "",
-    #         " themed": "",
-    #         "fairy tale": "fairytale",
-    #         "science fiction": "scifi",
-    #     }
-
-    #     # Apply regular expression replacements
-    #     for pattern, replacement in replacements.items():
-    #         genre = re.sub(pattern, replacement, genre, flags=re.IGNORECASE)
-
-    #     # split multigenres
-    #     if genre in genres_to_split:
-    #         return genre.split(" ")
-    #     else:
-    #     # If they are not in the list of genres to split, then it's one genre and not mutilple
-    #         return [] if genre == "" else [genre.strip()]
-
 
 
     def select_columns(self, df):
         return df[self.required_columns]
 
     def clean_dataset(self, input_path, output_path, sep=',', headers=[]):
-        # with tqdm(total=1, desc="Loading data") as pbar:
-        df = load_raw_data(input_path, sep, headers)
-            # pbar.update(1)
+        with tqdm(total=1, desc="Loading data") as pbar:
+            df = load_raw_data(input_path, sep, headers)
+            pbar.update(1)
         print("original df shape", df.shape)
         if 'status' in df.columns:
             df = self.clean_status(df)
@@ -137,6 +134,11 @@ class DataCleaner:
         print("after duplicates", df.shape)
         df = self.clean_numeric_columns(df)
         print("after numeric columns", df.shape)
+        df = self.clean_string_columns(df)
+        print("after string columns", df.shape)
+        if 'production_companies' in df.columns:
+            df['production_companies'] = df['production_companies'].apply(self.clean_prod_companies)
+            print("after production companies", df.shape)
         df = self.select_columns(df)
         print("after select columns", df.shape)
         
@@ -148,7 +150,7 @@ def main():
     TMDB_required_columns = ['title', 'release_date', 'revenue', 'runtime', 'budget', 'original_language', 'overview', 'genres',
             'production_companies', 'production_countries', 'spoken_languages', 'keywords', 'release_year']
 
-    TMDB_string_columns = ['genres', 'production_companies', 'production_countries', 'spoken_languages', 'keywords']
+    TMDB_string_columns = ['title', 'genres', 'overview','production_companies', 'production_countries', 'spoken_languages', 'keywords']
     TMDB_numeric_columns = ['revenue', 'runtime', 'budget']
 
     CMU_movie_headers = ["wikipedia_movie_id", "freebase_ID", "title", "release_year", "revenue",
