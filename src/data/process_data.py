@@ -131,5 +131,5 @@ def create_tmdb_dataset(tmdb_path):
     df_tmdb = clean_string_to_list(df_tmdb, TMDB_string_columns)
     df_tmdb = df_tmdb[(df_tmdb['runtime'] == 0) | (df_tmdb['runtime'] > 45)]
     df_tmdb = df_tmdb[df_tmdb['genres'].apply(lambda x: 'Documentary' not in x)]
-    df_tmdb['overview'].fillna('', inplace=True)
+    df_tmdb.fillna({'overview': ''}, inplace=True)
     return annotate_dvd_era(df_tmdb)

@@ -40,7 +40,7 @@ class LDAModel:
         num_columns = min(self.num_topics, max_col)
         num_rows = int(math.ceil(float(self.num_topics) / max_col))
         fig, axes = plt.subplots(num_rows, num_columns,
-                                 figsize=(5,5), sharex=True, sharey=True)
+                                 figsize=(8,8), sharex=True, sharey=True)
 
         for i, ax in enumerate(axes.flatten()):
             if i >= self.num_topics:

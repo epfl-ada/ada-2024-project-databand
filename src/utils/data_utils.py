@@ -97,3 +97,31 @@ def adjust_inflation(df, old_col="budget", new_col="budget_inflation", inflation
     df[new_col] = df.apply(lambda row: row[old_col] * inflation_dict.get(row['release_year'], 1), axis=1)
 
     return df
+
+def categorize_budget(row, budget_stats):
+    mean_budget_row = budget_stats.loc[budget_stats['release_year'] == row['release_year'], 'mean_budget']
+    if mean_budget_row.empty:
+        return 'Unknown'
+    mean_budget = mean_budget_row.values[0]
+    if row['budget'] < 0.1 * mean_budget:
+        return 'Independent'
+    elif row['budget'] < mean_budget:
+        return 'Small'
+    elif row['budget'] < 5 * mean_budget:
+        return 'Big'
+    else:
+        return 'Super'
+
+def budget_rolling_averages(df, window):
+    budget_stats = df.groupby('release_year')['budget'].agg(mean_budget='mean').reset_index()
+    df.loc[:,'budget_category'] = df.apply(categorize_budget, args=(budget_stats,), axis=1)
+
+    # Count the number of each budget category per year
+    budget_category_counts = df.groupby(['release_year', 'budget_category']).size().unstack(fill_value=0)
+
+    # Calculate the proportion of each budget category per year
+    budget_category_proportions = budget_category_counts.div(budget_category_counts.sum(axis=1), axis=0)
+
+    # Calculate the 3-year rolling average for each budget category
+    proportion_rolling = budget_category_proportions.rolling(window=window, center=True).mean()
+    return proportion_rolling
