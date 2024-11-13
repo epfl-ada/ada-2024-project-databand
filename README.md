@@ -106,11 +106,11 @@ This analysis relies heavily on plots (graphical assessment).
 - Compute the mean of movie budgets and plot it across time, corrected for inflation or not
 - Plot histograms to visualize the distribution of budgets across DVD eras ; this is done in a cross-era manner to visualize the shifts in budget distribution. 
 - Calculate the rolling discrete derivative of the mean budget with a window of three years, providing insights into the rate of change in movie budgets over time. 
-- Display the proportion of tiny, small, big and super-productions (for budgets ranging in [0, 0.2], [0.2, 1], [1, 5] and [5, ..] times the budget average). 
+- Display the proportion of tiny, small, big and super-productions (for budgets ranging in [0, 0.2], [0.2, 1], [1, 5] and [5, ..] times the budget average).
 
-**Task 3: Production analysis**
+**Task 4: Production analysis**
 
-**Task 4: Genre analysis**
+**Task 5: Genre analysis**
 - Genre Emergence and Decline Analysis:
 We will calculate the number of movies per genre in each DVD era (pre, during, and post) to track genre popularity over time. 
 Line and area charts will visualize these trends, and a chi-square test will assess the statistical significance of genre 
@@ -120,7 +120,7 @@ High-revenue films (top 10% by revenue) within each genre and era will be identi
 using stacked bar charts, showing each genre’s contribution to total revenue. Percentage change analysis will reveal how the 
 share of high-revenue films per genre shifted from pre-DVD to post-DVD eras.
 
-**Task 5: Common themes per genre**
+**Task 6: Common themes per genre**
 For each of the pre-DVD, during-DVD, and post-DVD eras, movie plots from the top genres will 
 be extracted and analyzed. First, pre-processing will be performed by removing stopwords and special characters. 
 Then, with the Latent Dirichlet Allocation model from the `gensim` library, the most common topics will be extracted 
