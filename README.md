@@ -93,7 +93,8 @@ the release of DVDs allow for more niche themes? Does the decline of DVD sales l
 - Plot histograms to visualize the distribution of budgets across these eras ; this is done in a cross-era manner to visualize the shifts in budget distribution. 
 - Calculate the rolling discrete derivative of the mean budget with a window of three years, providing insights into the rate of change in movie budgets over time. 
 - Display the proportion of tiny, small, big and superproductions (for budgets ranging in [0, 0.2], [0.2, 1], [1, 5] and [5, ..] times the average).
-2. Revenue analysis
+2. Revenue analysis:
+  
   A DVD rental dataset of 600 movies was used to visualise the distribution of DVD rental/sales over the years between 1990 and 2016.
 The movies were categorized into three distinct eras based on their release dates:
 Pre-DVD Era: Before DVDs were mainstream (typically before the mid-1990s).
@@ -102,8 +103,7 @@ Post-DVD Era: After DVDs started declining, and digital streaming began
 We thenn vizualised revenue distribution using Seaborn
 We applied a logarithmic scale to the x-axis to handle the wide range of revenue values and make the visualization clearer.
 palette: A color scheme ('viridis') was used to differentiate the eras visually.
-4. Logarithmic Scale
-Log Scale for Revenue: The x-axis was set to a logarithmic scale using log_scale=True to better represent the wide range of revenue values. This scale helps compress the values so that both low and high revenues can be visualized together without skewing the distribution.
+The x-axis was set to a logarithmic scale using log_scale=True to better represent the wide range of revenue values. This scale helps compress the values so that both low and high revenues can be visualized together without skewing the distribution.
 
 3. Production analysis
 4. Genre analysis 1) Genre Emergence and Decline Analysis:
