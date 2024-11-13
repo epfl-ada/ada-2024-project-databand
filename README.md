@@ -79,13 +79,13 @@ as it allows us to do an analysis of movies that were released pre-DVD era (<199
 ## Research questions 
 
 ?? Are movied more expensive to make today??
-1. Money - budget & revenue: 
+1. Budget : How does the DVD rise and downfall influenced the way movies are produced ? *Hypothesis 1* : DVD emergence allowed smaller budget films to gain feasability as people could consume them outside cinemas (which were costly and therefore encouraged people to chose well-known high-budget movies). *Hypothesis 2* : the DVD downfall due to streaming killed both smaller budget movies (that would not be good enough to be bought by streaming services) and superproductions (that would be too costly to be bought by streaming services).
 2. Genres: How did the rise and fall of the DVD era influence the emergence of new genres and the decline of older ones? Hypothesis 1: The DVD era encouraged new, niche genres due to increased accessibility at home. Hypothesis 2: The shift to streaming favored mainstream genres, causing niche genres to decline.
 How did the distribution of high-revenue movies within each genre change from the pre-DVD era to the post-DVD era? Hypothesis 1: The DVD era spread high-revenue success across more genres due to repeat home viewings. Hypothesis 2: The streaming era concentrated high-revenue movies in blockbuster genres like action and adventure films.
 4. Themes per genre: are there shifts in major themes within genres between the different DVD eras? For instance, does
 the release of DVDs allow for more niche themes? Does the decline of DVD sales lead to more universal themes in blockbuster movies? 
 5. Production: Are major franchise production companies more successful in the post-DVD era? Are we seeing more of the same productions companies (for example Marvel Studios) or are new players still entering the market ?
-6. How does the DVD rise and downfall influenced the way movies are produced ? *Hypothesis 1* : DVD emergence allowed smaller budget films to gain feasability as people could consume them outside cinemas (which were costly and therefore encouraged people to chose well-known high-budget movies). *Hypothesis 2* : the DVD downfall due to streaming killed both smaller budget movies (that would not be good enough to be bought by streaming services) and superproductions (that would be too costly to be bought by streaming services).
+
 
 ## Methods
 **Task 1: Revenue analysis**
