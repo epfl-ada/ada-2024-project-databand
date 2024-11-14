@@ -46,3 +46,17 @@ def save_csv_data(df, filename):
 #         save_csv_data(raw_data, processed_data_path)
 
 #         print(f"Cleaned data saved to {processed_data_path}")
+
+
+#TODO
+#result = pyreadr.read_r('data/movies.RData') 
+# df_dvd_rentals = next(iter(result.values()))
+# df_dvd_rentals['dvd_release_date'] = pd.to_datetime(
+#     df_dvd_rentals[['dvd_rel_year', 'dvd_rel_month', 'dvd_rel_day']]
+#     .astype('Int64')
+#     .astype(str)
+#     .agg('-'.join, axis=1), 
+#     errors='coerce'
+# )
+# path = os.path.join('data', 'dvd_rentals.csv')
+# df_dvd_rentals.to_csv(path, sep=',')

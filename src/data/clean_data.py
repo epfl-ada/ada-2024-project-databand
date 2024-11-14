@@ -113,9 +113,9 @@ class DataCleaner:
         return df[self.required_columns]
 
     def clean_dataset(self, input_path, output_path, sep=',', headers=[]):
-        with tqdm(total=1, desc="Loading data") as pbar:
-            df = load_raw_data(input_path, sep, headers)
-            pbar.update(1)
+        # with tqdm(total=1, desc="Loading data") as pbar:
+        df = load_raw_data(input_path, sep, headers)
+            # pbar.update(1)
         print("original df shape", df.shape)
         if 'status' in df.columns:
             df = self.clean_status(df)
