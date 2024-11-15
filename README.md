@@ -49,10 +49,10 @@ for pre-DVD versus post-DVD eras.
 ## Research questions 
 1. Revenue: 
 2. Budget : How does the DVD rise and downfall influenced the way movies are produced ? 
-   - *Hypothesis 1* : DVD emergence allowed smaller budget films to gain feasability as 
-   people could consume them outside cinemas (which were costly and therefore encouraged people to chose well-known high-budget movies). 
-   - *Hypothesis 2* : the DVD downfall due to streaming killed both smaller budget movies 
-   (that would not be good enough to be bought by streaming services) and superproductions (that would be too costly to be bought by streaming services).
+   - *Subquestion 1* : did DVD emergence allow smaller budget films to gain feasability as 
+   people could consume them outside cinemas (which were costly and therefore encouraged people to chose well-known high-budget movies) ?
+   - *Subquestion 2* : did the DVD downfall due to streaming killed both smaller budget movies 
+   (that would not be good enough to be bought by streaming services) and superproductions (that would be too costly to be bought by streaming services) ?
 3. Production: Are major franchise production companies more successful in the post-DVD era? 
 Are we seeing more of the same productions companies (for example Marvel Studios) or are new players still entering the market ?
 4. Genres: How did the rise and fall of the DVD era influence the emergence of new genres and the decline of older ones? 
