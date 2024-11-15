@@ -83,17 +83,30 @@ def plot_mean_budget_inflation(df):
     plt.show()
 
 def plot_budget_histograms(df, eras, colors, labels, title):
-    fig, axes = plt.subplots(3, 1, figsize=(12, 18), sharex=True)
+    fig, axes = plt.subplots(len(eras), 1, figsize=(12, 6*len(eras)), sharex=True)
 
-    for i, (era1, era2) in enumerate(eras):
-        ax = axes[i]
-        sns.histplot(df[df['dvd_era'] == era1]['budget'], bins=50, color=colors[i][0], label=labels[i][0], ax=ax, kde=True, stat="density")
-        sns.histplot(df[df['dvd_era'] == era2]['budget'], bins=50, color=colors[i][1], label=labels[i][1], ax=ax, kde=True, stat="density")
-        ax.set_xscale('log')
-        ax.set_xlabel('Budget')
-        ax.set_ylabel('Density')
-        ax.legend()
-        ax.set_title(f'{title} ({labels[i][0]} vs {labels[i][1]})')
+    if len(eras) == 1:
+        era1 = eras[0][0]
+        era2 = eras[0][1]
+        sns.histplot(df[df['dvd_era'] == era1]['budget'], bins=50, color=colors[0][0], label=labels[0][0],
+                     kde=True, stat="density")
+        sns.histplot(df[df['dvd_era'] == era2]['budget'], bins=50, color=colors[0][1], label=labels[0][1],
+                     kde=True, stat="density")
+        plt.xscale('log')
+        plt.xlabel('Budget')
+        plt.ylabel('Density')
+        plt.legend()
+        plt.title(f'{title} ({labels[0][0]} vs {labels[0][1]})')
+    else:
+        for i, (era1, era2) in enumerate(eras):
+            ax = axes[i]
+            sns.histplot(df[df['dvd_era'] == era1]['budget'], bins=50, color=colors[i][0], label=labels[i][0], ax=ax, kde=True, stat="density")
+            sns.histplot(df[df['dvd_era'] == era2]['budget'], bins=50, color=colors[i][1], label=labels[i][1], ax=ax, kde=True, stat="density")
+            ax.set_xscale('log')
+            ax.set_xlabel('Budget')
+            ax.set_ylabel('Density')
+            ax.legend()
+            ax.set_title(f'{title} ({labels[i][0]} vs {labels[i][1]})')
 
     plt.tight_layout()
     plt.show()

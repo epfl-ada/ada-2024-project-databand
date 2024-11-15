@@ -124,6 +124,8 @@ def create_cmu_tmdb_dataset(cmu_movies_path, plots_path, tmdb_path, how_merge):
     df_combined = combine_dataframes(df_movies=df_movies, df_plots=df_plots, df_tmdb=df_tmdb,
                                      common_columns=common_columns, cutoffyear=2012, how_merge=how_merge)
     df_combined = annotate_dvd_era(df_combined)
+    df_combined['overview'] = df_combined['summary'].copy()
+    df_combined.fillna({'overview': ''}, inplace=True)
     return df_combined
 
 def create_tmdb_dataset(tmdb_path):
