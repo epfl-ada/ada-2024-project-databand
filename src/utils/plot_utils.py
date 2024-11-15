@@ -133,3 +133,13 @@ def plot_rolling_averages(proportion_rolling):
 
     plt.tight_layout()
     plt.show()
+
+def style_plot(title='', xlabel='', ylabel='', legend=False):
+    plt.title(title)
+    plt.xlabel(xlabel)
+    plt.ylabel(ylabel)
+    plt.grid(True, linestyle='--', alpha=0.4)
+    sns.despine()
+    if legend:
+        plt.legend()
+    plt.show()

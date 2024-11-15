@@ -1,5 +1,6 @@
 import os
 import pandas as pd
+import pyreadr
 
 # GLOBAL VARS
 MOVIE_HEADERS = ["Wikipedia movie ID", "Freebase ID", "Movie name", "Release date","Box office revenue",
@@ -29,6 +30,22 @@ def save_csv_data(df, filename):
     df.to_csv(filename, index=False)
 
 
+def load_dvd_sales():
+    result = pyreadr.read_r('data/raw/movies.RData')
+    df_dvd_releases = next(iter(result.values()))
+    df_dvd_releases['dvd_release_date'] = pd.to_datetime(
+        df_dvd_releases[['dvd_rel_year', 'dvd_rel_month', 'dvd_rel_day']]
+        .astype('Int64')
+        .astype(str)
+        .agg('-'.join, axis=1),
+        errors='coerce'
+    )
+    df_dvd_releases = df_dvd_releases.dropna(subset=['dvd_release_date'])
+    path = os.path.join('data', 'processed', 'dvd_releases.csv')
+    df_dvd_releases[['dvd_release_date']].to_csv(path, sep=',',
+                                                 index=False,
+                                                 header=True)
+
 # if __name__ == "__main__":
 #     # Define file paths
 #     files = ["movie.metadata.tsv", "character.metadata.tsv", "plot_summaries.txt"]
@@ -46,17 +63,3 @@ def save_csv_data(df, filename):
 #         save_csv_data(raw_data, processed_data_path)
 
 #         print(f"Cleaned data saved to {processed_data_path}")
-
-
-#TODO
-#result = pyreadr.read_r('data/movies.RData') 
-# df_dvd_rentals = next(iter(result.values()))
-# df_dvd_rentals['dvd_release_date'] = pd.to_datetime(
-#     df_dvd_rentals[['dvd_rel_year', 'dvd_rel_month', 'dvd_rel_day']]
-#     .astype('Int64')
-#     .astype(str)
-#     .agg('-'.join, axis=1), 
-#     errors='coerce'
-# )
-# path = os.path.join('data', 'dvd_rentals.csv')
-# df_dvd_rentals.to_csv(path, sep=',')
