@@ -1,58 +1,28 @@
 
 # databand
-This is a template repo for your project to help you organise and document your code better. 
-Please use this structure for your project and document the installation, usage and structure as below.
-
-## Quickstart
-
-```bash
-# clone project
-git clone <project link>
-cd <project repo>
-
-# [OPTIONAL] create conda environment
-conda create -n <env_name> python=3.11 or ...
-conda activate <env_name>
-
-
-# install requirements
-pip install -r pip_requirements.txt
-```
-
-
-
-### How to use the library
-Tell us how the code is arranged, any explanations goes here.
-
-data: 
-- data/raw: raw files given from the CMU movie dataset
-- data/processed: relevant files put in csv format, including column headers as specified by dataset README
-
-src:
-- src/data: scripts to load and process the data 
-  - src/data/load_data.py: functions to load raw files from data/raw and save into correct format into data/processed
-  - src/data/process_data.py: functions to pre-process data and extract meaningful information e.g. values from FreebaseID:name tuples
 
 ## Project Structure
-
-The directory structure of new project looks like this:
+The directory structure of project:
 
 ```
 ├── data                        <- Project data files
-│   ├── processed                       <- Files in csv format with headers 
-│   ├── raw                             <- Raw data files from CMU dataset
+│   ├── processed                       <- Clean files in csv
+│   ├── raw                             <- Raw data files 
 ├── src                         <- Source code
 │   ├── data                            <- Data directory
-│   │   ├── load_data.py 
-│   │   ├── process_data.py 
+│   │   ├── process_data.py                 <- functions extract meaningful information and combine datasets
 │   ├── models                          <- Model directory
+│   │   ├── lda_model.py                   <- LDA model for topic extract 
 │   ├── utils                           <- Utility directory
-│   ├── scripts                         <- Shell scripts
+│   │   ├── data_utils.py                   <- utility functions for data analyses 
+│   │   ├── load_data.py                    <- utility functions to load dataframes and save them to csv files 
+│   │   ├── plot_utils.py                   <- utility functions to plot data
+│   │   ├── statistics_utils.py             <- utility functions for statistic analyses
+│   ├── scripts                         <- Shell/Python scripts
+│   │   ├── clean_data.py                   <- script to clean all datasets
 │
-├── tests                       <- Tests of any kind
-│
-├── results.ipynb               <- a well-structured notebook showing the results
-│
+├── data_overview_CMU.ipynb               <- notebook with an overview for movie features for CMU movies
+├── data_overview_TMDB.ipynb              <- notebook with an overview for movie features for TMDB movies 
 ├── .gitignore                  <- List of files ignored by git
 ├── pip_requirements.txt        <- File for installing python dependencies
 └── README.md
@@ -78,7 +48,6 @@ as it allows us to do an analysis of movies that were released pre-DVD era (<199
 
 ## Research questions 
 
-?? Are movied more expensive to make today??
 1. Budget : How does the DVD rise and downfall influenced the way movies are produced ? *Hypothesis 1* : DVD emergence allowed smaller budget films to gain feasability as people could consume them outside cinemas (which were costly and therefore encouraged people to chose well-known high-budget movies). *Hypothesis 2* : the DVD downfall due to streaming killed both smaller budget movies (that would not be good enough to be bought by streaming services) and superproductions (that would be too costly to be bought by streaming services).
 2. Genres: How did the rise and fall of the DVD era influence the emergence of new genres and the decline of older ones? Hypothesis 1: The DVD era encouraged new, niche genres due to increased accessibility at home. Hypothesis 2: The shift to streaming favored mainstream genres, causing niche genres to decline.
 How did the distribution of high-revenue movies within each genre change from the pre-DVD era to the post-DVD era? Hypothesis 1: The DVD era spread high-revenue success across more genres due to repeat home viewings. Hypothesis 2: The streaming era concentrated high-revenue movies in blockbuster genres like action and adventure films.
@@ -129,6 +98,7 @@ from movie plots for each genre-era.
   - 3a: Compose data story
   - 3b: Create github.io report template with figures 
 - Milestone 4 (13-20 Dec): Combine data story and figures in report
+
 20.12.2024: P3 Deadline 
 
 ## Questions for TA
