@@ -28,6 +28,10 @@ The directory structure of project:
 └── README.md
 ```
 
+Our analyses are primarily focused for the TMDB dataset, thus the data_overview_TMDB notebook should be examined first. 
+Whenever possible, we perform the same analyses on the CMU datatset, but these provide less information due to the lower 
+amount of data. 
+
 # The Rise and Fall of the DVD: how did they impact the movie industry
 
 The emergence of DVDs in the 1990s had a major impact on the film industry by providing a wider accessibility to movies 
@@ -43,40 +47,40 @@ how changes in distribution models influenced the business and creative sides of
 - [TMDB 1M Movies](https://www.kaggle.com/datasets/asaniczka/tmdb-movies-dataset-2023-930k-movies): This dataset contains information about 1 million movies, such as release date, revenue, budget, genre, runtime, companies and countries of productions,
 movie plots, and languages spoken in the movie. It contains movies between 1976 and 2023, which is particularly useful 
 as it allows us to do an analysis of movies that were released pre-DVD era (<1997), during the DVD era (1997-2013), and post-DVD era (>2013).
-- DVD rentals: This DVD rentals dataset allows us to approximate the trends of DVD popularity, which we use to define our cut-off dates$
+  - Note: Due to the lack of data in the CMU dataset, we use the TMDB dataset as our main data source to perform comparisons between pre, during and post DVD eras.
+- DVD rentals: This DVD rentals dataset allows us to approximate the trends of DVD popularity, which we use to define our cut-off dates
 for pre-DVD versus post-DVD eras.
 
 ## Research questions 
-1. Revenue: 
-2. Budget : How does the DVD rise and downfall influenced the way movies are produced ? 
-   - *Subquestion 1* : did DVD emergence allow smaller budget films to gain feasability as 
-   people could consume them outside cinemas (which were costly and therefore encouraged people to chose well-known high-budget movies) ?
-   - *Subquestion 2* : did the DVD downfall due to streaming killed both smaller budget movies 
-   (that would not be good enough to be bought by streaming services) and superproductions (that would be too costly to be bought by streaming services) ?
+1. Revenue: DVDs provide another revenue stream to production companies, but did they have 
+a noticeable effect on overall movie revenue e.g. does revenue increase with the rise of DVD sales? 
+Can we observe a significant difference in revenue as DVD sales started going down, or do box office and streaming profits make up 
+for it?
+2. Budget: how did DVDs impact small and large production studios?
+   - *Subquestion 1* : how much did DVDs level the playing field for low-budget movies by providing smaller production companies a way to distribute their movies 
+   without relying on costly theatrical releases? 
+   - *Subquestion 2* : how did the fall of DVDs impact low-budget movies, did they maintain their foothold in the movie industry? 
+   Did the decline in DVD sales influence production companies to release more "theatrical" i.e., high budget - high revenue, movies?
 3. Production: Are major franchise production companies more successful in the post-DVD era? 
 Are we seeing more of the same productions companies (for example Marvel Studios) or are new players still entering the market ?
 4. Genres: How did the rise and fall of the DVD era influence the emergence of new genres and the decline of older ones? 
-   - *Hypothesis 1*: The DVD era encouraged new, niche genres due to increased accessibility at home. 
-   - *Hypothesis 2*: The shift to streaming favored mainstream genres, causing niche genres to decline.
-   How did the distribution of high-revenue movies within each genre change from the pre-DVD era to the post-DVD era? 
-   - Hypothesis 1: The DVD era spread high-revenue success across more genres due to repeat home viewings. 
-   - Hypothesis 2: The streaming era concentrated high-revenue movies in blockbuster genres like action and adventure films.
-5. Themes per genre: are there shifts in major themes within genres between the different DVD eras? For instance, does
-the release of DVDs allow for more niche themes? Does the decline of DVD sales lead to more universal themes in blockbuster movies? 
+   - *Subquestion 1*: Did the DVD era encourage new genres due to increased accessibility outside of theaters? Did the rise of
+   streaming services impact this? 
+   - *Subquestion 2*: How did DVD sales impact the genres of blockbuster movies? Can we observe a shift to typical,
+   mainstream genres for such movies after sales decline? 
+   - *Subquestion 3*: are there differences in major themes within genres between the different DVD eras? For instance, does 
+   the release of DVDs allow for more niche themes? Does the decline of DVD sales lead to more universal themes? 
 
 
 ## Methods
 **Task 1: Revenue analysis**
 
-A DVD rental dataset of 600 movies is used to visualise the distribution of DVD rental/sales over the years between 1990 and 2016.
-Movies were categorized into three distinct eras based on their release dates:
-- Pre-DVD Era: Before DVDs were mainstream (typically before the mid-1990s).
-- Peak DVD Era: When DVDs were at their peak popularity (mid-1990s to mid-2000s).
-- Post-DVD Era: After DVDs started declining, and digital streaming began 
-We then visualize revenue distribution using Seaborn
-We applied a logarithmic scale to the x-axis to handle the wide range of revenue values and make the visualization clearer.
-palette: A color scheme ('viridis') was used to differentiate the eras visually.
-The x-axis was set to a logarithmic scale using log_scale=True to better represent the wide range of revenue values. This scale helps compress the values so that both low and high revenues can be visualized together without skewing the distribution.
+To observe whether there are differences in revenue between the different eras, we first use visual
+representations such as comparing frequency distribution and cumulative revenue distributions between eras.
+To determine whether such differences are significant, we use statistical tests such as t-test to qualify the difference
+mean or median revenue and chi-square test to evaluate the differences in revenue distributions between DVD eras. 
+
+Using similar methods, we also examine the differences in profitability, computed as $profitability = revenue - budget$. 
 
 **Task 2: Budget analysis** 
 
