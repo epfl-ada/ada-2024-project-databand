@@ -30,19 +30,20 @@ The directory structure of project:
 
 Our analyses are primarily focused for the TMDB dataset, thus the data_overview_TMDB notebook should be examined first. 
 Whenever possible, we perform the same analyses on the CMU datatset, but these provide less information due to the lower 
-amount of data. 
+amount of data and the lack of data after 2012. 
 
-# The Rise and Fall of the DVD: how did they impact the movie industry
+# Abstract: The Rise and Fall of the DVD and it's impact on the movie industry
 
-The emergence of DVDs in the 1990s had a major impact on the film industry by providing a wider accessibility to movies 
-and a shift in revenue streams, reducing the reliance on profitable theatrical releases. Then, the shift away from physical 
-media to digital streaming in the late 2000s reshaped the industry again, pushing studios to focus on streaming licenses 
-and successful theatrical runs with blockbusters. In this project, we aim to characterize the impact of the rise 
-and fall of the DVD on the movie industry using the TMDB database. Considering three distinct phases - pre-DVD, during the 
-DVD era, and post-DVD, we first examine shifts in key financial aspects like budget and revenue, alongside shifts in the 
-types of productions. We then analyze how genre and theme preferences evolved across time. Ultimately, we aim to understand 
-how changes in distribution models influenced the business and creative sides of filmmaking. 
+  The emergence of DVDs in the 1990s had a resounding impact on the film industry, providing a wider accessibility to movies 
+and a new revenue stream. The popularity of DVDs meant that even if a movie did not perform well at the box office, studios could still generate revenue through sales of DVDs. Throuhgout the 2000s, however, the industry shifted away from physical media to a digital streaming industry, pushing studios to rely on successful theatrical releases notably, blockbusters.
 
+In this project, we aim to characterize the impact of the DVD phases on the movie industry using the TMDB database. We created three distinct phases (eras) with the help of DVD release data:
+1. The pre-DVD era
+2. During the DVD era
+3. The post-DVD era
+
+Through our initial analysis, we examined shifts in financial aspects like budget and revenue, alongside shifts in the 
+types of productions companies making movies. We then analyze how genre and theme preferences evolved across time. Ultimately, we aim to understand how changes in distribution models influenced the business and creative sides of filmmaking.
 ## Additional datasets
 - [TMDB 1M Movies](https://www.kaggle.com/datasets/asaniczka/tmdb-movies-dataset-2023-930k-movies): This dataset contains information about 1 million movies, such as release date, revenue, budget, genre, runtime, companies and countries of productions,
 movie plots, and languages spoken in the movie. It contains movies between 1976 and 2023, which is particularly useful 
@@ -52,20 +53,23 @@ as it allows us to do an analysis of movies that were released pre-DVD era (<199
 for pre-DVD versus post-DVD eras.
 
 ## Research questions 
-1. Revenue: DVDs provide another revenue stream to production companies, but did they have 
-a noticeable effect on overall movie revenue e.g. does revenue increase with the rise of DVD sales? 
-Can we observe a significant difference in revenue as DVD sales started going down, or do box office and streaming profits make up 
-for it?
-2. Budget: how did DVDs impact small and large production studios?
-   - *Subquestion 1* : how much did DVDs level the playing field for low-budget movies by providing smaller production companies a way to distribute their movies 
-   without relying on costly theatrical releases? 
-   - *Subquestion 2* : how did the fall of DVDs impact low-budget movies, did they maintain their foothold in the movie industry? 
-   Did the decline in DVD sales influence production companies to release more "theatrical" i.e., high budget - high revenue, movies?
-3. Production: Are major franchise production companies more successful in the post-DVD era? 
-Are we seeing more of the same productions companies (for example Marvel Studios) or are new players still entering the market ?
+1. Revenue: 
+   - *Subquestion 1*: DVDs provide another revenue stream to production companies, but did they have 
+   a noticeable effect on overall movie revenue e.g. does revenue increase with the rise of DVD sales? 
+   - *Subquestion 2*: Are there categories of movies (genres, budget, ...) for which revenue significantly changes from one era to another
+
+2. Budget: how did DVDs impact small, medium and large production studios?
+   - *Subquestion 1* : Did DVDs level the playing field for low-budget movies by providing smaller production companies a way to distribute their movies without relying on costly theatrical releases? 
+   - *Subquestion 2* : Did the fall of DVDs impact low and mid-budget movies ?
+   - *Subquestion 3* : Did the decline in DVD sales influence production companies to release more "theatrical" i.e., high budget - high revenue, movies?
+   - *Subquestion 4* : Are movies more expensive today?
+
+3. Production: 
+   - *Subquestion 1* : Is there a change in dominant production companies during the different eras? 
+   - *Subquestion 2* : Are new players entering the market post-DVD era? Is there a significant change in the production companies market share?
+
 4. Genres: How did the rise and fall of the DVD era influence the emergence of new genres and the decline of older ones? 
-   - *Subquestion 1*: Did the DVD era encourage new genres due to increased accessibility outside of theaters? Did the rise of
-   streaming services impact this? 
+   - *Subquestion 1*: Did the DVD era encourage new genres due to increased accessibility outside of theaters? How does this compare to the rise of streaming services? 
    - *Subquestion 2*: How did DVD sales impact the genres of blockbuster movies? Can we observe a shift to typical,
    mainstream genres for such movies after sales decline? 
    - *Subquestion 3*: are there differences in major themes within genres between the different DVD eras? For instance, does 
@@ -98,7 +102,10 @@ Again, an ANOVA test will complement this analysis.
 
 **Task 4: Production analysis**
 
+To analyze the evolution of production companies we started with an exploration the data. This was important to understand the top players and how they compare with others (i.e BBC, Warner Bros, etc.). We used bar and line plots for a visual reprensentation. We also found a strong correlation between of the number production companies for one movie and time, suggesting that movies need more investments today with more production companies. The next step to correctly categorize them is using clustering techniques to group the production companies based on their movie production activity and genre they produce. This will better help us observe trends during the different eras. 
+
 **Task 5: Genre analysis**
+
 - Genre Emergence and Decline Analysis:
 We will analyze genre popularity over time by calculating the proportion of movies per genre in each DVD era (pre, during, and post), rather than just the count. This will account for the unequal number of movies across eras. Line and area charts will visualize these trends, showing the relative share of each genre in each era. A chi-square test will assess the statistical significance of shifts in genre distribution, and clustering techniques will help identify patterns of genre emergence and decline across eras.
 - High-Revenue Movie Distribution Analysis:
