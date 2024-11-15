@@ -84,14 +84,17 @@ Using similar methods, we also examine the differences in profitability, compute
 
 **Task 2: Budget analysis** 
 
-This analysis relies heavily on plots (graphical assessment).
-- Compute the mean of movie budgets and plot it across time, corrected for inflation or not
+We first use graphical assessments to observe shifts in budgets between the DVD eras: 
+- Plot the mean budget across time, corrected for inflation or not
 - Plot histograms to visualize the distribution of budgets across DVD eras ; this is done in a cross-era manner to visualize the shifts in budget distribution. 
 - Calculate the rolling discrete derivative of the mean budget with a window of three years, providing insights into the rate of change in movie budgets over time. 
 - Display the proportion of tiny, small, big and super-productions (for budgets ranging in [0, 0.2], [0.2, 1], [1, 5] and [5, ..] times the budget average).
-Different tests can then be conducted to confirm the graphical observations :
-- Evolution of budget through the years : linear regression to assess the importance of years in explaining the budget. ANOVA to show which part of budget variability can be explained by the year.
-- Influence of DVD : t-test of differences in distributions between pre, during and post-dvd era. Again, an ANOVA could complement this analysis.
+
+Statistical tests will then be conducted to confirm the graphical observations :
+- Evolution of budget through the years: linear regression will be used to assess the importance of release years in explaining 
+the budget and ANOVA tests will be used to show which part of budget variability can be explained by the release year. 
+- Influence of DVD: chi-square tests will be used to examine the differences in budget distributions between pre, during and post-dvd era. 
+Again, an ANOVA test will complement this analysis.
 
 **Task 4: Production analysis**
 
@@ -102,6 +105,7 @@ We will analyze genre popularity over time by calculating the proportion of movi
 We will identify the top 10% of high-revenue films by genre and era, then calculate the mean revenue for each genre, corrected for inflation. Stacked bar charts will visualize genre contributions to total revenue, and percentage change analysis will track how the share of high-revenue films shifted from the pre-DVD to post-DVD era.
 
 **Task 6: Common themes per genre**
+
 For each of the pre-DVD, during-DVD, and post-DVD eras, movie plots from the top genres will 
 be extracted and analyzed. First, pre-processing will be performed by removing stopwords and special characters. 
 Then, with the Latent Dirichlet Allocation model from the `gensim` library, the most common topics will be extracted 
