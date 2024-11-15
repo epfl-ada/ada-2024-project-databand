@@ -68,12 +68,15 @@ def plot_mean_budget_inflation(df):
     # Plot the statistics
     plt.figure(figsize=(14, 7))
     sns.lineplot(data=budget_stats_inflation, x='release_year', y='mean_budget_inflation', marker='o')
+    plt.axvline(x=1997, label='Start DVD era', color='green', linestyle='dotted')
+    plt.axvline(x=2013, label='End DVD era', color='red', linestyle='dotted')
 
     # Customize the plot
     plt.title('Year by year mean film budget - adjusted for inflation', fontsize=16)
     plt.xlabel('Release year')
     plt.ylabel('Budget (inflation adjusted)')
     plt.xticks(rotation=45)
+    plt.legend()
     plt.tight_layout()
 
     # Show the plot
@@ -143,3 +146,26 @@ def style_plot(title='', xlabel='', ylabel='', legend=False):
     if legend:
         plt.legend()
     plt.show()
+
+
+def plot_movie_freq_per_production_company(df):
+    companies = df['production_companies'].explode().value_counts()
+    plt.figure(figsize=(12, 6))
+
+    plt.plot(range(len(companies)),
+             companies.values,
+             linewidth=2,
+             marker='o',
+             markersize=4,
+             color='#2ecc71')
+    plt.yscale('log')
+    plt.xscale('log')
+
+    for i in range(5):  # Annotate top 5
+        plt.annotate(f'{companies.index[i]}',
+                     xy=(i, companies.values[i]),
+                     xytext=(10, 10),
+                     textcoords='offset points',
+                     fontsize=8,
+                     bbox=dict(facecolor='white', edgecolor='none', alpha=0.7))
+    style_plot('Number of Movies per Production Company', 'Production Company', 'Number of Movies', False)
