@@ -48,7 +48,7 @@ as it allows us to do an analysis of movies that were released pre-DVD era (<199
 
 ## Research questions 
 
-1. Budget : How does the DVD rise and downfall influenced the way movies are produced ? *Hypothesis 1* : DVD emergence allowed smaller budget films to gain feasability as people could consume them outside cinemas (which were costly and therefore encouraged people to chose well-known high-budget movies). *Hypothesis 2* : the DVD downfall due to streaming killed both smaller budget movies (that would not be good enough to be bought by streaming services) and superproductions (that would be too costly to be bought by streaming services).
+1. Budget : How does the DVD rise and downfall influenced the way movies are produced ? How did DVDs influence the productions of low, medium or high budget films ? For instance, did the rise of DVDs allowed more small-budget films to be produced ?
 2. Genres: How did the rise and fall of the DVD era influence the emergence of new genres and the decline of older ones? Hypothesis 1: The DVD era encouraged new, niche genres due to increased accessibility at home. Hypothesis 2: The shift to streaming favored mainstream genres, causing niche genres to decline.
 How did the distribution of high-revenue movies within each genre change from the pre-DVD era to the post-DVD era? Hypothesis 1: The DVD era spread high-revenue success across more genres due to repeat home viewings. Hypothesis 2: The streaming era concentrated high-revenue movies in blockbuster genres like action and adventure films.
 4. Themes per genre: are there shifts in major themes within genres between the different DVD eras? For instance, does
@@ -76,6 +76,9 @@ This analysis relies heavily on plots (graphical assessment).
 - Plot histograms to visualize the distribution of budgets across DVD eras ; this is done in a cross-era manner to visualize the shifts in budget distribution. 
 - Calculate the rolling discrete derivative of the mean budget with a window of three years, providing insights into the rate of change in movie budgets over time. 
 - Display the proportion of tiny, small, big and super-productions (for budgets ranging in [0, 0.2], [0.2, 1], [1, 5] and [5, ..] times the budget average).
+Different tests can then be conducted to confirm the graphical observations :
+- Evolution of budget through the years : linear regression to assess the importance of years in explaining the budget. ANOVA to show which part of budget variability can be explained by the year.
+- Influence of DVD : t-test of differences in distributions between pre, during and post-dvd era. Again, an ANOVA could complement this analysis.
 
 **Task 4: Production analysis**
 
