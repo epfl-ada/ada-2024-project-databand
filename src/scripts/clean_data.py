@@ -7,21 +7,6 @@ from tqdm import tqdm
 sys.path.append(str(Path().resolve()  / 'src' / 'utils'))
 from load_data import load_raw_data, save_csv_data
 
-# ROOT_DIR = './' 
-# DATA_DIR = os.path.join(ROOT_DIR, 'data')
-
-# with open(os.path.join(DATA_DIR, 'genres_to_clean'), 'r') as file:
-#     lines = file.readlines()
-
-# # Remove newline characters if they exist at the end of each line
-# genres_to_split = [line.strip() for line in lines]
-
-
-
-# character_headers = ["Wikipedia movie ID", "Freebase movie ID", "Movie release date", "Character name",
-#                              "Actor DoB", "Actor gender", "Actor height (m)", "Actor ethnicity (Freebase ID)",
-#                              "Actor name", "Actor age at movie release", "Freebase character/actor map ID",
-#                              "Freebase character ID", "Freebase actor ID"]
 plot_headers = ["wikipedia_movie_id", "summary"]
 
 import pdb 
@@ -67,7 +52,6 @@ class DataCleaner:
         return df
     
     def clean_string_columns(self, df):
-        # MAYBE MORE CLEANING?
         """Clean string columns to lower case"""
         for col in self.string_columns:
             df[col] = df[col].str.lower()
@@ -113,9 +97,7 @@ class DataCleaner:
         return df[self.required_columns]
 
     def clean_dataset(self, input_path, output_path, sep=',', headers=[]):
-        # with tqdm(total=1, desc="Loading data") as pbar:
         df = load_raw_data(input_path, sep, headers)
-            # pbar.update(1)
         print("original df shape", df.shape)
         if 'status' in df.columns:
             df = self.clean_status(df)
