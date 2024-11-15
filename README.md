@@ -28,7 +28,7 @@ The directory structure of project:
 └── README.md
 ```
 
-# <Project title>
+# The Rise and Fall of the DVD: how did they impact the movie industry
 
 The emergence of DVDs in the 1990s had a major impact on the film industry by providing a wider accessibility to movies 
 and a shift in revenue streams, reducing the reliance on profitable theatrical releases. Then, the shift away from physical 
@@ -40,20 +40,29 @@ types of productions. We then analyze how genre and theme preferences evolved ac
 how changes in distribution models influenced the business and creative sides of filmmaking. 
 
 ## Additional datasets
-- [TMDB 1M Movies](https://www.kaggle.com/datasets/asaniczka/tmdb-movies-dataset-2023-930k-movies): This dataset 
-contains information about 1 million movies, such as release date, revenue, budget, genre, runtime, companies and countries of productions,
+- [TMDB 1M Movies](https://www.kaggle.com/datasets/asaniczka/tmdb-movies-dataset-2023-930k-movies): This dataset contains information about 1 million movies, such as release date, revenue, budget, genre, runtime, companies and countries of productions,
 movie plots, and languages spoken in the movie. It contains movies between 1976 and 2023, which is particularly useful 
-as it allows us to do an analysis of movies that were released pre-DVD era (<1997), during the DVD era (1997-2008), and post-DVD era (>2008).
-- DVD sales
+as it allows us to do an analysis of movies that were released pre-DVD era (<1997), during the DVD era (1997-2013), and post-DVD era (>2013).
+- DVD rentals: This DVD rentals dataset allows us to approximate the trends of DVD popularity, which we use to define our cut-off dates$
+for pre-DVD versus post-DVD eras.
 
 ## Research questions 
-
-1. Budget : How does the DVD rise and downfall influenced the way movies are produced ? How did DVDs influence the productions of low, medium or high budget films ? For instance, did the rise of DVDs allowed more small-budget films to be produced ?
-2. Genres: How did the rise and fall of the DVD era influence the emergence of new genres and the decline of older ones? Hypothesis 1: The DVD era encouraged new, niche genres due to increased accessibility at home. Hypothesis 2: The shift to streaming favored mainstream genres, causing niche genres to decline.
-How did the distribution of high-revenue movies within each genre change from the pre-DVD era to the post-DVD era? Hypothesis 1: The DVD era spread high-revenue success across more genres due to repeat home viewings. Hypothesis 2: The streaming era concentrated high-revenue movies in blockbuster genres like action and adventure films.
-4. Themes per genre: are there shifts in major themes within genres between the different DVD eras? For instance, does
+1. Revenue: 
+2. Budget : How does the DVD rise and downfall influenced the way movies are produced ? 
+   - *Hypothesis 1* : DVD emergence allowed smaller budget films to gain feasability as 
+   people could consume them outside cinemas (which were costly and therefore encouraged people to chose well-known high-budget movies). 
+   - *Hypothesis 2* : the DVD downfall due to streaming killed both smaller budget movies 
+   (that would not be good enough to be bought by streaming services) and superproductions (that would be too costly to be bought by streaming services).
+3. Production: Are major franchise production companies more successful in the post-DVD era? 
+Are we seeing more of the same productions companies (for example Marvel Studios) or are new players still entering the market ?
+4. Genres: How did the rise and fall of the DVD era influence the emergence of new genres and the decline of older ones? 
+   - *Hypothesis 1*: The DVD era encouraged new, niche genres due to increased accessibility at home. 
+   - *Hypothesis 2*: The shift to streaming favored mainstream genres, causing niche genres to decline.
+   How did the distribution of high-revenue movies within each genre change from the pre-DVD era to the post-DVD era? 
+   - Hypothesis 1: The DVD era spread high-revenue success across more genres due to repeat home viewings. 
+   - Hypothesis 2: The streaming era concentrated high-revenue movies in blockbuster genres like action and adventure films.
+5. Themes per genre: are there shifts in major themes within genres between the different DVD eras? For instance, does
 the release of DVDs allow for more niche themes? Does the decline of DVD sales lead to more universal themes in blockbuster movies? 
-5. Production: Are major franchise production companies more successful in the post-DVD era? Are we seeing more of the same productions companies (for example Marvel Studios) or are new players still entering the market ?
 
 
 ## Methods
@@ -104,5 +113,20 @@ from movie plots for each genre-era.
 
 20.12.2024: P3 Deadline 
 
+## Team contributions
+- Revenue analysis: Yann Ravot
+- Budget analysis: Nicolas Moyne
+- Production analysis: Charlotte Meyer
+- Genre analysis: Abdul Karim Mouakeh
+- Theme extractions: Charlotte Sacré
+- Data story: Charlotte Sacré, Yann Ravot & Abdul Karim Mouakeh
+- Report website: Charlotte Meyer & Nicolas Moyne
+
 ## Questions for TA
+For the CMU dataset, we perform an inner merge with the TMDB dataset (based on movie title and release year) to obtain 
+information such as budget and production companies for CMU movies and perform analyses similar to the TMDB movies. 
+However, this significantly reduces the amount of movies to analyse (around 17,000 results movies). As a result, we were 
+wondering which of the two options would be preferable for P3:
+- Do the inner merge and perform all analyses (e.g. on budget & production companies) on the restricted set of movies 
+- Perform a restricted set of analyses using the available features from the CMU dataset on a larger set of movies 
 
