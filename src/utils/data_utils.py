@@ -71,7 +71,7 @@ def get_movie_plots(df, genre, era):
 def clean_text(text):
     text = str(text)
     text = text.lower()
-    text = text.translate(str.maketrans('', '', string.punctuation))
+    text = text.translate(str.maketrans(' ', ' ', string.punctuation))
     text = re.sub(r'\W+', ' ', text)
     return " ".join([word for word in str(text).split() if word not in stop_words])
 
