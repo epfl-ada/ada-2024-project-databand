@@ -125,3 +125,10 @@ def budget_rolling_averages(df, window):
     # Calculate the 3-year rolling average for each budget category
     proportion_rolling = budget_category_proportions.rolling(window=window, center=True).mean()
     return proportion_rolling
+
+
+def calculate_roi(df):
+    if df.revenue > 0 and df.budget > 0:
+        return (df.revenue - df.budget) / df.budget * 100
+    else:
+        return 0
