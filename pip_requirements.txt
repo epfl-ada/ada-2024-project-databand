@@ -8,3 +8,5 @@ matplotlib
 nltk
 gensim
 pyreadr
+plotly
+dash
