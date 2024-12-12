@@ -4,6 +4,12 @@ import nltk
 from nltk.corpus import stopwords
 import string
 import re
+from empath import Empath
+import spacy
+import random
+
+lexicon = Empath()
+nlp = spacy.load('en_core_web_sm')
 
 # Download stopwords
 nltk.download('stopwords')
@@ -132,3 +138,55 @@ def calculate_roi(df):
         return (df.revenue - df.budget) / df.budget * 100
     else:
         return 0
+
+
+def get_topk_empath_features(text, topk=10):
+    doc = nlp(text)
+    empath_features = lexicon.analyze(doc.text, normalize=True)
+    if topk is not None:
+        return {k: v for k, v in sorted(empath_features.items(), key=lambda item: item[1], reverse=True)[:topk]}
+    return empath_features
+
+
+def empath_feature_extraction(df, genre, prod_type=None, topk=10):
+    results = []
+    top_features = set()
+    plots = []
+    for era in ['pre', 'during', 'post']:
+        plots_era = get_movie_plots(df, genre, era) if prod_type is None else get_movie_plots(
+            df[df['prod_type'] == prod_type], genre, era)
+        random.shuffle(plots_era)
+        text = ";".join(plots_era)
+        if len(text) > 1e6:
+            text = text[:1000000]
+            plots = text.split(';')[:-1]
+            text = ';'.join(plots_era)
+        plots.append(text)
+        top_k_features = get_topk_empath_features(text, topk=topk)
+        results.append(top_k_features)
+        top_features.update(set(results[-1].keys()))
+
+    for i, era in enumerate(['pre', 'during', 'post']):
+        if len(set(results[i].keys())) != len(top_features):
+            doc = nlp(plots[i])
+            empath_features = lexicon.analyze(doc.text, normalize=True)
+            for feature in top_features:
+                if feature not in results[i].keys():
+                    results[i][feature] = empath_features[feature]
+
+    words = []
+    for d in results:
+        words = words + list(d.keys())
+    words = list(set(words))
+
+    prop_dict = {'word': [], 'era': [], 'factor': []}
+    for i, era in enumerate(['pre', 'during', 'post']):
+        for word in words:
+            prop_dict['era'].append(era)
+            prop_dict['word'].append(word)
+            if word in results[i]:
+                prop_dict['factor'].append(results[i][word])
+            else:
+                prop_dict['factor'].append(0)
+
+    return pd.DataFrame(data=prop_dict)
