@@ -1,9 +1,9 @@
-# import libraries 
 import pandas as pd
 import matplotlib.pyplot as plt
 import sys
 from pathlib import Path
 import seaborn as sns
+import os
 
 # Add 'src' to the system path
 sys.path.append(str(Path().resolve() / 'src'))
@@ -12,10 +12,55 @@ from src.utils.load_data import load_raw_data
 from src.utils.data_utils import *
 from src.utils.plot_utils import *
 from src.models.lda_model import *
+import shutil
 
-df = create_tmdb_dataset('data/processed/TMDB_clean.csv')
+# Define the function to create the lightweight Streamlit data
+def create_streamlit_data(raw_data_path='data/processed/TMDB_clean.csv', streamlit_data_path='data/streamlit/year_budget.csv'):
+    """
+    Function to create a lightweight version of the dataset for use in Streamlit.
+    This function should be run locally to generate and save the smaller dataset.
+    """
+    if not os.path.exists('data/streamlit'):
+        os.makedirs('data/streamlit')
+    
+    # Load the raw data
+    df = create_tmdb_dataset(raw_data_path)
+
+    # Example of data reduction: Select only necessary columns and rows with 'budget' > 0 for simplicity
+    df_filtered = df[(df['budget'] > 0)]
+
+    # For example, you can filter only the relevant columns to make the data lighter
+    df_lightweight = df_filtered[['release_year', 'budget']]  # Adjust based on what data is needed
+
+    # Save the lightweight data to the 'streamlit' folder
+    df_lightweight.to_csv(streamlit_data_path, index=False)
+    print(f"Lightweight dataset saved to {streamlit_data_path}")
+
+# Function to load data from the lightweight Streamlit dataset
+def load_streamlit_data(data_path='data/streamlit/year_budget.csv'):
+    """
+    Load the lightweight Streamlit data if it exists, or create it if not.
+    """
+    streamlit_data_path = Path(data_path)
+
+    # Check if the streamlit data exists, otherwise create it
+    if not streamlit_data_path.exists():
+        print("Streamlit data not found. Creating it now...")
+        create_streamlit_data()  # Creates the lightweight dataset
+        print("Streamlit data created. Now loading...")
+    
+    # Load the data from the lightweight dataset
+    df_streamlit = pd.read_csv(data_path)
+    return df_streamlit
+
+
+# Load the Streamlit data (will create it if not exists)
+df = load_streamlit_data('data/streamlit/year_budget.csv')
+
+# Now, you can proceed with the rest of your code, using df_filtered as the dataset
 df_filtered = df[(df['budget'] > 0)]
 
+# Your existing functions can stay the same, no need to change them:
 def plot_mean_budget_inflation(df = df_filtered, save_path=None):
     budget_stats = df[df.budget > 0].groupby('release_year')['budget'].agg(mean_budget='mean').reset_index()
 
@@ -55,6 +100,7 @@ def plot_mean_budget_inflation(df = df_filtered, save_path=None):
 
     # Return the figure object
     return fig
+
 
 def plot_movies_budget_slider(df = df_filtered, mode='budget'):
     # Filter out movies with budget under 1000
