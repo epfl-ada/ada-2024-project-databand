@@ -1,0 +1,13 @@
+numpy
+pandas
+tqdm
+wordcloud
+colorcet
+seaborn
+matplotlib
+nltk
+gensim
+pyreadr
+plotly
+dash
+streamlit
