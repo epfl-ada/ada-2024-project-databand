@@ -6,9 +6,9 @@ colorcet
 seaborn
 matplotlib
 nltk
-gensim==4.3.2
+gensim
 pyreadr
 plotly
 dash
 streamlit
-scipy==1.10.1
+scipy
