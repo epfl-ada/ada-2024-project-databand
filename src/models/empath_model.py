@@ -14,7 +14,7 @@ class EmpathModel:
     def get_topk_empath_features(self, text, topk=10):
         doc = self.nlp(text)
         empath_features = self.lexicon.analyze(doc.text, normalize=True)
-        if topk is not None:
+        if topk is not None and empath_features is not None:
             return {k: v for k, v in sorted(empath_features.items(), key=lambda item: item[1], reverse=True)[:topk]}
         return empath_features
 
@@ -22,21 +22,21 @@ class EmpathModel:
         results = []
         top_features = set()
         plots = []
-        for era in ['pre', 'during', 'post']:
+        for era in df.dvd_era.unique():
             plots_era = get_movie_plots(df, genre, era) if prod_type is None else get_movie_plots(
                 df[df['prod_type'] == prod_type], genre, era)
             random.shuffle(plots_era)
             text = ";".join(plots_era)
             if len(text) > 1e6:
                 text = text[:1000000]
-                plots = text.split(';')[:-1]
+                plots_era = text.split(';')[:-1]
                 text = ';'.join(plots_era)
             plots.append(text)
             top_k_features = self.get_topk_empath_features(text, topk=topk)
             results.append(top_k_features)
             top_features.update(set(results[-1].keys()))
 
-        for i, era in enumerate(['pre', 'during', 'post']):
+        for i, era in enumerate(df.dvd_era.unique()):
             if len(set(results[i].keys())) != len(top_features):
                 doc = self.nlp(plots[i])
                 empath_features = self.lexicon.analyze(doc.text, normalize=True)
@@ -50,7 +50,7 @@ class EmpathModel:
         words = list(set(words))
 
         prop_dict = {'prod_type': [], 'genre': [], 'word': [], 'era': [], 'factor': []}
-        for i, era in enumerate(['pre', 'during', 'post']):
+        for i, era in enumerate(df.dvd_era.unique()):
             for word in words:
                 prop_dict['prod_type'].append(prod_type)
                 prop_dict['genre'].append(genre)
@@ -73,34 +73,26 @@ class EmpathModel:
 
         return results
 
-    '''def plot_features_single_genre(self, df, genre, prod_type=None, topk=10):
-        ax = sns.lineplot(data=df, x='era', y='factor', hue='word', marker='o', legend='full', palette='tab20')
-        sns.move_legend(ax, bbox_to_anchor=(1.45, 1), loc='upper right')
-        plt.title(f'Evolution of top {topk} plot features for {genre} movies - {prod_type} productions')
-        plt.xlabel('DVD era')
-        plt.ylabel('Importance coefficient (normalized)')
-        plt.show()'''
 
-    def plot_features_single_prod(self, df, genre, prod_type=None, topk=10, ax=None):
+    def plot_features_single_prod(self, df,prod_type=None, ax=None):
         if ax is None:
             fig, ax = plt.subplots(figsize=(8, 6))
 
         sns.lineplot(data=df, x='era', y='factor', hue='word', marker='o', legend='full', palette='tab20', ax=ax)
-        sns.move_legend(ax, bbox_to_anchor=(1.55, 1), loc='upper right')
+        sns.move_legend(ax, bbox_to_anchor=(1.45, 1), loc='upper right')
 
         ax.set_title(f'{prod_type} production')
         ax.set_xlabel('DVD era')
         ax.set_ylabel('Importance coefficient (normalized)')
-
+        plt.tight_layout(pad=1)
         if ax is None:
             plt.show()
 
     def plot_all_features(self, df, genre, topk=10):
         prod_types = df.prod_type.unique()
-        fig, axes = plt.subplots(nrows=2, ncols=2, figsize=(20, 12))
+        fig, axes = plt.subplots(nrows=2, ncols=2, figsize=(16, 8))
         for j, prod_type in enumerate(prod_types):
             subset = df[(df['genre'] == genre) & (df['prod_type'] == prod_type)]
-            self.plot_features_single_prod(subset, genre, prod_type, topk=topk, ax=axes.flatten()[j])
+            self.plot_features_single_prod(subset, prod_type, ax=axes.flatten()[j])
         plt.suptitle(f'Evolution of top {topk} plot features for {genre} movies')
-        plt.tight_layout()
         plt.show()
