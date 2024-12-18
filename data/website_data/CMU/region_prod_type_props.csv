@@ -1,0 +1,49 @@
+region,dvd_era,prod_type,count,total,prop
+Eastern Asia,pre,Independent,36,248,0.14516129032258066
+Eastern Asia,pre,Small,139,248,0.5604838709677419
+Eastern Asia,pre,Big,73,248,0.29435483870967744
+Eastern Asia,pre,Super,0,248,0.0
+Eastern Asia,during,Independent,160,862,0.18561484918793503
+Eastern Asia,during,Small,489,862,0.5672853828306265
+Eastern Asia,during,Big,205,862,0.23781902552204176
+Eastern Asia,during,Super,8,862,0.009280742459396751
+Europe,pre,Independent,60,518,0.11583011583011583
+Europe,pre,Small,245,518,0.47297297297297297
+Europe,pre,Big,210,518,0.40540540540540543
+Europe,pre,Super,3,518,0.005791505791505791
+Europe,during,Independent,419,3168,0.13226010101010102
+Europe,during,Small,1628,3168,0.5138888888888888
+Europe,during,Big,1052,3168,0.33207070707070707
+Europe,during,Super,69,3168,0.021780303030303032
+North America,pre,Independent,403,4409,0.09140394647312315
+North America,pre,Small,1977,4409,0.4484009979587208
+North America,pre,Big,2005,4409,0.45475164436380133
+North America,pre,Super,24,4409,0.005443411204354729
+North America,during,Independent,1083,8606,0.12584243551010924
+North America,during,Small,3667,8606,0.4260980711131769
+North America,during,Big,3517,8606,0.4086683709040205
+North America,during,Super,339,8606,0.03939112247269347
+Oceania,pre,Independent,52,128,0.40625
+Oceania,pre,Small,59,128,0.4609375
+Oceania,pre,Big,17,128,0.1328125
+Oceania,pre,Super,0,128,0.0
+Oceania,during,Independent,50,278,0.17985611510791366
+Oceania,during,Small,105,278,0.3776978417266187
+Oceania,during,Big,120,278,0.4316546762589928
+Oceania,during,Super,3,278,0.01079136690647482
+Southern Asia,pre,Independent,20,38,0.5263157894736842
+Southern Asia,pre,Small,13,38,0.34210526315789475
+Southern Asia,pre,Big,5,38,0.13157894736842105
+Southern Asia,pre,Super,0,38,0.0
+Southern Asia,during,Independent,217,517,0.4197292069632495
+Southern Asia,during,Small,263,517,0.5087040618955513
+Southern Asia,during,Big,27,517,0.05222437137330754
+Southern Asia,during,Super,10,517,0.019342359767891684
+UK,pre,Independent,37,542,0.06826568265682657
+UK,pre,Small,263,542,0.48523985239852396
+UK,pre,Big,239,542,0.44095940959409596
+UK,pre,Super,3,542,0.005535055350553505
+UK,during,Independent,141,1469,0.09598366235534377
+UK,during,Small,722,1469,0.4914908100748809
+UK,during,Big,531,1469,0.36147038801906056
+UK,during,Super,75,1469,0.05105513955071477
