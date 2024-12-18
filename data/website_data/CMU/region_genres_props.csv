@@ -1,0 +1,229 @@
+,dvd_era,region,genres,count,total,prop
+0,pre,Eastern Asia,action,46,248,0.18548387096774194
+1,pre,Eastern Asia,adventure,22,248,0.08870967741935484
+2,pre,Eastern Asia,animation,12,248,0.04838709677419355
+3,pre,Eastern Asia,comedy,18,248,0.07258064516129033
+4,pre,Eastern Asia,crime,14,248,0.056451612903225805
+5,pre,Eastern Asia,documentary,1,248,0.004032258064516129
+6,pre,Eastern Asia,drama,35,248,0.14112903225806453
+7,pre,Eastern Asia,family,11,248,0.04435483870967742
+8,pre,Eastern Asia,fantasy,13,248,0.05241935483870968
+9,pre,Eastern Asia,history,8,248,0.03225806451612903
+10,pre,Eastern Asia,horror,9,248,0.036290322580645164
+11,pre,Eastern Asia,music,0,248,0.0
+12,pre,Eastern Asia,mystery,1,248,0.004032258064516129
+13,pre,Eastern Asia,romance,8,248,0.03225806451612903
+14,pre,Eastern Asia,science fiction,25,248,0.10080645161290322
+15,pre,Eastern Asia,thriller,15,248,0.06048387096774194
+16,pre,Eastern Asia,tv movie,1,248,0.004032258064516129
+17,pre,Eastern Asia,war,5,248,0.020161290322580645
+18,pre,Eastern Asia,western,3,248,0.012096774193548387
+19,pre,Europe,action,41,518,0.07915057915057915
+20,pre,Europe,adventure,50,518,0.09652509652509653
+21,pre,Europe,animation,7,518,0.013513513513513514
+22,pre,Europe,comedy,44,518,0.08494208494208494
+23,pre,Europe,crime,24,518,0.04633204633204633
+24,pre,Europe,documentary,0,518,0.0
+25,pre,Europe,drama,113,518,0.21814671814671815
+26,pre,Europe,family,14,518,0.02702702702702703
+27,pre,Europe,fantasy,36,518,0.0694980694980695
+28,pre,Europe,history,22,518,0.04247104247104247
+29,pre,Europe,horror,29,518,0.055984555984555984
+30,pre,Europe,music,9,518,0.017374517374517374
+31,pre,Europe,mystery,20,518,0.03861003861003861
+32,pre,Europe,romance,34,518,0.06563706563706563
+33,pre,Europe,science fiction,21,518,0.04054054054054054
+34,pre,Europe,thriller,36,518,0.0694980694980695
+35,pre,Europe,tv movie,0,518,0.0
+36,pre,Europe,war,15,518,0.02895752895752896
+37,pre,Europe,western,3,518,0.005791505791505791
+38,pre,North America,action,426,4409,0.09662054887729644
+39,pre,North America,adventure,293,4409,0.06645497845316398
+40,pre,North America,animation,58,4409,0.013154910410523928
+41,pre,North America,comedy,676,4409,0.1533227489226582
+42,pre,North America,crime,301,4409,0.06826944885461556
+43,pre,North America,documentary,6,4409,0.0013608528010886822
+44,pre,North America,drama,675,4409,0.15309594012247676
+45,pre,North America,family,172,4409,0.03901111363120889
+46,pre,North America,fantasy,169,4409,0.03833068723066455
+47,pre,North America,history,53,4409,0.012020866409616693
+48,pre,North America,horror,310,4409,0.07031072805624858
+49,pre,North America,music,59,4409,0.013381719210705375
+50,pre,North America,mystery,121,4409,0.027443864821955093
+51,pre,North America,romance,292,4409,0.06622816965298253
+52,pre,North America,science fiction,252,4409,0.05715581764572465
+53,pre,North America,thriller,446,4409,0.10115672488092538
+54,pre,North America,tv movie,9,4409,0.0020412792016330232
+55,pre,North America,war,55,4409,0.012474484009979588
+56,pre,North America,western,35,4409,0.007938308006350647
+57,pre,Oceania,action,9,128,0.0703125
+58,pre,Oceania,adventure,14,128,0.109375
+59,pre,Oceania,animation,3,128,0.0234375
+60,pre,Oceania,comedy,17,128,0.1328125
+61,pre,Oceania,crime,3,128,0.0234375
+62,pre,Oceania,documentary,0,128,0.0
+63,pre,Oceania,drama,28,128,0.21875
+64,pre,Oceania,family,6,128,0.046875
+65,pre,Oceania,fantasy,3,128,0.0234375
+66,pre,Oceania,history,5,128,0.0390625
+67,pre,Oceania,horror,6,128,0.046875
+68,pre,Oceania,music,1,128,0.0078125
+69,pre,Oceania,mystery,2,128,0.015625
+70,pre,Oceania,romance,11,128,0.0859375
+71,pre,Oceania,science fiction,7,128,0.0546875
+72,pre,Oceania,thriller,8,128,0.0625
+73,pre,Oceania,tv movie,0,128,0.0
+74,pre,Oceania,war,4,128,0.03125
+75,pre,Oceania,western,1,128,0.0078125
+76,pre,Southern Asia,action,7,38,0.18421052631578946
+77,pre,Southern Asia,adventure,1,38,0.02631578947368421
+78,pre,Southern Asia,animation,0,38,0.0
+79,pre,Southern Asia,comedy,3,38,0.07894736842105263
+80,pre,Southern Asia,crime,2,38,0.05263157894736842
+81,pre,Southern Asia,documentary,0,38,0.0
+82,pre,Southern Asia,drama,11,38,0.2894736842105263
+83,pre,Southern Asia,family,2,38,0.05263157894736842
+84,pre,Southern Asia,fantasy,1,38,0.02631578947368421
+85,pre,Southern Asia,history,2,38,0.05263157894736842
+86,pre,Southern Asia,horror,0,38,0.0
+87,pre,Southern Asia,music,0,38,0.0
+88,pre,Southern Asia,mystery,0,38,0.0
+89,pre,Southern Asia,romance,7,38,0.18421052631578946
+90,pre,Southern Asia,science fiction,0,38,0.0
+91,pre,Southern Asia,thriller,2,38,0.05263157894736842
+92,pre,Southern Asia,tv movie,0,38,0.0
+93,pre,Southern Asia,war,0,38,0.0
+94,pre,Southern Asia,western,0,38,0.0
+95,pre,UK,action,42,542,0.07749077490774908
+96,pre,UK,adventure,54,542,0.0996309963099631
+97,pre,UK,animation,10,542,0.01845018450184502
+98,pre,UK,comedy,48,542,0.08856088560885608
+99,pre,UK,crime,23,542,0.042435424354243544
+100,pre,UK,documentary,0,542,0.0
+101,pre,UK,drama,103,542,0.1900369003690037
+102,pre,UK,family,21,542,0.03874538745387454
+103,pre,UK,fantasy,28,542,0.05166051660516605
+104,pre,UK,history,21,542,0.03874538745387454
+105,pre,UK,horror,27,542,0.04981549815498155
+106,pre,UK,music,13,542,0.023985239852398525
+107,pre,UK,mystery,17,542,0.03136531365313653
+108,pre,UK,romance,32,542,0.05904059040590406
+109,pre,UK,science fiction,35,542,0.06457564575645756
+110,pre,UK,thriller,43,542,0.07933579335793357
+111,pre,UK,tv movie,1,542,0.0018450184501845018
+112,pre,UK,war,23,542,0.042435424354243544
+113,pre,UK,western,1,542,0.0018450184501845018
+114,during,Eastern Asia,action,159,862,0.18445475638051045
+115,during,Eastern Asia,adventure,63,862,0.07308584686774942
+116,during,Eastern Asia,animation,22,862,0.025522041763341066
+117,during,Eastern Asia,comedy,41,862,0.04756380510440835
+118,during,Eastern Asia,crime,47,862,0.054524361948955914
+119,during,Eastern Asia,documentary,1,862,0.001160092807424594
+120,during,Eastern Asia,drama,168,862,0.19489559164733178
+121,during,Eastern Asia,family,19,862,0.022041763341067284
+122,during,Eastern Asia,fantasy,35,862,0.04060324825986079
+123,during,Eastern Asia,history,38,862,0.04408352668213457
+124,during,Eastern Asia,horror,40,862,0.04640371229698376
+125,during,Eastern Asia,music,1,862,0.001160092807424594
+126,during,Eastern Asia,mystery,24,862,0.027842227378190254
+127,during,Eastern Asia,romance,41,862,0.04756380510440835
+128,during,Eastern Asia,science fiction,47,862,0.054524361948955914
+129,during,Eastern Asia,thriller,91,862,0.10556844547563805
+130,during,Eastern Asia,tv movie,0,862,0.0
+131,during,Eastern Asia,war,21,862,0.024361948955916472
+132,during,Eastern Asia,western,4,862,0.004640371229698376
+133,during,Europe,action,283,3168,0.08933080808080808
+134,during,Europe,adventure,168,3168,0.05303030303030303
+135,during,Europe,animation,45,3168,0.014204545454545454
+136,during,Europe,comedy,298,3168,0.09406565656565656
+137,during,Europe,crime,210,3168,0.06628787878787878
+138,during,Europe,documentary,15,3168,0.004734848484848485
+139,during,Europe,drama,740,3168,0.2335858585858586
+140,during,Europe,family,66,3168,0.020833333333333332
+141,during,Europe,fantasy,117,3168,0.036931818181818184
+142,during,Europe,history,87,3168,0.027462121212121212
+143,during,Europe,horror,167,3168,0.052714646464646464
+144,during,Europe,music,21,3168,0.006628787878787879
+145,during,Europe,mystery,147,3168,0.04640151515151515
+146,during,Europe,romance,209,3168,0.06597222222222222
+147,during,Europe,science fiction,102,3168,0.032196969696969696
+148,during,Europe,thriller,385,3168,0.12152777777777778
+149,during,Europe,tv movie,4,3168,0.0012626262626262627
+150,during,Europe,war,95,3168,0.029987373737373736
+151,during,Europe,western,6,3168,0.001893939393939394
+152,during,North America,action,822,8606,0.09551475714617709
+153,during,North America,adventure,535,8606,0.062165930745991166
+154,during,North America,animation,169,8606,0.019637462235649546
+155,during,North America,comedy,1208,8606,0.14036718568440623
+156,during,North America,crime,533,8606,0.061933534743202415
+157,during,North America,documentary,32,8606,0.0037183360446200325
+158,during,North America,drama,1423,8606,0.16534975598419707
+159,during,North America,family,369,8606,0.04287706251452475
+160,during,North America,fantasy,327,8606,0.037996746455960954
+161,during,North America,history,103,8606,0.01196839414362073
+162,during,North America,horror,501,8606,0.05821519869858238
+163,during,North America,music,87,8606,0.010109226121310714
+164,during,North America,mystery,335,8606,0.038926330467115966
+165,during,North America,romance,615,8606,0.07146177085754125
+166,during,North America,science fiction,383,8606,0.044503834534046015
+167,during,North America,thriller,987,8606,0.11468742737624912
+168,during,North America,tv movie,48,8606,0.005577504066930049
+169,during,North America,war,81,8606,0.009412038112944457
+170,during,North America,western,38,8606,0.004415524052986289
+171,during,Oceania,action,28,278,0.10071942446043165
+172,during,Oceania,adventure,25,278,0.08992805755395683
+173,during,Oceania,animation,8,278,0.02877697841726619
+174,during,Oceania,comedy,31,278,0.11151079136690648
+175,during,Oceania,crime,9,278,0.03237410071942446
+176,during,Oceania,documentary,2,278,0.007194244604316547
+177,during,Oceania,drama,49,278,0.17625899280575538
+178,during,Oceania,family,14,278,0.050359712230215826
+179,during,Oceania,fantasy,16,278,0.05755395683453238
+180,during,Oceania,history,3,278,0.01079136690647482
+181,during,Oceania,horror,19,278,0.0683453237410072
+182,during,Oceania,music,2,278,0.007194244604316547
+183,during,Oceania,mystery,11,278,0.039568345323741004
+184,during,Oceania,romance,16,278,0.05755395683453238
+185,during,Oceania,science fiction,12,278,0.04316546762589928
+186,during,Oceania,thriller,25,278,0.08992805755395683
+187,during,Oceania,tv movie,1,278,0.0035971223021582736
+188,during,Oceania,war,5,278,0.017985611510791366
+189,during,Oceania,western,2,278,0.007194244604316547
+190,during,Southern Asia,action,85,517,0.1644100580270793
+191,during,Southern Asia,adventure,18,517,0.03481624758220503
+192,during,Southern Asia,animation,3,517,0.005802707930367505
+193,during,Southern Asia,comedy,74,517,0.14313346228239845
+194,during,Southern Asia,crime,39,517,0.07543520309477757
+195,during,Southern Asia,documentary,1,517,0.0019342359767891683
+196,during,Southern Asia,drama,128,517,0.24758220502901354
+197,during,Southern Asia,family,13,517,0.025145067698259187
+198,during,Southern Asia,fantasy,7,517,0.013539651837524178
+199,during,Southern Asia,history,6,517,0.01160541586073501
+200,during,Southern Asia,horror,4,517,0.007736943907156673
+201,during,Southern Asia,music,7,517,0.013539651837524178
+202,during,Southern Asia,mystery,3,517,0.005802707930367505
+203,during,Southern Asia,romance,76,517,0.1470019342359768
+204,during,Southern Asia,science fiction,7,517,0.013539651837524178
+205,during,Southern Asia,thriller,39,517,0.07543520309477757
+206,during,Southern Asia,tv movie,0,517,0.0
+207,during,Southern Asia,war,3,517,0.005802707930367505
+208,during,Southern Asia,western,2,517,0.0038684719535783366
+209,during,UK,action,131,1469,0.08917631041524847
+210,during,UK,adventure,108,1469,0.07351940095302927
+211,during,UK,animation,24,1469,0.016337644656228726
+212,during,UK,comedy,146,1469,0.09938733832539143
+213,during,UK,crime,100,1469,0.06807351940095303
+214,during,UK,documentary,8,1469,0.005445881552076242
+215,during,UK,drama,300,1469,0.2042205582028591
+216,during,UK,family,47,1469,0.031994554118447927
+217,during,UK,fantasy,58,1469,0.039482641252552755
+218,during,UK,history,42,1469,0.02859087814840027
+219,during,UK,horror,56,1469,0.0381211708645337
+220,during,UK,music,16,1469,0.010891763104152484
+221,during,UK,mystery,54,1469,0.03675970047651463
+222,during,UK,romance,124,1469,0.08441116405718176
+223,during,UK,science fiction,43,1469,0.029271613342409804
+224,during,UK,thriller,171,1469,0.11640571817562968
+225,during,UK,tv movie,1,1469,0.0006807351940095302
+226,during,UK,war,34,1469,0.02314499659632403
+227,during,UK,western,5,1469,0.0034036759700476512
