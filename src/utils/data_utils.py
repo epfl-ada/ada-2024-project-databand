@@ -118,6 +118,18 @@ def categorize_budget(row, budget_stats):
     else:
         return 'Super'
 
+def categorize_production(row, means):
+    mean_budget = means.loc[row.release_year, 'mean_budget']
+    if row['budget'] < 0.1 * mean_budget:
+        return 'Independent'
+    elif row['budget'] < mean_budget:
+        return 'Small'
+    elif row['budget'] < 5 * mean_budget:
+        return 'Big'
+    else:
+        return 'Super'
+
+
 def budget_rolling_averages(df, window):
     budget_stats = df.groupby('release_year')['budget'].agg(mean_budget='mean').reset_index()
     df.loc[:,'budget_category'] = df.apply(categorize_budget, args=(budget_stats,), axis=1)
@@ -139,54 +151,9 @@ def calculate_roi(df):
     else:
         return 0
 
-
-def get_topk_empath_features(text, topk=10):
-    doc = nlp(text)
-    empath_features = lexicon.analyze(doc.text, normalize=True)
-    if topk is not None:
-        return {k: v for k, v in sorted(empath_features.items(), key=lambda item: item[1], reverse=True)[:topk]}
-    return empath_features
-
-
-def empath_feature_extraction(df, genre, prod_type=None, topk=10):
-    results = []
-    top_features = set()
-    plots = []
-    for era in ['pre', 'during', 'post']:
-        plots_era = get_movie_plots(df, genre, era) if prod_type is None else get_movie_plots(
-            df[df['prod_type'] == prod_type], genre, era)
-        random.shuffle(plots_era)
-        text = ";".join(plots_era)
-        if len(text) > 1e6:
-            text = text[:1000000]
-            plots = text.split(';')[:-1]
-            text = ';'.join(plots_era)
-        plots.append(text)
-        top_k_features = get_topk_empath_features(text, topk=topk)
-        results.append(top_k_features)
-        top_features.update(set(results[-1].keys()))
-
-    for i, era in enumerate(['pre', 'during', 'post']):
-        if len(set(results[i].keys())) != len(top_features):
-            doc = nlp(plots[i])
-            empath_features = lexicon.analyze(doc.text, normalize=True)
-            for feature in top_features:
-                if feature not in results[i].keys():
-                    results[i][feature] = empath_features[feature]
-
-    words = []
-    for d in results:
-        words = words + list(d.keys())
-    words = list(set(words))
-
-    prop_dict = {'word': [], 'era': [], 'factor': []}
-    for i, era in enumerate(['pre', 'during', 'post']):
-        for word in words:
-            prop_dict['era'].append(era)
-            prop_dict['word'].append(word)
-            if word in results[i]:
-                prop_dict['factor'].append(results[i][word])
-            else:
-                prop_dict['factor'].append(0)
-
-    return pd.DataFrame(data=prop_dict)
+def get_proportions(df, base_vars, target_var):
+    counts = df.groupby(base_vars + [target_var], observed=False).size().reset_index(name='count')
+    totals = df.groupby(base_vars, observed=False).size().reset_index(name='total')
+    props = counts.merge(totals, on=base_vars)
+    props['prop'] = props['count'] / props['total']
+    return props
