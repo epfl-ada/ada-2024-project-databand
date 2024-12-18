@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 from PIL import Image
+from network_utils import create_network_graph, create_network_plot
 
 st.set_page_config(page_title="The Fall of DVD: Analysis with TMDB Data", layout="wide")
 
@@ -80,12 +81,49 @@ if selection == "Production Analysis" or st.session_state.get('scroll', True):
     
     # Example table
     production_data = pd.DataFrame({"Era": ["Pre-DVD", "DVD Era", "Post-DVD"], "Top Company": ["Company A", "Company B", "Company C"]})
-    st.table(production_data)
 
-    st.subheader("Emergence of New Players Post-DVD Era")
-    st.markdown("Exploring the rise of new production companies after the DVD era.")
-    
-    st.info("Detailed findings and interactive visualizations coming soon!")
+    def display_network_analysis():
+        # Add controls
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            year = st.slider(
+                "Select Year",
+                min_value=1976,
+                max_value=2023,
+                value=2000,
+                step=1
+            )
+        
+        with col2:
+            prod_type = st.selectbox(
+                "Select Production Type",
+                options=['Super', 'Big', 'Small', 'Independent']
+            )
+        
+        # Filter data
+        df_filtered = df_graph[
+            (df_graph['release_year'].astype(int) == year) & 
+            (df_graph['prod_type'] == prod_type)
+        ]
+        
+        # Create network and get statistics
+        G, stats = create_network_graph(df_filtered)
+        
+        # Create and display plot
+        fig = create_network_plot(G, year, prod_type, stats)
+        st.pyplot(fig)
+        
+        # Display statistics
+        if stats['num_nodes'] > 0:
+            st.subheader("Top 5 Companies by Number of Collaborations:")
+            for company, degree in stats['top_companies']:
+                st.write(f"{company}: {degree} collaborations")
+        else:
+            st.write("No data available for this selection.")   
+    display_network_analysis()
+
+# Call the function in your 
     section_divider("Genres Analysis")
 
 # Genres Section

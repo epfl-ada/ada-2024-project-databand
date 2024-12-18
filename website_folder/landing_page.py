@@ -12,7 +12,7 @@ st.set_page_config(
     }
 )
 
-# This is CSS code to change the 'theme' the of the overall page
+# Dark mode CSS
 st.markdown("""
     <style>
         /* Dark mode styles */
@@ -46,6 +46,24 @@ st.markdown("""
         /* Hide footer */
         footer {
             visibility: hidden;
+        }
+
+        /* Style the next button */
+        .stButton button {
+            position: fixed;
+            bottom: 40px;
+            right: 40px;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 0.5rem 2rem;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .stButton button:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.3);
         }
     </style>
 """, unsafe_allow_html=True)
@@ -195,3 +213,7 @@ css_code = """
 
 # Display the HTML and CSS
 st.components.v1.html(css_code + html_code, height=700)
+
+# Add the Next button
+if st.button("Next →"):
+    st.switch_page("pages/Matt_damon.py")
