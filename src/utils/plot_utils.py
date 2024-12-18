@@ -3,6 +3,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import numpy as np
 from src.utils.data_utils import adjust_inflation
+import geopandas as gpd
 
 def plot_top_proportions_per_era(top_k_df, column, k):
     pivot_data = top_k_df.pivot_table(index='dvd_era', columns=column, values='proportion', aggfunc='sum',
@@ -182,3 +183,20 @@ def plot_movie_freq_per_production_company(df):
                      fontsize=8,
                      bbox=dict(facecolor='white', edgecolor='none', alpha=0.7))
     style_plot('Number of Movies per Production Company', 'Production Company', 'Number of Movies', False)
+
+def plot_world_map(countries_regions):
+    # Load a world map
+    world = gpd.read_file('./data/ne_110m_admin_0_countries.shp', encoding='utf-8')
+    world['SOVEREIGNT'] = world['SOVEREIGNT'].str.lower()
+
+    # Add a region column by mapping from the dictionary
+    world['region'] = world['SOVEREIGNT'].map(countries_regions)
+
+    fig, ax = plt.subplots(1, 1, figsize=(15, 10))
+    world.dropna(subset=['region']).plot(column='region', legend=True, ax=ax, cmap='tab20',
+                                         legend_kwds={'title': 'World Regions', 'bbox_to_anchor': (1.05, 1),
+                                                      'loc': 'upper left'})
+    plt.title("Production Countries Map Colored by Region", fontsize=16)
+    plt.xticks([])
+    plt.yticks([])
+    plt.show()
