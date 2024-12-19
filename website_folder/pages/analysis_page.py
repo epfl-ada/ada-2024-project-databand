@@ -7,6 +7,7 @@ import sys
 import plotly.graph_objects as go
 import json
 import geopandas as gpd
+from plotly.subplots import make_subplots
 
 # Set up paths
 root_dir = Path(__file__).parent.parent.parent  # Go up two levels from the current file
@@ -284,7 +285,6 @@ st.subheader("Impact globally: ")
 st.write("""But was the movie industry impacted the same way globally? 
 Let's focus on the production countries of our movies. Since there are many, we group them into main global regions:  
 """)
-
 def plot_world_map(countries_regions):
     try:
         # Read the shapefile
@@ -301,7 +301,7 @@ def plot_world_map(countries_regions):
         fig = px.choropleth(
             world_filtered,
             geojson=world_filtered.geometry,
-            locations=world_filtered.index,  # Use the new reset index
+            locations=world_filtered.index,
             color='region',
             hover_name='SOVEREIGNT',
             color_discrete_sequence=px.colors.qualitative.Set3,
@@ -323,7 +323,7 @@ def plot_world_map(countries_regions):
                 'xanchor': 'center',
                 'font': {'size': 20}
             },
-            height=600,
+            height=500,
             margin={"r": 0, "t": 30, "l": 0, "b": 0},
             legend_title_text='World Regions',
             legend=dict(
@@ -332,7 +332,7 @@ def plot_world_map(countries_regions):
                 xanchor="right",
                 x=0.99
             ),
-            template='plotly_white'  # Match your website's theme
+            template='plotly_white'
         )
         
         # Display the plot in Streamlit
@@ -342,31 +342,29 @@ def plot_world_map(countries_regions):
         st.error(f"Error loading the map: {str(e)}")
         st.write("Please ensure the shapefile is in the correct location: data/ne_110m_admin_0_countries.shp")
 
-# Load and display the map
+# Rest of your existing code stays the same...
+# World Map
 try:
     with open('data/countries_to_region.json', 'r') as file:
         countries_regions = json.load(file)
     plot_world_map(countries_regions)
 except FileNotFoundError:
     st.error("Could not find the countries_to_region.json file. Please ensure it's in the data directory.")
-st.write("""If we look at the proportion of movies released by each major region across the years, we see 3 major film industry players - North America (notably including the United States), Europe, and Eastern Asia (notably including China): 
+
+st.write("""If we look at the proportion of movies released by each major region across the years, 
+we see 3 major film industry players - North America (notably including the United States), 
+Europe, and Eastern Asia (notably including China): 
 """)
 
-# Calculate region proportions
-# Calculate region proportions
-movies = df.copy()
-movies_exploded = movies.explode('genres')
-movies_exp2 = movies_exploded.copy().explode('production_countries')
-
-# Add safer region mapping with error handling
-movies_exp2['region'] = movies_exp2.production_countries.apply(
-    lambda x: countries_regions.get(x, 'Other') if pd.notna(x) else None
+# Calculate region proportions using the new data processing
+df_countries = df.copy().explode('production_countries')
+df_countries = df_countries.explode('genres')
+df_countries['region'] = df_countries.production_countries.apply(
+    lambda x: countries_regions[x] if x in countries_regions and pd.notna(x) else None
 )
+df_countries.dropna(subset=['region'], inplace=True)
 
-movies_wregions = movies_exp2.dropna(subset=['region'])
-
-
-region_counts = movies_wregions.groupby(['release_year', 'region']).size().reset_index(name='count')
+region_counts = df_countries.groupby(['release_year', 'region']).size().reset_index(name='count')
 filtered_regions = (region_counts.groupby('region')
                    .sum('count')
                    .sort_values(by='count', ascending=False)
@@ -374,7 +372,7 @@ filtered_regions = (region_counts.groupby('region')
                    .head(16)
                    .region.to_list())
 
-total_counts = movies_wregions.groupby(['release_year']).size().reset_index(name='total')
+total_counts = df_countries.groupby(['release_year']).size().reset_index(name='total')
 region_prop = region_counts.merge(total_counts, on='release_year')
 region_prop['prop'] = region_prop['count'] / region_prop['total']
 
@@ -390,7 +388,7 @@ fig = px.line(
         'prop': 'Proportion of Movies',
         'region': 'Region'
     },
-    color_discrete_sequence=px.colors.qualitative.Set3  # Match the color scheme of your world map
+    color_discrete_sequence=px.colors.qualitative.Set3
 )
 
 # Update layout
@@ -437,3 +435,91 @@ Eastern Asian releases dipped slightly during this time, while European releases
 North American movies, which have dominated since the mid-80s, hit their golden era in the late 1990s—just 
 as DVDs emerged—and have seen a small but steady decline ever since.
 """)
+
+st.write("""Let's focus on the major film-producing regions and analyze their production types:""")
+
+# Filter for major regions
+selected_regions = list(region_prop[region_prop.prop > 0.05].region.unique())
+df_countries_filtered = df_countries[(df_countries.region.isin(selected_regions)) 
+                                   & (df_countries.budget > 0)]
+
+# Create subplots
+fig = make_subplots(
+    rows=1, 
+    cols=len(selected_regions),
+    subplot_titles=selected_regions,
+    shared_yaxes=True
+)
+
+# Color mapping for production types
+colors = px.colors.qualitative.Set3[:4]
+prod_type_order = ['Independent', 'Small', 'Big', 'Super']
+
+# Create a plot for each region
+for i, region in enumerate(selected_regions):
+    region_data = df_countries_filtered[df_countries_filtered['region'] == region]
+    
+    # Calculate proportions for each DVD era and production type
+    props = (region_data.groupby('dvd_era')['prod_type']
+             .value_counts(normalize=True)
+             .unstack()
+             .fillna(0))
+    
+    # Ensure all production types are present
+    for prod_type in prod_type_order:
+        if prod_type not in props.columns:
+            props[prod_type] = 0
+    
+    # Reorder columns
+    props = props[prod_type_order]
+    
+    # Add bars for each production type
+    for j, prod_type in enumerate(prod_type_order):
+        fig.add_trace(
+            go.Bar(
+                name=prod_type,
+                x=props.index,
+                y=props[prod_type],
+                legendgroup=prod_type,
+                showlegend=(i == 0),  # Show legend only for first region
+                marker_color=colors[j]
+            ),
+            row=1, 
+            col=i+1
+        )
+
+# Update layout
+fig.update_layout(
+    title={
+        'text': 'Production Type Proportions by Region Across DVD Eras',
+        'x': 0.5,
+        'xanchor': 'center',
+        'font': {'size': 20}
+    },
+    barmode='relative',
+    height=500,
+    showlegend=True,
+    legend=dict(
+        yanchor="top",
+        y=0.99,
+        xanchor="right",
+        x=1.02,
+        title="Production Type"
+    ),
+    template='plotly_white',
+    margin=dict(t=100, r=150)  # Add right margin for legend
+)
+
+# Update axes
+for i in range(len(selected_regions)):
+    fig.update_xaxes(title_text="DVD Era", row=1, col=i+1)
+    if i == 0:  # Only add y-axis title to first subplot
+        fig.update_yaxes(title_text="Proportion", row=1, col=1)
+
+# Update y-axes format
+fig.update_yaxes(tickformat='.0%')
+
+# Display the plot
+st.plotly_chart(fig, use_container_width=True)
+
+st.write("""Clearly, DVDs shook up the movie industry in different ways across world regions! Even among our major players—Eastern Asia, Europe, and North America—the trends vary widely. In Eastern Asia, for example, independent movies were already a staple in the pre-DVD era but gave way to super productions once DVDs arrived. In North America, super productions also gained traction post-DVD, but this came hand-in-hand with a significant rise in independent films, mirroring the global trend. Europe, however, stands out with the most surprising shift: independent movies declined, while super productions rose—but only during the DVD era!""")
