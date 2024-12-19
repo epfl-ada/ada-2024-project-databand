@@ -4,6 +4,8 @@ import nltk
 from nltk.corpus import stopwords
 import string
 import re
+from itertools import combinations
+import networkx as nx
 
 # Download stopwords
 nltk.download('stopwords')
@@ -154,3 +156,51 @@ def get_proportions(df, base_vars, target_var):
     props = counts.merge(totals, on=base_vars)
     props['prop'] = props['count'] / props['total']
     return props
+
+def create_edges_list(df):
+    edges = []
+    for companies in df['production_companies']:
+        if len(companies) > 1:
+            edges.extend(list(combinations(companies, 2)))
+    return edges
+
+def get_prod_companies_analysis_df(df_graph, production_types):
+    # Create DataFrame for analysis
+    analysis_data = []
+    for year in sorted(df_graph['release_year'].unique()):
+        for prod_type in production_types:
+            # Filter data
+            df_filtered = df_graph[
+                (df_graph['release_year'] == year) &
+                (df_graph['prod_type'] == prod_type)
+                ]
+
+            total_movies = len(df_filtered)
+
+            if total_movies > 0:
+                # Create network
+                edges = create_edges_list(df_filtered)
+                G = nx.Graph()
+                G.add_edges_from(edges)
+
+                # Calculate normalized collaborations
+                collaborations = G.number_of_edges() / total_movies if G.number_of_nodes() > 0 else 0
+
+                analysis_data.append({
+                    'year': year,
+                    'prod_type': prod_type,
+                    'collaborations': collaborations,
+                    'total_movies': total_movies
+                })
+
+    return pd.DataFrame(analysis_data)
+
+
+ # Calculate collaborations per movie for each era
+def get_collab_per_movie(data):
+    if len(data) > 0:
+        edges = create_edges_list(data)
+        G = nx.Graph()
+        G.add_edges_from(edges)
+        return G.number_of_edges() / len(data) if G.number_of_nodes() > 0 else 0
+    return 0
