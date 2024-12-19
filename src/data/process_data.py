@@ -1,6 +1,8 @@
 import json
 import pandas as pd
 from collections import Counter
+import gdown
+import os
 
 TMDB_string_columns = ['genres', 'production_companies', 'production_countries', 'spoken_languages', 'keywords']
 
@@ -129,9 +131,24 @@ def create_cmu_tmdb_dataset(cmu_movies_path, plots_path, tmdb_path, how_merge):
     return df_combined
 
 def create_tmdb_dataset(tmdb_path):
+
+    google_drive_url = "https://drive.google.com/file/d/1JgLG2V9BAja3b3ERBQuy1VtrjE-U-BZ8/view?usp=drive_link"
+
+    # Check if the TMDB file exists
+    if not os.path.exists(tmdb_path):
+        print(f"File not found at {tmdb_path}, downloading...")
+        
+        # Google Drive file ID extraction (you can get the ID from the link)
+        file_id = google_drive_url.split('/d/')[1].split('/')[0]
+        gdown.download(f'https://drive.google.com/uc?id={file_id}', tmdb_path, quiet=False)
+        
+        print(f"File downloaded to {tmdb_path}")
+
+    # Now that we know the file is there (either existing or just downloaded), process it
     df_tmdb = pd.read_csv(tmdb_path)
     df_tmdb = clean_string_to_list(df_tmdb, TMDB_string_columns)
     df_tmdb = df_tmdb[(df_tmdb['runtime'] == 0) | (df_tmdb['runtime'] > 45)]
     df_tmdb = df_tmdb[df_tmdb['genres'].apply(lambda x: 'documentary' not in x)]
     df_tmdb.fillna({'overview': ''}, inplace=True)
+    
     return annotate_dvd_era(df_tmdb)
