@@ -349,6 +349,88 @@ try:
     plot_world_map(countries_regions)
 except FileNotFoundError:
     st.error("Could not find the countries_to_region.json file. Please ensure it's in the data directory.")
+st.write("""If we look at the proportion of movies released by each major region across the years, we see 3 major film industry players - North America (notably including the United States), Europe, and Eastern Asia (notably including China): 
+""")
+
+# Calculate region proportions
+# Calculate region proportions
+movies = df.copy()
+movies_exploded = movies.explode('genres')
+movies_exp2 = movies_exploded.copy().explode('production_countries')
+
+# Add safer region mapping with error handling
+movies_exp2['region'] = movies_exp2.production_countries.apply(
+    lambda x: countries_regions.get(x, 'Other') if pd.notna(x) else None
+)
+
+movies_wregions = movies_exp2.dropna(subset=['region'])
+
+
+region_counts = movies_wregions.groupby(['release_year', 'region']).size().reset_index(name='count')
+filtered_regions = (region_counts.groupby('region')
+                   .sum('count')
+                   .sort_values(by='count', ascending=False)
+                   .reset_index()
+                   .head(16)
+                   .region.to_list())
+
+total_counts = movies_wregions.groupby(['release_year']).size().reset_index(name='total')
+region_prop = region_counts.merge(total_counts, on='release_year')
+region_prop['prop'] = region_prop['count'] / region_prop['total']
+
+# Create Plotly figure
+fig = px.line(
+    region_prop[region_prop.prop > 0.01], 
+    x='release_year', 
+    y='prop',
+    color='region',
+    title='Regional Distribution of Movie Production Over Time',
+    labels={
+        'release_year': 'Release Year',
+        'prop': 'Proportion of Movies',
+        'region': 'Region'
+    },
+    color_discrete_sequence=px.colors.qualitative.Set3  # Match the color scheme of your world map
+)
+
+# Update layout
+fig.update_layout(
+    title={
+        'text': 'Regional Distribution of Movie Production Over Time',
+        'x': 0.5,
+        'xanchor': 'center',
+        'font': {'size': 20}
+    },
+    xaxis_title='Release Year',
+    yaxis_title='Proportion of Movies',
+    yaxis_tickformat='.0%',
+    legend_title='Region',
+    legend=dict(
+        yanchor="top",
+        y=0.99,
+        xanchor="right",
+        x=0.99
+    ),
+    template='plotly_white',
+    height=500,
+    margin=dict(t=50, b=50, l=50, r=50)
+)
+
+# Add gridlines
+fig.update_xaxes(
+    showgrid=True,
+    gridwidth=1,
+    gridcolor='rgba(128, 128, 128, 0.2)',
+    dtick=5
+)
+fig.update_yaxes(
+    showgrid=True,
+    gridwidth=1,
+    gridcolor='rgba(128, 128, 128, 0.2)'
+)
+
+# Display the plot
+st.plotly_chart(fig, use_container_width=True)
 
 st.write("""Interestingly, Eastern Asia and Europe show opposite trends in movie releases around the DVD era: 
 Eastern Asian releases dipped slightly during this time, while European releases climbed. Meanwhile, 
