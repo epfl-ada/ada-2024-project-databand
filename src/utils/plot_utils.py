@@ -82,7 +82,26 @@ def plot_mean_budget_inflation(df):
 
     # Show the plot
     plt.show()
+    
+def plot_revenue_inflation(df):
+    
+    # Adjust the inflation for the revenue statistics
+    revenue_inflation = adjust_inflation(df, old_col='revenue', new_col='revenue_inflation')
 
+    # Filter out movies with missing or zero revenue data
+    revenue_inflation = revenue_inflation[revenue_inflation['revenue_inflation'] > 0]
+
+    # Plot revenue distributions for each DVD era
+    plt.figure(figsize=(14, 6))
+    sns.histplot(data=revenue_inflation, x='revenue_inflation', hue='dvd_era', kde=True, log_scale=True, palette='viridis')
+    plt.title('Distribution of Revenue by DVD Era - adjusted for inflation')
+    plt.xlabel('Revenue (log scale)')
+    plt.ylabel('Density')
+    plt.grid(True)
+    plt.show()
+
+    
+    
 def plot_budget_histograms(df, eras, colors, labels, title):
     fig, axes = plt.subplots(len(eras), 1, figsize=(12, 6*len(eras)), sharex=True)
 
