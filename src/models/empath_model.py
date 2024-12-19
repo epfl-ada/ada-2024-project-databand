@@ -90,9 +90,10 @@ class EmpathModel:
 
     def plot_all_features(self, df, genre, topk=10):
         prod_types = df.prod_type.unique()
-        fig, axes = plt.subplots(nrows=2, ncols=2, figsize=(16, 8))
+        fig, axes = plt.subplots(nrows=2, ncols=2, figsize=(16, 10))
         for j, prod_type in enumerate(prod_types):
             subset = df[(df['genre'] == genre) & (df['prod_type'] == prod_type)]
             self.plot_features_single_prod(subset, prod_type, ax=axes.flatten()[j])
         plt.suptitle(f'Evolution of top {topk} plot features for {genre} movies')
+        plt.tight_layout()
         plt.show()

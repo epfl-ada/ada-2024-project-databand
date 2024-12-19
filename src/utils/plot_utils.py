@@ -200,3 +200,79 @@ def plot_world_map(countries_regions):
     plt.xticks([])
     plt.yticks([])
     plt.show()
+
+
+def plot_genre_prop_by_prod_type(genre_proportions):
+    grouped_genres = genre_proportions.groupby(['prod_type', 'genres'], observed=False).sum('count').reset_index()
+    grouped_genres['proportion'] = grouped_genres['count'] / grouped_genres['total']
+
+    (grouped_genres.pivot_table(index='prod_type', columns='genres', values='proportion', fill_value=0, observed=False)
+     .plot(kind='bar', stacked=True, figsize=(8, 6), colormap='tab20'))
+    plt.tight_layout()
+    plt.legend(title="Genres", bbox_to_anchor=(1.2, 1), loc='upper right')
+    style_plot("Genre Proportions by Production Type", "Production Type", "Proportion")
+
+def plot_genre_trends_by_prod_type(genre_proportions):
+    sns.set(style="whitegrid")
+    f, axs = plt.subplots(2, 2, figsize=(12, 10), sharey=True)
+    for i, prod_type in enumerate(genre_proportions['prod_type'].unique()):
+        subset = genre_proportions[genre_proportions['prod_type'] == prod_type]
+
+        ax = axs.flatten()[i]
+        sns.lineplot(data=subset, x='dvd_era', y='prop', hue='genres', marker='o', ax=ax, palette='tab20')
+        ax.set_title(f"{prod_type} Production Type")
+        ax.set_xlabel('DVD Era')
+        ax.set_ylabel('Proportion')
+
+        ax.legend(title='Genres', bbox_to_anchor=(1.05, 1), loc='upper left')
+        plt.tight_layout()
+
+    plt.suptitle('Genre Proportions Across DVD Eras', fontweight='bold')
+    plt.tight_layout()
+    plt.show()
+
+def plot_movies_prop_per_region(region_props):
+    plt.figure(figsize=(12, 8))
+    sns.lineplot(data=region_props[region_props.prop > 0.01], x='release_year', y='prop', hue='region', palette='tab20')
+    plt.legend(loc='upper right', bbox_to_anchor=(1.25, 1), frameon=False)
+    style_plot('Proportion of movies released over time per region', 'Release Year', 'Proportion')
+    plt.show()
+
+def plot_prod_type_prop_per_region(selected_regions, df_countries_filtered):
+    f, axs = plt.subplots(1, len(selected_regions), figsize=(16, 6), sharey=True)
+
+    for i, region in enumerate(selected_regions):
+        ax = axs[i]
+        legend = False if (i < len(selected_regions) - 1) else 'full'
+        sns.histplot(data=df_countries_filtered[(df_countries_filtered['region'] == region)], x='dvd_era',
+                     hue='prod_type',
+                     multiple='fill', legend=legend, ax=ax, hue_order=['Independent', 'Small', 'Big', 'Super'],
+                     palette='tab20')
+        ax.set_title(region)
+        ax.set_ylabel('Proportion')
+        ax.set_xlabel('DVD Era')
+    sns.move_legend(axs[len(selected_regions) - 1], loc='upper right', bbox_to_anchor=(2.25, 1),
+                    title='Production Type')
+    f.suptitle('Production type proportions for major regions', fontweight='bold')
+    plt.tight_layout()
+    plt.show()
+
+def plot_genre_prop_per_region(selected_regions, countries_genres_props):
+    sns.set(style="whitegrid")
+    f, axs = plt.subplots(1, len(selected_regions), figsize=(20, 6), sharey=True)
+    for i, region in enumerate(selected_regions):
+        subset = countries_genres_props[countries_genres_props['region'] == region]
+        ax = axs[i]
+        legend = False if (i < len(selected_regions) - 1) else 'full'
+        sns.lineplot(data=subset, x='dvd_era', y='prop', hue='genres', marker='o', ax=ax, legend=legend,
+                     palette='tab20')
+        ax.set_ylabel('Proportion')
+        ax.set_xlabel('DVD Era')
+        ax.set_title(region)
+
+    sns.move_legend(axs[len(selected_regions) - 1], loc='upper right', bbox_to_anchor=(2.25, 1), title='Genres')
+    f.suptitle('Production type proportions for major regions', fontweight='bold')
+    plt.tight_layout()
+    plt.show()
+
+# %run src/utils/plot_utils.py
