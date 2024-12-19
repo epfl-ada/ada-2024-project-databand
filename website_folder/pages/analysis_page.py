@@ -9,8 +9,6 @@ import json
 import geopandas as gpd
 from plotly.subplots import make_subplots
 
-from src.utils.website_utils import *
-
 # Set up paths
 root_dir = Path(__file__).parent.parent.parent  # Go up two levels from the current file
 sys.path.append(str(root_dir))
@@ -20,6 +18,7 @@ from src.data.process_data import create_tmdb_dataset
 from src.utils.load_data import load_raw_data
 from src.utils.data_utils import *
 from src.utils.plot_utils import *
+from src.utils.website_utils import *
 
 # Clean raw data and load the processed dataset
 df = create_tmdb_dataset('data/processed/TMDB_clean.csv')
