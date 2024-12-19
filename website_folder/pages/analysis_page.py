@@ -287,18 +287,21 @@ Let's focus on the production countries of our movies. Since there are many, we 
 
 def plot_world_map(countries_regions):
     try:
-        # Updated file path to match your structure
-        world = gpd.read_file('data/website_data/ne_110m_admin_0_countries.shp', encoding='utf-8')
+        # Read the shapefile
+        world = gpd.read_file('data/ne_110m_admin_0_countries.shp', encoding='utf-8')
         world['SOVEREIGNT'] = world['SOVEREIGNT'].str.lower()
         
         # Add region column
         world['region'] = world['SOVEREIGNT'].map(countries_regions)
         
+        # Filter out NaN values and reset index
+        world_filtered = world.dropna(subset=['region']).reset_index(drop=True)
+        
         # Create Plotly choropleth map
         fig = px.choropleth(
-            world.dropna(subset=['region']),
-            geojson=world.geometry,
-            locations=world.index,
+            world_filtered,
+            geojson=world_filtered.geometry,
+            locations=world_filtered.index,  # Use the new reset index
             color='region',
             hover_name='SOVEREIGNT',
             color_discrete_sequence=px.colors.qualitative.Set3,
@@ -341,12 +344,11 @@ def plot_world_map(countries_regions):
 
 # Load and display the map
 try:
-    # Updated file path to match your structure
-    with open('data/website_data/countries_to_region.json', 'r') as file:
+    with open('data/countries_to_region.json', 'r') as file:
         countries_regions = json.load(file)
     plot_world_map(countries_regions)
 except FileNotFoundError:
-    st.error("Could not find the countries_to_region.json file. Please ensure it's in the data/website_data directory.")
+    st.error("Could not find the countries_to_region.json file. Please ensure it's in the data directory.")
 
 st.write("""Interestingly, Eastern Asia and Europe show opposite trends in movie releases around the DVD era: 
 Eastern Asian releases dipped slightly during this time, while European releases climbed. Meanwhile, 
