@@ -5,6 +5,8 @@ import numpy as np
 from pathlib import Path
 import sys
 import plotly.graph_objects as go
+import json
+import geopandas as gpd
 
 # Set up paths
 root_dir = Path(__file__).parent.parent.parent  # Go up two levels from the current file
@@ -280,5 +282,74 @@ st.plotly_chart(fig, use_container_width=True)
 
 st.subheader("Impact globally: ")
 st.write("""But was the movie industry impacted the same way globally? 
-Let’s focus on the production countries of our movies. Since there are many, we group them into main global regions:  
+Let's focus on the production countries of our movies. Since there are many, we group them into main global regions:  
+""")
+
+def plot_world_map(countries_regions):
+    try:
+        # Updated file path to match your structure
+        world = gpd.read_file('data/website_data/ne_110m_admin_0_countries.shp', encoding='utf-8')
+        world['SOVEREIGNT'] = world['SOVEREIGNT'].str.lower()
+        
+        # Add region column
+        world['region'] = world['SOVEREIGNT'].map(countries_regions)
+        
+        # Create Plotly choropleth map
+        fig = px.choropleth(
+            world.dropna(subset=['region']),
+            geojson=world.geometry,
+            locations=world.index,
+            color='region',
+            hover_name='SOVEREIGNT',
+            color_discrete_sequence=px.colors.qualitative.Set3,
+        )
+        
+        # Update layout
+        fig.update_geos(
+            showcoastlines=True,
+            coastlinecolor="Black",
+            showland=True,
+            showframe=False,
+            projection_type="equirectangular"
+        )
+        
+        fig.update_layout(
+            title={
+                'text': 'Production Countries Map Colored by Region',
+                'x': 0.5,
+                'xanchor': 'center',
+                'font': {'size': 20}
+            },
+            height=600,
+            margin={"r": 0, "t": 30, "l": 0, "b": 0},
+            legend_title_text='World Regions',
+            legend=dict(
+                yanchor="top",
+                y=0.99,
+                xanchor="right",
+                x=0.99
+            ),
+            template='plotly_white'  # Match your website's theme
+        )
+        
+        # Display the plot in Streamlit
+        st.plotly_chart(fig, use_container_width=True)
+        
+    except Exception as e:
+        st.error(f"Error loading the map: {str(e)}")
+        st.write("Please ensure the shapefile is in the correct location: data/ne_110m_admin_0_countries.shp")
+
+# Load and display the map
+try:
+    # Updated file path to match your structure
+    with open('data/website_data/countries_to_region.json', 'r') as file:
+        countries_regions = json.load(file)
+    plot_world_map(countries_regions)
+except FileNotFoundError:
+    st.error("Could not find the countries_to_region.json file. Please ensure it's in the data/website_data directory.")
+
+st.write("""Interestingly, Eastern Asia and Europe show opposite trends in movie releases around the DVD era: 
+Eastern Asian releases dipped slightly during this time, while European releases climbed. Meanwhile, 
+North American movies, which have dominated since the mid-80s, hit their golden era in the late 1990s—just 
+as DVDs emerged—and have seen a small but steady decline ever since.
 """)
