@@ -8,3 +8,7 @@ matplotlib
 nltk
 gensim
 pyreadr
+statsmodels
+scipy
+geopandas
+empath
