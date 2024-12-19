@@ -1,163 +1,113 @@
 import streamlit as st
 import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+from pathlib import Path
+import sys
 import plotly.express as px
-from PIL import Image
-from network_utils import create_network_graph, create_network_plot
+import plotly.figure_factory as ff
+import numpy as np
 
-st.set_page_config(page_title="The Fall of DVD: Analysis with TMDB Data", layout="wide")
+# Set up paths
+root_dir = Path(__file__).parent.parent.parent  # Go up two levels from the current file
+sys.path.append(str(root_dir))
 
-# Sidebar 
-st.sidebar.title("Navigation")
-sections = [
-    "Introduction",
-    "Revenue Analysis",
-    "Budget Analysis",
-    "Production Analysis",
-    "Genres Analysis",
-    "Conclusion"
-]
-selection = st.sidebar.radio("Go to:", sections)
+# Import custom modules
+from src.data.process_data import create_tmdb_dataset
+from src.utils.load_data import load_raw_data
+from src.utils.data_utils import *
+from src.utils.plot_utils import *
+from src.models.lda_model import *
+from src.scripts.clean_data import clean_raw_data
 
-# Helper function to scrollable sections
-def section_divider(title):
-    st.markdown(f"""<div style='margin-top: 50px; margin-bottom: 20px; border-top: 2px solid #ccc;'>
-                <h2 style='margin-top: 20px;'>{title}</h2></div>""", unsafe_allow_html=True)
+# Clean raw data and load the processed dataset
+df = create_tmdb_dataset('data/processed/TMDB_clean.csv')
+df_filtered = df[df['revenue'] > 0]
 
-# Header Section
-if selection == "Introduction" or st.session_state.get('scroll', True):
-    st.title("The Fall of DVD: Analysis with TMDB Data")
-    st.markdown(
-        """### Exploring the Impact of DVDs on the Film Industry
-        This website presents an in-depth analysis of the rise and fall of DVDs and their impact on movie revenue, budgets, production companies, and genres using data from TMDB.
+# Prepare data: ensure positive values and proper types
+plot_data = df_filtered.copy()
+plot_data = plot_data[plot_data['revenue'] > 0]  # Remove zero or negative values
+plot_data['revenue'] = plot_data['revenue'].astype(float)
+plot_data['log_revenue'] = np.log10(plot_data['revenue'])
 
-        Below, you'll find answers to research questions structured into four key areas: Revenue, Budget, Production, and Genres. Navigate through the sections to explore the findings.
-        """
+# Page configuration
+st.set_page_config(
+    page_title="Film Industry Evolution",
+    layout="wide",
+    initial_sidebar_state="collapsed"
+)
+
+# Title and introduction using Streamlit's native components
+st.title("The Evolution of the Film Industry: The Impact of DVDs and Beyond")
+
+# Add content and layout
+st.write("""
+    The film industry has undergone seismic shifts over the past few decades, driven largely by changes in 
+    distribution models. Among the most notable innovations was the emergence of DVDs in the 1990s. DVDs 
+    revolutionized the accessibility of movies, providing a new revenue stream for production companies and 
+    reshaping both the business and creative landscapes of filmmaking.
+
+    This narrative explores these transformations through an analysis of key differences observed in data 
+    from various eras of the film industry, focusing on revenue, budgets, production dynamics, and genre evolution.
+""")
+
+# Layout with columns for plot and explanatory text
+col1, col2 = st.columns([1, 2])
+
+with col2:
+    fig = px.histogram(
+        plot_data,
+        x='log_revenue',
+        color='dvd_era',
+        nbins=50,
+        title='Revenue Distribution Across DVD Eras',
+        labels={'log_revenue': 'Revenue (log scale)', 'dvd_era': 'DVD Era'},
+        color_discrete_sequence=['#2E86C1', '#28B463', '#E74C3C'],
+        opacity=0.6
     )
-    section_divider("Revenue Analysis")
-
-# Revenue Section
-if selection == "Revenue Analysis" or st.session_state.get('scroll', True):
-    st.title("Revenue Analysis")
-
-    st.subheader("Impact of DVDs on Overall Movie Revenue")
-    st.markdown("Analyzing how DVD sales contributed to overall movie revenue.")
-
-    # Example chart: Revenue trends
-    revenue_data = pd.DataFrame({"Year": [2000, 2005, 2010, 2015, 2020], "Revenue": [50, 80, 100, 90, 60]})
-    fig = px.line(revenue_data, x="Year", y="Revenue", title="Revenue Trends over the Years", markers=True)
-    st.plotly_chart(fig, use_container_width=True)
-
-    st.subheader("Revenue by Categories")
-    st.markdown("Examining revenue shifts for different genres and budgets over time.")
-    
-    # Placeholder for detailed analysis or interactive visualizations
-    st.info("Detailed findings and interactive visualizations coming soon!")
-    section_divider("Budget Analysis")
-
-# Budget Section
-if selection == "Budget Analysis" or st.session_state.get('scroll', True):
-    st.title("Budget Analysis")
-
-    st.subheader("Did DVDs Level the Playing Field for Low-Budget Movies?")
-    st.markdown("Investigating how DVDs influenced small production studios.")
-
-    # Example visualization: Budget categories
-    budget_data = pd.DataFrame({"Category": ["Low", "Medium", "High"], "Revenue Impact": [10, 20, 40]})
-    fig = px.bar(budget_data, x="Category", y="Revenue Impact", title="Impact of DVDs on Different Budget Categories")
-    st.plotly_chart(fig, use_container_width=True)
-
-    st.subheader("Impact of DVD Decline on Low- and Mid-Budget Movies")
-    st.markdown("Assessing the changes in the market dynamics post-DVD era.")
-    
-    st.info("Detailed findings and interactive visualizations coming soon!")
-    section_divider("Production Analysis")
-
-# Production Section
-if selection == "Production Analysis" or st.session_state.get('scroll', True):
-    st.title("Production Analysis")
-
-    st.subheader("Change in Dominant Production Companies")
-    st.markdown("Examining the shifts in production company dominance across eras.")
-    
-    # Example table
-    production_data = pd.DataFrame({"Era": ["Pre-DVD", "DVD Era", "Post-DVD"], "Top Company": ["Company A", "Company B", "Company C"]})
-
-    def display_network_analysis():
-        # Add controls
-        col1, col2 = st.columns(2)
-        
-        with col1:
-            year = st.slider(
-                "Select Year",
-                min_value=1976,
-                max_value=2023,
-                value=2000,
-                step=1
-            )
-        
-        with col2:
-            prod_type = st.selectbox(
-                "Select Production Type",
-                options=['Super', 'Big', 'Small', 'Independent']
-            )
-        
-        # Filter data
-        df_filtered = df_graph[
-            (df_graph['release_year'].astype(int) == year) & 
-            (df_graph['prod_type'] == prod_type)
-        ]
-        
-        # Create network and get statistics
-        G, stats = create_network_graph(df_filtered)
-        
-        # Create and display plot
-        fig = create_network_plot(G, year, prod_type, stats)
-        st.pyplot(fig)
-        
-        # Display statistics
-        if stats['num_nodes'] > 0:
-            st.subheader("Top 5 Companies by Number of Collaborations:")
-            for company, degree in stats['top_companies']:
-                st.write(f"{company}: {degree} collaborations")
-        else:
-            st.write("No data available for this selection.")   
-    display_network_analysis()
-
-# Call the function in your 
-    section_divider("Genres Analysis")
-
-# Genres Section
-if selection == "Genres Analysis" or st.session_state.get('scroll', True):
-    st.title("Genres Analysis")
-
-    st.subheader("How DVDs Influenced the Rise of New Genres")
-    st.markdown("Looking at genre diversity during the DVD era.")
-
-    # Example visualization: Genres comparison
-    genre_data = pd.DataFrame({"Era": ["Pre-DVD", "DVD Era", "Post-DVD"], "Genre Diversity": [5, 8, 6]})
-    fig = px.bar(genre_data, x="Era", y="Genre Diversity", title="Genre Diversity Across Eras")
-    st.plotly_chart(fig, use_container_width=True)
-
-    st.subheader("Impact on Themes within Genres")
-    st.markdown("Exploring shifts in major themes within movie genres.")
-    
-    st.info("Detailed findings and interactive visualizations coming soon!")
-    section_divider("Conclusion")
-
-# Conclusion Section
-if selection == "Conclusion" or st.session_state.get('scroll', True):
-    st.title("Conclusion")
-    st.markdown(
-        """### Summary of Findings
-        - DVDs had a noticeable impact on revenue, especially for specific genres and budget categories.
-        - The decline of DVDs led to shifts in production dynamics, favoring high-budget movies.
-        - Genre diversity peaked during the DVD era and evolved with streaming services.
-        
-        Explore the visualizations and insights shared in each section to dive deeper into the findings!
-        """
+    fig.update_layout(
+        title_x=0.5,
+        title_font_size=20,
+        showlegend=True,
+        xaxis_title='Revenue (log scale)',
+        yaxis_title='Density',
+        bargap=0.1,
+        template='plotly_white',
+        legend=dict(
+            yanchor="top",
+            y=0.99,
+            xanchor="right",
+            x=0.99
+        ),
+        margin=dict(t=50, b=50, l=50, r=50),
+        height=500
     )
-    # st.image("summary_image.jpg", use_column_width=True)
 
-# Footer
-st.sidebar.markdown("---")
-st.sidebar.markdown("Created with ❤️ using Streamlit")
+    # Add gridlines
+    fig.update_xaxes(
+        showgrid=True, 
+        gridwidth=1, 
+        gridcolor='rgba(128, 128, 128, 0.2)'
+    )
+    fig.update_yaxes(
+        showgrid=True, 
+        gridwidth=1, 
+        gridcolor='rgba(128, 128, 128, 0.2)'
+    )
+
+    st.plotly_chart(fig, use_container_width=True)
+
+with col1:
+    st.write("### The Role of DVDs in the Film Industry")
+    st.write("""
+    The introduction of DVDs provided a secondary revenue stream for production companies. Many movies that 
+    struggled at the box office found profitability in home entertainment. This diversification of revenue sources allowed for:
+    
+    - **Recovery Opportunities**: Underperforming films could achieve financial success through strong DVD sales.
+    - **Broader Accessibility**: DVDs expanded the reach of films, particularly benefiting family-friendly and niche genres.
+    """)
+
+st.header('Budget Dynamics: Leveling the Playing Field')
+
+
+

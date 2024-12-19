@@ -128,6 +128,31 @@ class DataCleaner:
         return df
 
 
+# For the streamlit app
+def clean_raw_data():
+    TMDB_required_columns = ['title', 'release_date', 'revenue', 'runtime', 'budget', 'original_language', 'overview', 'genres',
+            'production_companies', 'production_countries', 'spoken_languages', 'keywords', 'release_year']
+
+    TMDB_string_columns = ['title', 'genres', 'overview','production_companies', 'production_countries', 'spoken_languages', 'keywords']
+    TMDB_numeric_columns = ['revenue', 'runtime', 'budget']
+
+    CMU_movie_headers = ["wikipedia_movie_id", "freebase_ID", "title", "release_year", "revenue",
+                         "runtime", "languages", "countries",  "genres"]
+
+    CMU_movie_required_columns_movie = ["wikipedia_movie_id",  "title", "release_year", "revenue", "runtime"] #, "genres"]
+    CMU_string_columns_movie = [] #['genres']
+    CMU_numeric_columns_movie = ['revenue', 'runtime']
+
+    cleaner = DataCleaner(TMDB_required_columns, TMDB_string_columns, TMDB_numeric_columns)
+    cleaner.clean_dataset('data/raw/TMDB_movie_dataset_v11.csv', 'data/processed/TMDB_clean.csv')
+
+    cleaner = DataCleaner(CMU_movie_required_columns_movie, CMU_string_columns_movie, CMU_numeric_columns_movie)
+    cleaner.clean_dataset('data/raw/movie.metadata.tsv', 'data/processed/movies.csv', sep = '\t', headers = CMU_movie_headers)
+
+    df = load_raw_data('data/raw/plot_summaries.txt', sep='\t', headers=['wikipedia_movie_id', 'summary'])
+    save_csv_data(df, 'data/processed/plot_summaries.csv')
+
+
 def main():
     TMDB_required_columns = ['title', 'release_date', 'revenue', 'runtime', 'budget', 'original_language', 'overview', 'genres',
             'production_companies', 'production_countries', 'spoken_languages', 'keywords', 'release_year']
