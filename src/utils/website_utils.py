@@ -198,9 +198,9 @@ def return_collaborations(df):
         text=list(G_before.nodes),
         textposition='bottom center',
         marker=dict(
-            showscale=True,
+            showscale=False,  # Remove the colorbar
             colorscale='Blues',
-            size=10,
+            size=15,  # Increase the node size
             color='lightblue',
             line_width=1
         ),
