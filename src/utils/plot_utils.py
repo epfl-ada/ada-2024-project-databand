@@ -1,6 +1,5 @@
 import colorcet as cc
 import seaborn as sns
-import matplotlib.pyplot as plt
 import numpy as np
 from src.utils.data_utils import adjust_inflation
 import geopandas as gpd
@@ -10,6 +9,10 @@ import matplotlib.pyplot as plt
 import plotly.graph_objects as go
 import plotly.express as px
 from plotly.subplots import make_subplots
+
+import networkx as nx
+from itertools import combinations
+
 
 def plot_movies_budget_slider(df, mode='budget'):
     # Filter out movies with budget under 1000
@@ -404,5 +407,134 @@ def plot_mean_budget_inflation(df, save_path=None):
 
     # Show the plot
     fig.show()
+
+def plot_avg_num_prod_companies(yearly_avg_companies):
+    # Create 2 subplots
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(15, 6))
+
+    # Plot mean number of production companies per year
+    ax1.plot(yearly_avg_companies['release_year'],
+             yearly_avg_companies['production_companies'],
+             linewidth=2,
+             color='#2ecc71')
+
+    # Add linear fit to the plot
+    z = np.polyfit(yearly_avg_companies['release_year'],
+                   yearly_avg_companies['production_companies'], 1)
+    p = np.poly1d(z)
+    ax1.plot(yearly_avg_companies['release_year'],
+             p(yearly_avg_companies['release_year']),
+             "r--",
+             alpha=0.8,
+             label=f'Trend line (slope: {z[0]:.3f})')
+
+    ax1.set_title('Average Number of Production Companies\nOver Time')
+    ax1.set_xlabel('Release Year')
+    ax1.set_ylabel('Average Number of Production Companies')
+    ax1.grid(True, alpha=0.3)
+    ax1.legend()
+
+    correlation = yearly_avg_companies['release_year'].corr(yearly_avg_companies['production_companies'])
+    covariance = yearly_avg_companies['release_year'].cov(yearly_avg_companies['production_companies'])
+
+    # Plot correlation between number of production companies and release year
+    sns.heatmap(yearly_avg_companies.corr(),
+                annot=True,
+                cmap='coolwarm',
+                center=0,
+                fmt='.3f',
+                ax=ax2)
+    plt.show()
+
+def create_edges_list(df):
+    edges = []
+    for companies in df['production_companies']:
+        if len(companies) > 1:
+            edges.extend(list(combinations(companies, 2)))
+    return edges
+
+def plot_num_companies_per_prod_type(df):
+    # Create figure
+    plt.figure(figsize=(15, 8))
+
+    # Define production types and colors for better visualization
+    production_types = ['Super', 'Big', 'Small', 'Independent']
+    colors = ['red', 'blue', 'green', 'purple']
+    df_graph = df[df['production_companies'].str.len() > 0]
+    # For each production type
+    for prod_type, color in zip(production_types, colors):
+        # Group by year and calculate average collaborations
+        yearly_data = []
+        years = sorted(df_graph['release_year'].unique())
+
+        for year in years:
+            # Filter data for this year and production type
+            df_filtered = df_graph[
+                (df_graph['release_year'] == year) &
+                (df_graph['prod_type'] == prod_type)
+                ]
+
+            # Get total number of movies for normalization
+            total_movies = len(df_filtered)
+
+            if total_movies > 0:  # Only process if there are movies
+                # Create network
+                edges = create_edges_list(df_filtered)
+                G = nx.Graph()
+                G.add_edges_from(edges)
+
+                # Calculate average collaborations normalized by number of movies
+                if G.number_of_nodes() > 0:
+                    avg_collaborations = G.number_of_edges() / total_movies
+                else:
+                    avg_collaborations = 0
+
+                yearly_data.append((year, avg_collaborations))
+
+        # Convert to arrays for plotting
+        years, avg_collabs = zip(*yearly_data)
+
+        # Plot line
+        plt.plot(years, avg_collabs, label=prod_type, color=color, linewidth=2, alpha=0.7)
+
+    # Customize plot
+    plt.title('Average Number of Collaborations per Movie Over Time by Production Type',
+              pad=20, fontsize=14)
+    plt.xlabel('Year', fontsize=12)
+    plt.ylabel('Average Collaborations per Movie', fontsize=12)
+    plt.grid(True, linestyle='--', alpha=0.7)
+    plt.legend(title='Production Type', bbox_to_anchor=(1.05, 1), loc='upper left')
+
+    # Add vertical lines for DVD era boundaries
+    plt.axvline(x=1997, color='gray', linestyle='--', alpha=0.5)
+    plt.axvline(x=2006, color='gray', linestyle='--', alpha=0.5)
+
+    # Add era labels
+    plt.text(1985, plt.ylim()[1], 'Pre-DVD', ha='center', va='bottom')
+    plt.text(2001.5, plt.ylim()[1], 'DVD Era', ha='center', va='bottom')
+    plt.text(2015, plt.ylim()[1], 'Post-DVD', ha='center', va='bottom')
+
+    plt.tight_layout()
+    plt.show()
+
+def plot_collaborations(df):
+    before_edges = create_edges_list(df)
+    G_before = nx.Graph()
+
+    G_before.add_edges_from(before_edges)
+    plt.figure(figsize=(12, 10))
+    nx.draw(
+        G_before,
+        with_labels=True,
+        node_size=500,
+        font_size=10,
+        node_color='lightblue',  # Add color to nodes
+        edge_color='gray',  # Add color to edges
+        alpha=0.7,  # Add transparency
+        width=1,  # Edge width
+        pos=nx.spring_layout(G_before)  # Use spring layout for better node positioning
+    )
+    plt.title("Production Company Collaboration Network")
+    plt.show()
 
 # %run src/utils/plot_utils.py
