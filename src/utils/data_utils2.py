@@ -151,3 +151,6 @@ def get_proportions(df, base_vars, target_var):
     props = counts.merge(totals, on=base_vars)
     props['prop'] = props['count'] / props['total']
     return props
+
+
+
