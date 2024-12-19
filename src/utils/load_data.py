@@ -1,5 +1,6 @@
 import os
 import pandas as pd
+import pyreadr
 
 # GLOBAL VARS
 MOVIE_HEADERS = ["Wikipedia movie ID", "Freebase ID", "Movie name", "Release date","Box office revenue",
@@ -28,6 +29,22 @@ def save_csv_data(df, filename):
     """Saves cleaned dataframe to a CSV file"""
     df.to_csv(filename, index=False)
 
+
+def load_dvd_sales():
+    result = pyreadr.read_r('data/raw/movies.RData')
+    df_dvd_releases = next(iter(result.values()))
+    df_dvd_releases['dvd_release_date'] = pd.to_datetime(
+        df_dvd_releases[['dvd_rel_year', 'dvd_rel_month', 'dvd_rel_day']]
+        .astype('Int64')
+        .astype(str)
+        .agg('-'.join, axis=1),
+        errors='coerce'
+    )
+    df_dvd_releases = df_dvd_releases.dropna(subset=['dvd_release_date'])
+    path = os.path.join('data', 'processed', 'dvd_releases.csv')
+    df_dvd_releases[['dvd_release_date']].to_csv(path, sep=',',
+                                                 index=False,
+                                                 header=True)
 
 # if __name__ == "__main__":
 #     # Define file paths

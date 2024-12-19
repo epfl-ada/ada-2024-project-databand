@@ -105,7 +105,7 @@ def get_dvd_era(release_year, start_year, end_year):
         return 'post'
 
 def annotate_dvd_era(df):
-    df['dvd_era'] = df['release_year'].apply(get_dvd_era, args=(1997,2008))
+    df['dvd_era'] = df['release_year'].apply(get_dvd_era, args=(1997,2013))
     return df
 
 def remove_genres(df, genres):
@@ -124,12 +124,14 @@ def create_cmu_tmdb_dataset(cmu_movies_path, plots_path, tmdb_path, how_merge):
     df_combined = combine_dataframes(df_movies=df_movies, df_plots=df_plots, df_tmdb=df_tmdb,
                                      common_columns=common_columns, cutoffyear=2012, how_merge=how_merge)
     df_combined = annotate_dvd_era(df_combined)
+    df_combined['overview'] = df_combined['summary'].copy()
+    df_combined.fillna({'overview': ''}, inplace=True)
     return df_combined
 
 def create_tmdb_dataset(tmdb_path):
     df_tmdb = pd.read_csv(tmdb_path)
     df_tmdb = clean_string_to_list(df_tmdb, TMDB_string_columns)
     df_tmdb = df_tmdb[(df_tmdb['runtime'] == 0) | (df_tmdb['runtime'] > 45)]
-    df_tmdb = df_tmdb[df_tmdb['genres'].apply(lambda x: 'Documentary' not in x)]
+    df_tmdb = df_tmdb[df_tmdb['genres'].apply(lambda x: 'documentary' not in x)]
     df_tmdb.fillna({'overview': ''}, inplace=True)
     return annotate_dvd_era(df_tmdb)
