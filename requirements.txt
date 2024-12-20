@@ -103,7 +103,7 @@ gdown
 geopandas
 empath
 spacy==3.6.1
-en-core-web-sm = 3.6.0
+en-core-web-sm==3.6.0
 
 
 
