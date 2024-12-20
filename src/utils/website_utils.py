@@ -28,7 +28,7 @@ def get_color_palette(categories):
             for category, color in zip(categories, palette)}
 
 
-def plot_features_single_prod(self, df, prod_type=None, ax=None):
+def plot_features_single_prod(df, prod_type=None, ax=None):
     if ax is None:
         fig, ax = plt.subplots(figsize=(8, 6))
 
@@ -49,12 +49,12 @@ def plot_features_single_prod(self, df, prod_type=None, ax=None):
         
     return ax
 
-def plot_all_features(self, df, genre, topk=10):
+def plot_all_features(df, genre, topk=10):
     prod_types = df.prod_type.unique()
     fig, axes = plt.subplots(nrows=2, ncols=2, figsize=(16, 10))
     for j, prod_type in enumerate(prod_types):
         subset = df[(df['genre'] == genre) & (df['prod_type'] == prod_type)]
-        self.plot_features_single_prod(subset, prod_type, ax=axes.flatten()[j])
+        plot_features_single_prod(subset, prod_type, ax=axes.flatten()[j])
 
     return fig
 
