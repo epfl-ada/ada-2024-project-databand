@@ -554,4 +554,59 @@ def plot_collaborations(df):
     plt.title("Production Company Collaboration Network")
     plt.show()
 
+
+def create_genre_proportions_heatmap(genre_proportions):
+    plt.figure(figsize=(14, 8))
+
+    sns.heatmap(
+        genre_proportions,
+        annot=True,
+        fmt=".2f",
+        cmap="viridis",
+        cbar_kws={'label': 'Proportion'},
+        linewidths=0.5,
+        linecolor='white'
+    )
+
+    plt.title("Heatmap of Genre Proportions Over DVD Eras", fontsize=20, weight='bold', pad=20, color='#2E4057')
+    plt.xlabel("DVD Era", fontsize=14, color='#2E4057')
+    plt.ylabel("Genre", fontsize=14, color='#2E4057')
+
+    plt.xticks(fontsize=12, rotation=45)
+    plt.yticks(fontsize=12)
+
+    plt.tight_layout()
+    plt.show()
+
+
+def create_genre_contributions_plot(genre_mean_revenues_pivot):
+    genres = genre_mean_revenues_pivot.columns[1:]
+    pre_values = genre_mean_revenues_pivot.loc[genre_mean_revenues_pivot['dvd_era'] == 'pre'].iloc[0, 1:].values
+    during_values = genre_mean_revenues_pivot.loc[genre_mean_revenues_pivot['dvd_era'] == 'during'].iloc[0, 1:].values
+    post_values = genre_mean_revenues_pivot.loc[genre_mean_revenues_pivot['dvd_era'] == 'post'].iloc[0, 1:].values
+
+    pre_values_billion = pre_values / 1e6
+    during_values_billion = during_values / 1e6
+    post_values_billion = post_values / 1e6
+
+    fig, ax = plt.subplots(figsize=(14, 6))
+    bar_width = 0.25
+
+    index = np.arange(len(genres))
+
+    ax.bar(index - bar_width, pre_values_billion, width=bar_width, color='#1f77b4', label='Pre Era')
+
+    ax.bar(index, during_values_billion, width=bar_width, color='#ff7f0e', label='During Era')
+
+    ax.bar(index + bar_width, post_values_billion, width=bar_width, color='#2ca02c', label='Post Era')
+
+    ax.set_title('Genre Revenues by DVD Era', fontsize=16, fontweight='bold')
+    ax.set_xlabel('Genres', fontsize=14, fontweight='bold')
+    ax.set_ylabel('Revenue (Millions USD)', fontsize=14, fontweight='bold')
+    ax.legend(title='DVD Era', fontsize=12)
+    ax.grid(axis='y', linestyle='--', alpha=0.7)
+    plt.xticks(index, genres, rotation=45, ha='right', fontsize=12)
+    plt.tight_layout()
+    plt.show()
+
 # %run src/utils/plot_utils.py

@@ -1,6 +1,6 @@
 import pandas as pd
 import statsmodels.api as sm
-from data_utils import get_collab_per_movie
+from src.utils.data_utils import get_collab_per_movie
 from scipy import stats
 
 

@@ -6,6 +6,7 @@ import string
 import re
 from itertools import combinations
 import networkx as nx
+import ast
 
 # Download stopwords
 nltk.download('stopwords')
@@ -204,3 +205,32 @@ def get_collab_per_movie(data):
         G.add_edges_from(edges)
         return G.number_of_edges() / len(data) if G.number_of_nodes() > 0 else 0
     return 0
+
+def get_top_genre_contributions(df):
+    sorted_data = df.sort_values('revenue', ascending=False)
+    top_10_percent_index = int(len(sorted_data) * 0.10)
+    top_10_percent_data = sorted_data.head(top_10_percent_index)
+    top_10_percent_data.loc[:,'genres'] = top_10_percent_data['genres'].apply(
+        lambda x: ast.literal_eval(x) if isinstance(x, str) else x
+    ,)
+
+    top_10_percent_exploded = top_10_percent_data.explode('genres')
+
+    genre_mean_revenues = (
+        top_10_percent_exploded
+        .groupby(['dvd_era', 'genres'], observed=False)['revenue']
+        .mean()
+        .reset_index()
+        .rename(columns={'genres': 'genre', 'revenue': 'mean_revenue'})
+    )
+
+    genre_mean_revenues_pivot = genre_mean_revenues.pivot_table(
+        index='dvd_era',
+        columns='genre',
+        values='mean_revenue',
+        aggfunc='mean',
+        observed=False
+    ).reset_index()
+
+    genre_mean_revenues_pivot.columns.name = None
+    return genre_mean_revenues_pivot
