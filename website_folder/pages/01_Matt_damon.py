@@ -1,5 +1,13 @@
 import streamlit as st
 import streamlit.components.v1 as components
+import os
+from pathlib import Path
+
+current_dir = Path(__file__).parent
+
+file_path = current_dir / "1_Analysis.py"
+print(f"File exists: {file_path.exists()}")
+print(f"File is file: {file_path.is_file()}")
 
 # Page Configurations
 st.set_page_config(
@@ -144,7 +152,7 @@ st.markdown("""
 
 # Add the Next button
 if st.button("Let's investigate →"):
-    st.switch_page("analysis_page.py")
+    st.switch_page("pages/02_Analysis.py")
 
 # Footer
 st.markdown("---")

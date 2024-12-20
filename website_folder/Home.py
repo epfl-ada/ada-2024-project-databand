@@ -216,7 +216,7 @@ st.components.v1.html(css_code + html_code, height=700)
 
 # Add the Next button
 if st.button("Next →"):
-    st.switch_page("pages/Matt_damon.py")
+    st.switch_page("pages/01_Matt_Damon.py")
 
 st.markdown(
     """
