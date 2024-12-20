@@ -118,9 +118,9 @@ def remove_genres(df, genres):
 def create_cmu_tmdb_dataset(cmu_movies_path, plots_path, tmdb_path, how_merge):
     # Google Drive URLs for the files, replace with actual URLs as needed
     google_drive_urls = {
-        "cmu_movies": "https://drive.google.com/file/d/CMU_MOVIES_FILE_ID/view?usp=drive_link",
-        "plots": "https://drive.google.com/file/d/PLOTS_FILE_ID/view?usp=drive_link",
-        "tmdb": "https://drive.google.com/file/d/TMDB_FILE_ID/view?usp=drive_link",
+        "cmu_movies": "https://drive.google.com/file/d/1R-fr2sA9dezme82ASCwz0z4C4NzuMy1Z/view?usp=sharing",
+        "plots": "https://drive.google.com/file/d/1K7GsKwwqMVaMheQ6fr6bOd881R8iTBmk/view?usp=sharing",
+        "tmdb": "https://drive.google.com/file/d/1JgLG2V9BAja3b3ERBQuy1VtrjE-U-BZ8/view?usp=sharing",
     }
     
     # Function to download a file from Google Drive if not present

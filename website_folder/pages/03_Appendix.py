@@ -24,6 +24,7 @@ st.set_page_config(
 
 df = create_cmu_tmdb_dataset(cmu_movies_path='data/processed/movies.csv', plots_path='data/processed/plot_summaries.csv', 
                              tmdb_path='data/processed/TMDB_clean.csv', how_merge='inner')
+
 df['log_revenue'] = np.log10(df['revenue'].replace(0, np.nan))
 df_filtered = df[df['revenue'] > 0]
 
