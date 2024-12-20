@@ -102,8 +102,8 @@ zipp==3.21.0
 gdown
 geopandas
 empath
-spacy
-en-core-web-sm
+spacy==3.6.1
+en-core-web-sm = 3.6.0
 
 
 
