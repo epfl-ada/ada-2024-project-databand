@@ -41,10 +41,33 @@ st.set_page_config(
 
 # Title and Introduction
 st.title("Is Matt Damon Right? Did the Fall of DVDs Doom the Film Industry?")
+# Custom CSS for the image
+# Custom CSS for the image
+st.markdown(
+    """
+    <style>
+    .centered-image {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        max-width: 50%;  # Ensures the image takes at most half the screen width
+        transition: transform 0.3s ease;
+        border-radius: 8px;  # Adds a slight border radius
+    }
+    .centered-image:hover {
+        transform: translateY(-10px);  # "Hop" effect on hover
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+# Display the image with the custom class
 st.image(
     "website_folder/pages/Why-are-we-surprised-by-Matt-Damons-recent-toxic-comments.webp",  
     caption="Matt <3", 
-    use_container_width=True  # Adjust the image size to fit the column width
+    use_container_width=False,  # Disable automatic width adjustment, rely on CSS
+    width=None,  # Let CSS handle the width
 )
 
 st.markdown("""
@@ -535,14 +558,14 @@ st.markdown("""The analysis highlights significant shifts in film production, dr
 
 st.markdown("""
     <style>
-        /* Style the Next button for both light and dark mode */
+        /* Style the Back button for both light and dark mode */
         .stButton button {
             position: fixed;
             bottom: 40px;
-            right: 40px;
-            background-color: rgba(0, 123, 255, 0.8); /* A nice blue with transparency */
-            color: white;
-            border: none;
+            right: 40px; /* Position at bottom-right */
+            background-color: white; /* White background */
+            color: rgba(255, 87, 34, 0.8); /* Orange text */
+            border: 2px solid rgba(255, 87, 34, 0.8); /* Orange border */
             padding: 0.5rem 2rem;
             border-radius: 20px;
             font-size: 16px;
@@ -552,7 +575,9 @@ st.markdown("""
         }
 
         .stButton button:hover {
-            background-color: rgba(30, 144, 255, 1); /* Brighter blue on hover */
+            background-color: #f0f0f0; /* Greyish background on hover */
+            color: rgba(255, 87, 34, 1); /* Orange text on hover */
+            border: 2px solid rgba(255, 69, 0, 1); /* Brighter orange border on hover */
             transform: scale(1.05); /* Slight zoom effect */
             box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2), 0 2px 4px rgba(0, 0, 0, 0.1); /* Enhanced shadow */
         }
@@ -560,27 +585,32 @@ st.markdown("""
         /* Ensure compatibility with both light and dark themes */
         @media (prefers-color-scheme: light) {
             .stButton button {
-                background-color: rgba(0, 123, 255, 0.9); /* Slightly darker blue for light mode */
-                color: white;
+                background-color: white; /* White background in light mode */
+                color: rgba(255, 87, 34, 0.8); /* Orange text */
+                border: 2px solid rgba(255, 87, 34, 0.8); /* Orange border */
             }
 
             .stButton button:hover {
-                background-color: rgba(0, 104, 204, 1); /* Complementary hover effect */
+                background-color: #f0f0f0; /* Greyish background */
+                border: 2px solid rgba(255, 69, 0, 1); /* Brighter orange border */
             }
         }
 
         @media (prefers-color-scheme: dark) {
             .stButton button {
-                background-color: rgba(30, 144, 255, 0.9); /* Brighter blue for dark mode */
-                color: white;
+                background-color: white; /* White background in dark mode */
+                color: rgba(255, 87, 34, 0.8); /* Orange text */
+                border: 2px solid rgba(255, 87, 34, 0.8); /* Orange border */
             }
 
             .stButton button:hover {
-                background-color: rgba(0, 104, 204, 1); /* Similar complementary effect for dark mode */
+                background-color: #f0f0f0; /* Greyish background */
+                border: 2px solid rgba(255, 69, 0, 1); /* Brighter orange border */
             }
         }
     </style>
 """, unsafe_allow_html=True)
+
 # Add the Next button
 if st.button("Appendix →"):
     st.switch_page("pages/03_Appendix.py")

@@ -64,19 +64,38 @@ st.title("Matt Damon Explains")
 st.markdown(
     """
     <div class="content-container">
-        <div class="explanation">
+        <div class="explanation hover-box">
             <h3>Basically...</h3>
-            <p style="font-size: 1.2rem; line-height: 1.6; color: #495057;">
+            <p>
             The appearance of DVDs in the 1990s had a resounding impact on the film industry. It provided studios with a whole new revenue stream and provided wider accessibility to movies. More importantly, the popularity of DVDs meant that even if a movie did not perform well at the box office, studios could still generate a profit through sales of DVDs. Throughout the 2000s, however, the industry shifted away from physical media to a digital streaming industry, pushing studios to rely on successful theatrical releases notably, blockbusters. In this interview, Matt Damon explains his experience with this problem and states that today, most of the movies he starred in could not be made.
             </p>
         </div>
-        <div class="video-container">
+        <div class="video-container hover-box">
             <h2>Watch the Video</h2>
             <div>
                 <iframe width="100%" height="315" src="https://www.youtube.com/embed/Jx8F5Imd8A8" frameborder="0" allowfullscreen></iframe>
             </div>
         </div>
     </div>
+    <style>
+        .hover-box {
+            background: #000000;
+            color: #ffffff;
+            border: 2px solid #ffffff;
+            transition: border-color 0.3s ease;
+        }
+        .hover-box:hover {
+            border-color: #ff5722; /* Orange border on hover */
+        }
+        .hover-box h3, .hover-box h2 {
+            color: #ffffff;
+        }
+        .hover-box p {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            color: #ffffff;
+        }
+    </style>
     """,
     unsafe_allow_html=True,
 )
@@ -103,14 +122,14 @@ components.html(
 
 st.markdown("""
     <style>
-        /* Style the Next button for both light and dark mode */
+        /* Style the Back button for both light and dark mode */
         .stButton button {
             position: fixed;
             bottom: 40px;
-            right: 40px;
-            background-color: rgba(0, 123, 255, 0.8); /* A nice blue with transparency */
-            color: white;
-            border: none;
+            right: 40px; /* Position at bottom-right */
+            background-color: white; /* White background */
+            color: rgba(255, 87, 34, 0.8); /* Orange text */
+            border: 2px solid rgba(255, 87, 34, 0.8); /* Orange border */
             padding: 0.5rem 2rem;
             border-radius: 20px;
             font-size: 16px;
@@ -120,7 +139,9 @@ st.markdown("""
         }
 
         .stButton button:hover {
-            background-color: rgba(30, 144, 255, 1); /* Brighter blue on hover */
+            background-color: #f0f0f0; /* Greyish background on hover */
+            color: rgba(255, 87, 34, 1); /* Orange text on hover */
+            border: 2px solid rgba(255, 69, 0, 1); /* Brighter orange border on hover */
             transform: scale(1.05); /* Slight zoom effect */
             box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2), 0 2px 4px rgba(0, 0, 0, 0.1); /* Enhanced shadow */
         }
@@ -128,23 +149,27 @@ st.markdown("""
         /* Ensure compatibility with both light and dark themes */
         @media (prefers-color-scheme: light) {
             .stButton button {
-                background-color: rgba(0, 123, 255, 0.9); /* Slightly darker blue for light mode */
-                color: white;
+                background-color: white; /* White background in light mode */
+                color: rgba(255, 87, 34, 0.8); /* Orange text */
+                border: 2px solid rgba(255, 87, 34, 0.8); /* Orange border */
             }
 
             .stButton button:hover {
-                background-color: rgba(0, 104, 204, 1); /* Complementary hover effect */
+                background-color: #f0f0f0; /* Greyish background */
+                border: 2px solid rgba(255, 69, 0, 1); /* Brighter orange border */
             }
         }
 
         @media (prefers-color-scheme: dark) {
             .stButton button {
-                background-color: rgba(30, 144, 255, 0.9); /* Brighter blue for dark mode */
-                color: white;
+                background-color: white; /* White background in dark mode */
+                color: rgba(255, 87, 34, 0.8); /* Orange text */
+                border: 2px solid rgba(255, 87, 34, 0.8); /* Orange border */
             }
 
             .stButton button:hover {
-                background-color: rgba(0, 104, 204, 1); /* Similar complementary effect for dark mode */
+                background-color: #f0f0f0; /* Greyish background */
+                border: 2px solid rgba(255, 69, 0, 1); /* Brighter orange border */
             }
         }
     </style>
