@@ -1,9 +1,16 @@
 import streamlit as st
+from pathlib import Path
+import sys
+
+# Add project root to Python path
+root_dir = Path(__file__).parent.parent.parent  # Go up two levels from the current file
+sys.path.append(str(root_dir))
+
 from src.data.process_data import create_cmu_tmdb_dataset
 from src.utils.website_utils import *
 import json
 from src.utils.data_utils import get_proportions, categorize_production
-from src.models.empath_model import *
+# from src.models.empath_model import *
 
 st.set_page_config(
     page_title="Appendix",

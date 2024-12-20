@@ -583,7 +583,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 # Add the Next button
 if st.button("Appendix →"):
-    st.switch_page("appendix_page.py")
+    st.switch_page("pages/03_Appendix.py")
 
 
 # Footer
