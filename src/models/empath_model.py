@@ -6,6 +6,10 @@ from src.utils.data_utils import get_movie_plots
 import seaborn as sns
 import matplotlib.pyplot as plt
 
+from src.utils.website_utils import palette_for_empath
+
+palette = palette_for_empath
+
 class EmpathModel:
     def __init__(self):
         self.lexicon = Empath()
@@ -81,7 +85,7 @@ class EmpathModel:
         # Create a normalized colormap for continuous coloring using Viridis
         unique_words = df['word'].unique()
         word_to_color = {word: i / len(unique_words) for i, word in enumerate(unique_words)}
-        colors = [plt.cm.viridis(word_to_color[word]) for word in df['word']]
+        colors = [palette(word_to_color[word]) for word in df['word']]
 
         # Plot with continuous colors based on 'word'
         sns.lineplot(data=df, x='era', y='factor', hue='word', palette=colors, marker='o', legend='full', ax=ax)

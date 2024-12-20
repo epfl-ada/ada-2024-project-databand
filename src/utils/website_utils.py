@@ -16,6 +16,10 @@ from src.utils.data_utils import categorize_budget
 from plotly.subplots import make_subplots
 import plotly.graph_objects as go
 
+## Color Palette (Viridis)
+
+palette_seq = px.colors.sequential.Viridis
+palette_for_empath = plt.cm.viridis
 
 def get_color_palette(categories):
     """Generate a consistent color mapping using viridis."""
@@ -497,8 +501,11 @@ def create_category_plot(data, category, label, color):
     
     return fig
 
-# Function: Create histogram with consistent color palette
-def create_histogram(data, x_col, color_col, title, labels, color_palette, nbins=50):
+def create_histogram(data, x_col, color_col, title, labels, color_palette="viridis", nbins=50):
+    # Use color_discrete_sequence for discrete color palettes
+    # Define the three extreme colors from the Viridis palette
+    viridis_colors = [palette_seq[0], palette_seq[len(palette_seq)//2], palette_seq[-1]]
+
     fig = px.histogram(
         data,
         x=x_col,
@@ -506,9 +513,10 @@ def create_histogram(data, x_col, color_col, title, labels, color_palette, nbins
         nbins=nbins,
         title=title,
         labels=labels,
-        color_discrete_sequence=color_palette,
+        color_discrete_sequence=viridis_colors,  # Use the three extreme colors from the Viridis palette
         opacity=0.6
     )
+    
     fig.update_layout(
         template="plotly_white",
         xaxis_title=labels.get(x_col, x_col),
@@ -518,8 +526,10 @@ def create_histogram(data, x_col, color_col, title, labels, color_palette, nbins
         legend=dict(yanchor="top", y=0.99, xanchor="right", x=1.05),
         margin=dict(t=50, b=50, l=50, r=150),
     )
+    
     fig.update_xaxes(showgrid=True, gridwidth=1, gridcolor="rgba(128, 128, 128, 0.2)")
     fig.update_yaxes(showgrid=True, gridwidth=1, gridcolor="rgba(128, 128, 128, 0.2)")
+    
     return fig
 
 # Function: Create line plot with consistent color palette
