@@ -15,7 +15,6 @@ sys.path.append(str(root_dir))
 from src.data.process_data import create_tmdb_dataset
 # from src.utils.load_data import load_raw_data
 from src.utils.data_utils import *
-from src.utils.plot_utils import *
 from src.utils.website_utils import *
 
 def load_region_mapping(file_path):

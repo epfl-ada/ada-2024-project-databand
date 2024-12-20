@@ -90,13 +90,18 @@ df_countries_filtered = df_countries[(df_countries.region.isin(selected_regions)
 fig = return_prod_type_prop_per_region(selected_regions, df_countries_filtered)
 st.plotly_chart(fig)
 
-st.markdown("Regarding the production type proportions for major regions, the CMU dataset paints a steadier picture of how DVDs influenced global movie production compared to TMDB's more dynamic trends. In Eastern Asia, independent films maintained their dominance across eras, with only a modest rise in super productions during the DVD era, contrasting TMDB's dramatic shifts. North America stands out as the stronghold for super productions, which dominated all eras in the CMU data, unlike TMDB's notable post-DVD rise in independent films. Europe shows some similarity to TMDB, with a decline in independent movies during the DVD era, but CMU suggests this shift was more sustained and less temporary. Interestingly, Oceania, absent from TMDB, mirrors Europe's patterns, further emphasizing the global foothold of big and super productions. Overall, the CMU data suggests a smoother and more consistent adoption of production trends across regions, lacking the volatility seen in TMDB’s analysis.")
+
+st.markdown("""
+            Regarding the production type proportions for major regions, the CMU dataset doesn’t show important differences in production types after the rise of DVDs, in contrast to the TMDB dataset. While we can observe a slight increase in super productions for Europe, North America, and the UK, there is almost no difference in the proportion of independent productions for most regions.
+            """)
 
 countries_genres_props = get_proportions(df_countries_filtered, ['dvd_era', 'region'], 'genres')
 fig = return_num_companies_per_prod_type(df)
 st.plotly_chart(fig)
 
-st.markdown("The rise of DVDs not only transformed distribution but also reshaped how production companies collaborated. Both the CMU and TMDB graphs highlight increasing collaboration among production companies, particularly for Super productions post-DVD. However, CMU shows steadier trends, with Big and Small productions gradually integrating into collaborative networks, compared to TMDB’s more erratic patterns. Independent productions remain isolated in both datasets, with minimal growth in collaboration. While dominant players likely lead in both, CMU suggests a slightly less centralized network compared to TMDB’s concentrated collaboration among major giants.")
+
+st.markdown("""The rise of DVDs not only transformed distribution but also reshaped how production companies collaborated. Both the CMU and TMDB graphs highlight increasing collaboration among production companies, particularly for Super productions post-DVD, while Independent productions appear to still be somewhat left behind in comparison. However, CMU shows a stronger increase in collaboration for independent productions. 
+            """)
 
 df_genres = df[df.genres.apply(lambda x: len(x) > 0)].copy()
 df_genres = df_genres.explode('genres')
@@ -109,23 +114,6 @@ fig = return_genre_trends_by_prod_type(genre_proportions)
 st.plotly_chart(fig)
 
 st.markdown("The CMU dataset reveals a more genre-specific evolution across production types during the DVD era compared to the TMDB dataset's broader narrative. For independent productions, Drama saw significant growth in both datasets, but CMU highlights Thriller as another genre on the rise, whereas TMDB emphasized Comedy and Horror. Small productions maintained a steady trajectory, with Drama experiencing growth in both datasets, though CMU points to a more stable overall landscape. Big productions showed remarkable consistency in the CMU data, with only a minor boost for Thriller, aligning with TMDB’s emphasis on stability for this production type. Super productions, however, diverge noticeably: while TMDB focuses on Action and Animation taking the lead, CMU showcases substantial growth in Adventure, alongside Fantasy and Family, suggesting a shift toward genres with strong imaginative appeal. Both datasets agree on the transformative impact of DVDs, yet CMU paints a picture of subtle, focused changes rather than the broader shifts emphasized in TMDB.")
-
-
-
-results = pd.read_csv('data/website_data/CMU/topics_per_genre_prod.csv')
-
-# Add a dropdown (selectbox) for genre selection
-genre_options = results['genre'].unique()
-selected_genre = st.selectbox("Select Genre:", genre_options)
-
-# Plot the data based on the selected genre
-fig_empath = plot_all_features(results, selected_genre)
-
-# Display the plot
-st.pyplot(fig_empath)
-
-
-st.markdown("Similarly to the TMDB dataset, the drama movies in the CMU dataset also emphasize themes of family and community, but the trends show distinct differences across production types. Independent dramas initially focus on themes like family and home, with slight growth in positive emotion, while themes like war and crime see a decline during the DVD era. For Small productions, family and celebration emerge as central themes, with noticeable growth during the DVD years, reinforcing their universal appeal. Big productions maintain a consistent focus on family and war themes, showing stability rather than dramatic shifts. Meanwhile, Super productions take a different turn, with themes like war, sports, and leadership dominating in the pre-DVD era but declining sharply during the DVD period as more diverse themes like friendship and competing gained traction. This shift indicates a movement toward narratives with broader audience appeal, even among high-budget dramas.")
 
 fig = return_movies_prop_per_region(region_props)
 st.plotly_chart(fig)
