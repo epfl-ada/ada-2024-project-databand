@@ -123,7 +123,7 @@ st.markdown("Focusing on regional dynamics of movie releases over time to examin
 fig = return_genre_prop_per_region(selected_regions, countries_genres_props)
 st.plotly_chart(fig)
 
-st.markdown("The CMU dataset provides a nuanced view of global genre trends during the DVD era, offering both overlap and contrast with TMDB's analysis. While Drama remains the dominant genre across most regions, the CMU data highlights regional differences: in Eastern Asia, Drama and History strongly rises as family genres decrease, diverging from TMDB's trend. Europe, UK and North America show steady Drama growth, while North America sees adventure gaining traction, reflecting super production influence more clearly than TMDB. Regarding Southern Asia and Oceania, their trends are very similar to the TMDB, focusing on drama and its decrease. Overall, CMU emphasizes broader regional diversification compared to TMDB’s global trends, while still aligning on Drama's global strength.")
+st.markdown("Genre trends across different world regions match those observed in TMDB, where Drama movies dominate, followed by Action movies in Eastern and Southern Asia. ")
 
 # Style for the Back button (bottom left)
 st.markdown("""
