@@ -74,19 +74,27 @@ class EmpathModel:
         return results
 
 
-    def plot_features_single_prod(self, df,prod_type=None, ax=None):
+    def plot_features_single_prod(self, df, prod_type=None, ax=None):
         if ax is None:
             fig, ax = plt.subplots(figsize=(8, 6))
 
-        sns.lineplot(data=df, x='era', y='factor', hue='word', marker='o', legend='full', palette='tab20', ax=ax)
+        # Create a normalized colormap for continuous coloring using Viridis
+        unique_words = df['word'].unique()
+        word_to_color = {word: i / len(unique_words) for i, word in enumerate(unique_words)}
+        colors = [plt.cm.viridis(word_to_color[word]) for word in df['word']]
+
+        # Plot with continuous colors based on 'word'
+        sns.lineplot(data=df, x='era', y='factor', hue='word', palette=colors, marker='o', legend='full', ax=ax)
         sns.move_legend(ax, bbox_to_anchor=(1.45, 1), loc='upper right')
 
         ax.set_title(f'{prod_type} production')
         ax.set_xlabel('DVD era')
         ax.set_ylabel('Importance coefficient (normalized)')
         plt.tight_layout(pad=1)
-        if ax is None:
-            plt.show()
+
+        print("WARNING / DIFF FROM MAIN. RETURNS INSTEAD OF PLOTTING")
+        
+        return ax
 
     def plot_all_features(self, df, genre, topk=10):
         prod_types = df.prod_type.unique()
@@ -94,6 +102,7 @@ class EmpathModel:
         for j, prod_type in enumerate(prod_types):
             subset = df[(df['genre'] == genre) & (df['prod_type'] == prod_type)]
             self.plot_features_single_prod(subset, prod_type, ax=axes.flatten()[j])
-        plt.suptitle(f'Evolution of top {topk} plot features for {genre} movies')
-        plt.tight_layout()
-        plt.show()
+
+        print("WARNING / DIFF FROM MAIN. RETURNS INSTEAD OF PLOTTING")
+        
+        return fig

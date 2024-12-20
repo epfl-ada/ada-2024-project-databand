@@ -820,6 +820,7 @@ def budget_rolling_averages(df, window):
     proportion_rolling = budget_category_proportions.rolling(window=window, center=True).mean()
     return proportion_rolling
 
+
 import plotly.graph_objects as go
 
 def create_combined_plot(data, categories):

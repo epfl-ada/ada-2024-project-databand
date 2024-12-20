@@ -51,7 +51,18 @@ st.plotly_chart(fig_revenue, use_container_width=True)
 
 st.markdown("For budgets however, the picture is a little grimmer for Independent productions here. While they showed a massive popularity boost with the entire TMDB dataset, there isn’t much of a difference in proportion over time here. Instead, small and big productions maintain their foothold.  ")
 
-fig = return_budget_rolling_averages(df)
+prop_rolling_avg = budget_rolling_averages(df_filtered, window=3)
+
+# Define categories and their properties
+categories = [
+    ('Independent', 'Independent productions (<0.1x mean budget)', '#9B59B6'),
+    ('Small', 'Small productions (<1x mean budget)', '#E74C3C'),
+    ('Big', 'Big productions (>1x mean budget)', '#28B463'),
+    ('Super', 'Super productions (>5x mean budget)', '#2E86C1')
+]
+
+# Create and display the combined plot
+fig = create_combined_plot(prop_rolling_avg, categories)
 
 st.plotly_chart(fig, use_container_width=True)
 
