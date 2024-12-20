@@ -1,7 +1,7 @@
 
 # databand
 
-Website: https://databand-movies.streamlit.app/
+Website: https://databand.streamlit.app/
 
 ## Project Structure
 The directory structure of project:
