@@ -534,7 +534,8 @@ st.markdown("""
 
 # Add the Next button
 if st.button("Appendix →"):
-    st.switch_page("pages/appendix_page.py")
+    st.switch_page("appendix_page.py")
+
 
 # Footer
 st.markdown("---")

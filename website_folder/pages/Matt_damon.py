@@ -3,7 +3,7 @@ import streamlit.components.v1 as components
 
 # Page Configurations
 st.set_page_config(
-    page_title="YouTube Video with Explanation",
+    page_title="Matt Damon Explains",
     layout="wide",
     initial_sidebar_state="collapsed",
 )
@@ -11,7 +11,6 @@ st.set_page_config(
 # Custom Styles
 st.markdown(
     """
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
     .main { background-color: #f8f9fa; }
     h1 {
@@ -51,16 +50,16 @@ st.markdown(
 )
 
 # Header
-st.title("Explore and Understand: Video and Explanation")
+st.title("Matt Damon Explains")
 
 # Section 1: Main Content
 st.markdown(
     """
     <div class="content-container">
         <div class="explanation">
-            <h2>Explanation of the Video</h2>
+            <h3>Basically...</h3>
             <p style="font-size: 1.2rem; line-height: 1.6; color: #495057;">
-            The emergence of DVDs in the 1990s had a resounding impact on the film industry, providing a wider accessibility to movies and a new revenue stream. The popularity of DVDs meant that even if a movie did not perform well at the box office, studios could still generate revenue through sales of DVDs. Throughout the 2000s, however, the industry shifted away from physical media to a digital streaming industry, pushing studios to rely on successful theatrical releases notably, blockbusters. Matt Damon was the first to shine a light on this problem. In an interview, he explains that most movies that he starred in could no longer be made today due to a reliance on revenue from the box office.
+            The appearance of DVDs in the 1990s had a resounding impact on the film industry. It provided studios with a whole new revenue stream and provided wider accessibility to movies. More importantly, the popularity of DVDs meant that even if a movie did not perform well at the box office, studios could still generate a profit through sales of DVDs. Throughout the 2000s, however, the industry shifted away from physical media to a digital streaming industry, pushing studios to rely on successful theatrical releases notably, blockbusters. In this interview, Matt Damon explains his experience with this problem and states that today, most of the movies he starred in could not be made.
             </p>
         </div>
         <div class="video-container">
@@ -144,8 +143,8 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # Add the Next button
-if st.button("Next →"):
-    st.switch_page("pages/analysis_page.py")
+if st.button("Let's investigate →"):
+    st.switch_page("analysis_page.py")
 
 # Footer
 st.markdown("---")

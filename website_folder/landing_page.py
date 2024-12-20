@@ -221,7 +221,7 @@ if st.button("Next →"):
 st.markdown(
     """
     <div style="position: fixed; bottom: 10px; right: 40px; color: white; text-align: center; font-size: 14px;">
-        Or you can stay here! See if the DVD lands on a corner!
+        Or you can stay here and watch if the DVD lands on a corner
     </div>
     """,
     unsafe_allow_html=True
