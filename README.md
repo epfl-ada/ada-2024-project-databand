@@ -25,8 +25,10 @@ The directory structure of project:
 │   ├── scripts                         <- Shell/Python scripts
 │   │   ├── clean_data.py                   <- script to clean all datasets
 │
-├── data_overview_CMU.ipynb               <- notebook with an overview for movie features for CMU movies
-├── data_overview_TMDB.ipynb              <- notebook with an overview for movie features for TMDB movies 
+├── data_overview_CMU.ipynb               <- notebook with an initial overview for movie features for CMU movies
+├── data_overview_TMDB.ipynb              <- notebook with an initial overview for movie features for TMDB movies 
+├── main_results_CMU.ipynb                <- notebook with main results for CMU movies
+├── main_results_TMDB.ipynb               <- notebook with main results for TMDB movies, contains the bulk of analyses 
 ├── .gitignore                  <- List of files ignored by git
 ├── pip_requirements.txt        <- File for installing python dependencies
 └── README.md
@@ -102,12 +104,11 @@ Again, an ANOVA test complements this analysis.
 
 **Task 4: Production analysis**
 
-To analyze the evolution of production companies we started with an exploration the data. 
-This was important to understand the top players and how they compare with others (i.e BBC, Warner Bros, etc.). 
-We used bar and line plots for a visual representation. We also found a strong correlation between of the number production companies 
-for one movie and time, suggesting that movies need more investments today with more production companies. 
-The next step to correctly categorize them is using clustering techniques to group the production companies based on 
-their movie production activity and genre they produce. This better helps us observe trends during the different eras. 
+We analyse production companies collaboration through co-producing movies, considering different production types, over time. 
+This is first done through line plots displaying the average number of companies per movies of each production types, then
+through statistical analyses such as linear regression and Spearman's correlation tests. 
+Then, to examine which companies co-produce movies, we create a collaboration graph where companies that produced together are linked,
+allowing us to observe production company clusters.
 
 **Task 5: Genre analysis**
 
