@@ -27,8 +27,8 @@ TMDB_PATH = DATA_PATH / "processed/TMDB_clean.csv"
 REGION_MAP_PATH = DATA_PATH / "countries_to_region.json"
 
 
-df = create_tmdb_dataset(TMDB_PATH)
-region_mapping = load_region_mapping(REGION_MAP_PATH)
+df = create_tmdb_dataset(str(TMDB_PATH))
+region_mapping = load_region_mapping(str(REGION_MAP_PATH))
 
 df['log_revenue'] = np.log10(df['revenue'].replace(0, np.nan))
 df_filtered = df[df['revenue'] > 0]
