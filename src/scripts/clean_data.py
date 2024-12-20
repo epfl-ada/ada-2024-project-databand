@@ -48,7 +48,7 @@ class DataCleaner:
         df[self.numeric_columns] = df[self.numeric_columns].fillna(0)
         df[self.numeric_columns] = df[self.numeric_columns].astype(int)
         for col in self.numeric_columns:
-            df = df[df[col]>=0]
+            df = df[df[col]>=0] # Must include movies with 0 otherwise we loose too much data
         return df
     
     def clean_string_columns(self, df):

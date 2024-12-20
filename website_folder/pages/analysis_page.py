@@ -9,119 +9,95 @@ import json
 import geopandas as gpd
 from plotly.subplots import make_subplots
 
-# Set up paths
 root_dir = Path(__file__).parent.parent.parent  # Go up two levels from the current file
 sys.path.append(str(root_dir))
 
-# Import custom modules
 from src.data.process_data import create_tmdb_dataset
-from src.utils.load_data import load_raw_data
+# from src.utils.load_data import load_raw_data
 from src.utils.data_utils import *
 from src.utils.plot_utils import *
 from src.utils.website_utils import *
 
-# Clean raw data and load the processed dataset
-df = create_tmdb_dataset('data/processed/TMDB_clean.csv')
+def load_region_mapping(file_path):
+    with open(file_path, 'r') as f:
+        return json.load(f)
+
+DATA_PATH = Path("data")
+TMDB_PATH = DATA_PATH / "processed/TMDB_clean.csv"
+REGION_MAP_PATH = DATA_PATH / "countries_to_region.json"
+
+
+df = create_tmdb_dataset(TMDB_PATH)
+region_mapping = load_region_mapping(REGION_MAP_PATH)
+
+df['log_revenue'] = np.log10(df['revenue'].replace(0, np.nan))
 df_filtered = df[df['revenue'] > 0]
 
-# Prepare data: ensure positive values and proper types
-plot_data = df_filtered.copy()
-plot_data['revenue'] = plot_data['revenue'].astype(float)
-plot_data['log_revenue'] = np.log10(plot_data['revenue'])
-
-# Page configuration
 st.set_page_config(
-    page_title="The Evolution of the Film Industry",
+    page_title="Was Matt Damon right?",
     layout="wide",
     initial_sidebar_state="collapsed"
 )
 
 # Title and Introduction
-st.title("The Evolution of the Film Industry: The Impact of DVDs and Beyond")
+st.title("Is Matt Damon Right? Did the Fall of DVDs Doom the Film Industry?")
+st.image(
+    "website_folder/pages/Why-are-we-surprised-by-Matt-Damons-recent-toxic-comments.webp",  
+    caption="Matt <3", 
+    use_container_width=True  # Adjust the image size to fit the column width
+)
 
 st.markdown("""
 The film industry has undergone seismic shifts over the past few decades, driven largely by changes in distribution models. Among the most notable innovations was the emergence of **DVDs in the 1990s**. DVDs revolutionized the accessibility of movies, providing a new revenue stream for production companies and reshaping both the business and creative landscapes of filmmaking. 
 
-This narrative explores these transformations through an analysis of key differences observed in data from various eras of the film industry, focusing on:
+This project explores these transformations through an analysis of key differences observed in data from various eras of the film industry, focusing on:
 - Revenue
 - Budgets
 - Production dynamics
 - Genre evolution
 """)
 
-# Revenue Section
-st.header("Revenue: A Changing Landscape")
+st.markdown("---")
 
-# Subsection: DVDs as a Revenue Catalyst
-st.subheader("DVDs as a Revenue Catalyst")
+# Revenue Section
+st.header("A Changing Financial Landscape")
+st.subheader("Leveling the Playing Field")
 st.markdown("""
 The introduction of DVDs provided a secondary revenue stream for production companies. Many movies that struggled at the box office found profitability in home entertainment. This diversification of revenue sources allowed for:
-- **Recovery Opportunities**: Underperforming films could achieve financial success through strong DVD sales.
-- **Broader Accessibility**: DVDs expanded the reach of films, particularly benefiting family-friendly and niche genres.
+
+This visualization provides a look at how the revenue of movies has evolved over three distinct eras in the film industry: pre-DVD, during the DVD era, and post-DVD, with their revenue displayed on a logarithmic scale.
+""")
+st.write("")
+col1, col2 = st.columns([1, 1])
+#- **Recovery Opportunities**: Underperforming films could achieve financial success through strong DVD sales.
+#- **Broader Accessibility**: DVDs expanded the reach of films, particularly benefiting family-friendly and niche genres.
+with col1:
+    st.write("")  
+    st.write("") 
+
+    fig_revenue = create_histogram(
+        df_filtered,
+        x_col='log_revenue',
+    color_col='dvd_era',
+    title='Revenue Distribution Across DVD Eras',
+    labels={'log_revenue': 'Revenue (log scale)', 'dvd_era': 'DVD Era'},
+    color_palette=['#2E86C1', '#28B463', '#E74C3C']
+)
+    st.plotly_chart(fig_revenue, use_container_width=True)
+
+with col2:
+    st.markdown(""" 
+##### The Pre-DVD Era (Red)
+Before the rise of DVDs, the film industry was dominated by theatrical releases, with a significant number of movies achieving mid-to-high revenue levels (log revenue scale of 5–7, equivalent to 100,000-10,000,000 dollars). 
+##### The DVD Era (Blue)
+The introduction of DVDs changed the industry. This era saw a sharp increase in the number of movies generating moderate revenue (log revenue scale of 3–6, roughly 1,000-1,000,000 dollars). DVDs provided smaller-budget and niche films with an alternate revenue stream, democratizing the market and allowing more films to find financial success even if they didn’t dominate at the box office.
+##### The Post-DVD Era (Green)
+With the decline of DVDs and the rise of streaming platforms, the revenue landscape shifted once again. The distribution reveals a drop in high-revenue films, with fewer movies achieving blockbuster-level revenues (log revenue scale above 7). The majority of movies now cluster in the lower revenue ranges (log revenue scale of 3–6), reflecting the challenges faced by filmmakers in the subscription-driven streaming era.
 """)
 
-# Layout with columns for explanatory text and plot
-col1, col2 = st.columns([1, 2])
-
-# Column 1: Explanatory text
-with col1:
-    st.subheader("Transition to Streaming")
-    st.markdown("""
-    The decline of DVD sales in the post-2013 era shifted revenue reliance back to theatrical releases and emerging digital platforms. Streaming services brought their own dynamics:
-    - **Licensing Revenue**: Studios increasingly depended on deals with platforms like Netflix and Amazon Prime.
-    - **Global Appeal**: Revenue strategies prioritized mainstream, blockbuster genres with universal themes.
-    """)
-
-# Column 2: Revenue distribution plot
-with col2:
-    fig = px.histogram(
-        plot_data,
-        x='log_revenue',
-        color='dvd_era',
-        nbins=50,
-        title='Revenue Distribution Across DVD Eras',
-        labels={'log_revenue': 'Revenue (log scale)', 'dvd_era': 'DVD Era'},
-        color_discrete_sequence=['#2E86C1', '#28B463', '#E74C3C'],
-        opacity=0.6
-    )
-
-    # Update layout for better visualization
-    fig.update_layout(
-        title_x=0.5,
-        title_font_size=20,
-        showlegend=True,
-        xaxis_title='Revenue (log scale)',
-        yaxis_title='Density',
-        bargap=0.1,
-        template='plotly_white',
-        legend=dict(
-            yanchor="top",
-            y=0.99,
-            xanchor="right",
-            x=0.99
-        ),
-        margin=dict(t=50, b=50, l=50, r=50),
-        height=500
-    )
-
-    # Add gridlines
-    fig.update_xaxes(
-        showgrid=True, 
-        gridwidth=1, 
-        gridcolor='rgba(128, 128, 128, 0.2)'
-    )
-    fig.update_yaxes(
-        showgrid=True, 
-        gridwidth=1, 
-        gridcolor='rgba(128, 128, 128, 0.2)'
-    )
-
-    # Display the plot
-    st.plotly_chart(fig, use_container_width=True)
 
 # Budget Section
-st.header("Budget Dynamics: Leveling the Playing Field")
-st.subheader("Empowerment Through DVDs")
+st.header("Budget Dynamics: Empowerment Through DVDs")
 st.markdown("""
 By providing an alternate revenue stream, the rise of DVDs at their peak allowed smaller production companies to enter the market.
 Indeed, small studios could directly distribute their movies as DVDs, without the hassle and expense of going for a theatrical release. 
@@ -135,62 +111,9 @@ To find evidence of this trend, we define 4 types of production companies using 
 
 Let’s take a look at how these productions evolve over time:
 """)
+
 prop_rolling_avg = budget_rolling_averages(df_filtered, window=3)
 
-# Create individual plots for each category
-def create_category_plot(data, category, label, color):
-    fig = go.Figure()
-    
-    fig.add_trace(
-        go.Scatter(
-            x=data.index,
-            y=data[category],
-            name=label,
-            line=dict(width=2, color=color),
-            hovertemplate="Year: %{x}<br>" +
-                        f"Proportion: %{{y:.1%}}<br>" +
-                        "<extra></extra>"
-        )
-    )
-    
-    fig.update_layout(
-        title={
-            'text': f'Proportion of {category.lower()} productions over the years (3-year rolling average)',
-            'x': 0.5,
-            'y': 0.95,
-            'xanchor': 'center',
-            'font': {'size': 16}
-        },
-        xaxis_title='Release year',
-        yaxis_title='Proportion',
-        yaxis_tickformat='.0%',
-        template='plotly_white',
-        height=400,
-        showlegend=True,
-        legend=dict(
-            yanchor="top",
-            y=0.99,
-            xanchor="right",
-            x=0.99
-        ),
-        margin=dict(t=60, b=50, l=50, r=50)
-    )
-    
-    fig.update_xaxes(
-        showgrid=True,
-        gridwidth=1,
-        gridcolor='rgba(128, 128, 128, 0.2)',
-        dtick=5
-    )
-    fig.update_yaxes(
-        showgrid=True,
-        gridwidth=1,
-        gridcolor='rgba(128, 128, 128, 0.2)'
-    )
-    
-    return fig
-
-# Define categories and their properties
 categories = [
     ('Independent', 'Independent productions (<0.1x mean budget)', '#9B59B6'),
     ('Small', 'Small productions (<1x mean budget)', '#E74C3C'),
@@ -198,13 +121,42 @@ categories = [
     ('Super', 'Super productions (>5x mean budget)', '#2E86C1')
 ]
 
-# Create and display each plot
-for category, label, color in categories:
+col1, col2 = st.columns(2)
+for i, (category, label, color) in enumerate(categories):
     fig = create_category_plot(prop_rolling_avg, category, label, color)
-    st.plotly_chart(fig, use_container_width=True)
     
-    # Add a small space between plots
-    st.write("")
+    if i % 2 == 0:
+        with col1:
+            st.plotly_chart(fig, use_container_width=True)
+    else:
+        with col2:
+            st.plotly_chart(fig, use_container_width=True)
+    
+    # Add a small space between rows
+    if i == 1:
+        st.write("")
+
+
+st.markdown("""
+
+##### 1.Independent Productions 
+Independent films have seen significant growth, rising from 40–50% in 1980–1995 to nearly 70% by 2020, with rapid acceleration post-2010. The DVD era (1995–2005) provided accessible distribution channels, and the rise of streaming platforms like Netflix and Amazon post-2010 created a surge in demand for low-budget content.  
+
+##### 2. Small Productions 
+Peaking at 30% during the DVD era (1990s–2005), small productions have declined sharply, making up less than 10% of movies by 2020.  
+DVDs allowed small-budget films to target niche audiences, but streaming platforms now favor either low-budget independents or high-budget blockbusters.  
+   - **Implications**: Small productions are being squeezed out, overshadowed by cheaper independent films and dominant super productions.  
+
+##### 3. Big Productions 
+   - Trend: Once over 35% of movies in the 1980s and 1990s, big productions have steadily declined, dropping below 15% by 2020.  
+   - Drivers: The decline of DVDs reduced mid-budget films' revenue streams, and streaming platforms prioritize independent or blockbuster content.  
+   - Implications: The shrinking space for mid-budget films reflects a shift to extremes in the industry’s financial model.  
+
+##### 4. Super Productions 
+   - Trend: Super productions have grown steadily since the 1980s, accounting for over 6% of movies by 2020, with rapid growth post-2000.  
+   - Drivers: Studios shifted to blockbusters to maximize theatrical revenue as DVDs declined, and in the streaming era, blockbusters drive subscriptions and dominate global viewership.  
+   - Implications: The rise of super productions underscores the industry's focus on fewer, high-budget films with global market appeal.  
+""")
 st.markdown("---")
 st.write("""
 Indeed! We can see a clear rise in movies from Independent production companies after DVDs hit the scene, 

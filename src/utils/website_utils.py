@@ -352,3 +352,159 @@ def return_num_companies_per_prod_type(df):
     fig.add_vline(x=2006, line=dict(color='gray', dash='dash', width=2))
 
     return fig
+def create_category_plot(data, category, label, color):
+    fig = go.Figure()
+    
+    fig.add_trace(
+        go.Scatter(
+            x=data.index,
+            y=data[category],
+            name=label,
+            line=dict(width=2, color=color),
+            hovertemplate="Year: %{x}<br>" +
+                        f"Proportion: %{{y:.1%}}<br>" +
+                        "<extra></extra>"
+        )
+    )
+    
+    fig.update_layout(
+        title={
+            'text': f'Proportion of {category.lower()} productions over the years (3-year rolling average)',
+            'x': 0.5,
+            'y': 0.95,
+            'xanchor': 'center',
+            'font': {'size': 16}
+        },
+        xaxis_title='Release year',
+        yaxis_title='Proportion',
+        yaxis_tickformat='.0%',
+        template='plotly_white',
+        height=400,
+        showlegend=True,
+        legend=dict(
+            yanchor="top",
+            y=0.99,
+            xanchor="right",
+            x=0.99
+        ),
+        margin=dict(t=60, b=50, l=50, r=50)
+    )
+    
+    fig.update_xaxes(
+        showgrid=True,
+        gridwidth=1,
+        gridcolor='rgba(128, 128, 128, 0.2)',
+        dtick=5
+    )
+    fig.update_yaxes(
+        showgrid=True,
+        gridwidth=1,
+        gridcolor='rgba(128, 128, 128, 0.2)'
+    )
+    
+    return fig
+# Utility function: Create histogram
+def create_histogram(data, x_col, color_col, title, labels, color_palette, nbins=50):
+    fig = px.histogram(
+        data,
+        x=x_col,
+        color=color_col,
+        nbins=nbins,
+        title=title,
+        labels=labels,
+        color_discrete_sequence=color_palette,
+        opacity=0.6
+    )
+    fig.update_layout(
+        template="plotly_white",
+        xaxis_title=labels.get(x_col, x_col),
+        yaxis_title="Count",
+        title_x=0.5,
+        title_font_size=20,
+        legend=dict(yanchor="top", y=0.99, xanchor="right", x=0.99),
+        margin=dict(t=50, b=50, l=50, r=50),
+    )
+    fig.update_xaxes(showgrid=True, gridwidth=1, gridcolor="rgba(128, 128, 128, 0.2)")
+    fig.update_yaxes(showgrid=True, gridwidth=1, gridcolor="rgba(128, 128, 128, 0.2)")
+    return fig
+
+
+# Utility function: Create line plot
+def create_line_plot(data, x_col, y_col, color_col, title, labels, color_palette):
+    fig = px.line(
+        data,
+        x=x_col,
+        y=y_col,
+        color=color_col,
+        title=title,
+        labels=labels,
+        color_discrete_sequence=color_palette,
+    )
+    fig.update_layout(
+        template="plotly_white",
+        xaxis_title=labels.get(x_col, x_col),
+        yaxis_title=labels.get(y_col, y_col),
+        title_x=0.5,
+        title_font_size=20,
+        legend=dict(yanchor="top", y=0.99, xanchor="right", x=0.99),
+        margin=dict(t=50, b=50, l=50, r=50),
+    )
+    fig.update_xaxes(showgrid=True, gridwidth=1, gridcolor="rgba(128, 128, 128, 0.2)")
+    fig.update_yaxes(showgrid=True, gridwidth=1, gridcolor="rgba(128, 128, 128, 0.2)")
+    return fig
+
+
+# Utility function: Create stacked bar plot
+def create_stacked_bar(data, x_col, y_cols, title, color_palette):
+    fig = go.Figure()
+    for i, col in enumerate(y_cols):
+        fig.add_trace(
+            go.Bar(
+                x=data[x_col],
+                y=data[col],
+                name=col,
+                marker_color=color_palette[i % len(color_palette)],
+            )
+        )
+    fig.update_layout(
+        barmode="relative",
+        template="plotly_white",
+        title=title,
+        xaxis_title=x_col,
+        yaxis_title="Proportion",
+        legend_title="Categories",
+        title_x=0.5,
+        margin=dict(t=50, b=50, l=50, r=50),
+    )
+    fig.update_yaxes(tickformat=".0%")
+    return fig
+
+
+# Utility function: Create choropleth map
+def create_choropleth_map(geo_data, region_mapping, color_palette):
+    geo_data["region"] = geo_data["SOVEREIGNT"].map(region_mapping)
+    geo_data = geo_data.dropna(subset=["region"])
+    fig = px.choropleth(
+        geo_data,
+        geojson=geo_data.geometry,
+        locations=geo_data.index,
+        color="region",
+        hover_name="SOVEREIGNT",
+        color_discrete_sequence=color_palette,
+    )
+    fig.update_geos(
+        showcoastlines=True, coastlinecolor="Black", showland=True, showframe=False
+    )
+    fig.update_layout(
+        template="plotly_white",
+        title="Production Countries by Region",
+        title_x=0.5,
+        margin={"r": 0, "t": 50, "l": 0, "b": 0},
+    )
+    return fig
+
+
+# Utility function: Filter data for proportions
+def calculate_proportions(df, base_vars, target_var):
+    counts = df.groupby(base_vars)[target_var].value_counts(normalize=True).unstack()
+    return counts.reset_index()
