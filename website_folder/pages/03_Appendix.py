@@ -114,9 +114,16 @@ st.markdown("The CMU dataset reveals a more genre-specific evolution across prod
 
 results = pd.read_csv('data/website_data/CMU/topics_per_genre_prod.csv')
 
-# Display the Empath model results
-fig_empath = plot_all_features(results, 'drama')
+# Add a dropdown (selectbox) for genre selection
+genre_options = results['genre'].unique()
+selected_genre = st.selectbox("Select Genre:", genre_options)
+
+# Plot the data based on the selected genre
+fig_empath = plot_all_features(results, selected_genre)
+
+# Display the plot
 st.pyplot(fig_empath)
+
 
 st.markdown("Similarly to the TMDB dataset, the drama movies in the CMU dataset also emphasize themes of family and community, but the trends show distinct differences across production types. Independent dramas initially focus on themes like family and home, with slight growth in positive emotion, while themes like war and crime see a decline during the DVD era. For Small productions, family and celebration emerge as central themes, with noticeable growth during the DVD years, reinforcing their universal appeal. Big productions maintain a consistent focus on family and war themes, showing stability rather than dramatic shifts. Meanwhile, Super productions take a different turn, with themes like war, sports, and leadership dominating in the pre-DVD era but declining sharply during the DVD period as more diverse themes like friendship and competing gained traction. This shift indicates a movement toward narratives with broader audience appeal, even among high-budget dramas.")
 
