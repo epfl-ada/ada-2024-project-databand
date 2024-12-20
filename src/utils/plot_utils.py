@@ -304,6 +304,27 @@ def plot_genre_prop_per_region(selected_regions, countries_genres_props):
     plt.show()
 
 def plot_rolling_averages(proportion_rolling):
+    plt.figure(figsize=(10,6))
+    # Plot the proportion of independent productions over the years
+    sns.lineplot(data=proportion_rolling['Independent'],
+                 label='Independent productions (<0.1x mean budget)')
+
+    # Plot the proportion of small productions over the years
+    sns.lineplot(data=proportion_rolling['Small'], label='Small productions (<1x mean budget)')
+
+    # Plot the proportion of big productions over the years
+    sns.lineplot(data=proportion_rolling['Big'],  label='Big productions (>1x mean budget)')
+
+    # Plot the proportion of super productions over the years
+    fig = sns.lineplot(data=proportion_rolling['Super'], label='Super productions (>5x mean budget)')
+    plt.xlabel('Release year')
+    plt.ylabel('Proportion')
+    plt.title('Production type proportions over years')
+    plt.tight_layout()
+    sns.move_legend(fig, bbox_to_anchor=(1.25, 1), loc='upper left')
+    plt.show()
+
+def plot_rolling_averages2(proportion_rolling):
     fig = go.Figure()
 
     fig.add_trace(go.Scatter(x=proportion_rolling.index, y=proportion_rolling['Independent'], 
@@ -378,6 +399,7 @@ def plot_revenue_inflation(df):
     plt.grid(True)
     plt.show()
 
+"""
 def plot_mean_budget_inflation(df, save_path=None):
     # Filter out movies with budget under 1000
     budget_stats = df[df.budget > 0].groupby('release_year')['budget'].agg(mean_budget='mean').reset_index()
@@ -424,6 +446,34 @@ def plot_mean_budget_inflation(df, save_path=None):
 
     # Show the plot
     fig.show()
+"""
+
+
+def plot_mean_budget_inflation(df):
+    budget_stats = df[df.budget > 0].groupby('release_year')['budget'].agg(mean_budget='mean').reset_index()
+
+    # Adjust the inflation for the budget statistics
+    budget_stats_inflation = adjust_inflation(budget_stats, old_col='mean_budget', new_col='mean_budget_inflation')
+
+    # Set the style and context for the plot
+    sns.set(style="whitegrid", context="talk")
+
+    # Plot the statistics
+    plt.figure(figsize=(14, 7))
+    sns.lineplot(data=budget_stats_inflation, x='release_year', y='mean_budget_inflation', marker='o')
+    plt.axvline(x=1997, label='Start DVD era', color='green', linestyle='dotted')
+    plt.axvline(x=2013, label='End DVD era', color='red', linestyle='dotted')
+
+    # Customize the plot
+    plt.title('Year by year mean film budget - adjusted for inflation', fontsize=16)
+    plt.xlabel('Release year')
+    plt.ylabel('Budget (inflation adjusted)')
+    plt.xticks(rotation=45)
+    plt.legend()
+    plt.tight_layout()
+
+    # Show the plot
+    plt.show()
 
 def plot_avg_num_prod_companies(yearly_avg_companies):
     # Create 2 subplots
