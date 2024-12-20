@@ -13,4 +13,4 @@ nltk==3.9.1
 gensim==4.3.3
 wordcloud==1.9.4
 gdown==.2.0
-pkg-resources
+pkg_resources
