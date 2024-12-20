@@ -102,6 +102,7 @@ zipp==3.21.0
 gdown
 geopandas
 empath
+spacy
 
 
 
