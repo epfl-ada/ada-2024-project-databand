@@ -137,11 +137,11 @@ st.plotly_chart(fig, use_container_width=True)
 
 # st.plotly_chart(fig, use_container_width=True)
 st.markdown("""
-From the plot, we can see a clear rise in movies from independent production companies after DVDs hit the scene, with small productions maintaining a strong presence.
+From the plot, we can see a clear rise in movies from independent production companies after DVDs hit the scene (1995-2005), with small productions maintaining a strong presence.
 
 However, it seems that the fall of DVDs reshaped budget allocations once again… 
 
-While Small production companies remained consistently prevalent during the DVD era, their popularity took a slight hit when DVD sales started declining. It seems that, without a viable secondary market, these projects struggled to find footing. 
+While small production companies remained consistently prevalent during the DVD era, their popularity took a slight hit when DVD sales started declining. It seems that, without a viable secondary market, these projects struggled to find footing. 
 In contrast, in peak DVD era was also marked with a slight boost in Super production companies, which maintained their influence in the movie industry after DVDs’ downfall. Indeed, some studios focused on large-scale productions with global earning potential.
 """)
 
@@ -245,7 +245,7 @@ region_prop['prop'] = region_prop['count'] / region_prop['total']
 
 # Create and display the regional distribution plot
 fig = create_regional_distribution_plot(region_prop)
-plot_col, text_col = st.columns([3, 1]) 
+plot_col, text_col = st.columns([3.5, 1]) 
 with plot_col:
     st.plotly_chart(fig, use_container_width=True)
 with text_col:
@@ -256,7 +256,7 @@ with text_col:
             North American movies, which have dominated since the mid-80s, hit their golden era in the late 1990s—just 
             as DVDs emerged—and have seen a small but steady decline ever since.
         """)
-st.markdown("""Let's focus on the biggest film-producing regions, and analyze their composition of production types:""")
+st.markdown("""Let's focus on the biggest film-producing regions, and analyze their composition of production types accross DVD eras:""")
 
 # Filter for major regions
 selected_regions = list(region_prop[region_prop.prop > 0.05].region.unique())
@@ -267,32 +267,51 @@ df_countries_filtered = df_countries[(df_countries.region.isin(selected_regions)
 fig = create_regional_production_subplots(df_countries_filtered, selected_regions)
 st.plotly_chart(fig, use_container_width=True)
 
-st.write("""Clearly, DVDs shook up the movie industry in different ways across world regions! Even among our major players—Eastern Asia, Europe, and North America—the trends vary widely. In Eastern Asia, for example, independent movies were already a staple in the pre-DVD era but gave way to super productions once DVDs arrived. In North America, super productions also gained traction post-DVD, but this came hand-in-hand with a significant rise in independent films, mirroring the global trend. Europe, however, stands out with the most surprising shift: independent movies declined, while super productions rose—but only during the DVD era!""")
+st.write("""Clearly, DVDs shook up the movie industry in different ways across world regions! Even among our major players—Eastern Asia, Europe, and North America—the trends vary widely. In Eastern Asia, for example, independent movies were already a staple in the pre-DVD era but gave way to super productions once DVDs arrived. In North America, super productions also gained traction post-DVD, but this came hand-in-hand with a significant rise in independent films, mirroring the global trend. """)
+with st.expander("🔍 Key Observations", expanded=True):
+    row1_col1, row1_col2 = st.columns([1, 1])
+    row2_col1, row2_col2 = st.columns([1, 1])
 
-st.header("Production Shifts: From Independence to Streaming Giants")
+    # Fill the grid with content
+    with row1_col1:
+        st.info("""
+            **1. Southern Asia and South America:**
+            
+            Both regions rely heavily on independent films, with minimal contributions from other production types.
+        """)
 
-# The Rise of Independent Studios
-st.subheader("The Rise of Independent Studios")
-st.markdown("""
-During the DVD era, independent studios leveraged home entertainment to:
-- **Distribute Niche Films**: DVDs offered a cost-effective means to reach audiences.
-- **Challenge Major Studios**: Smaller players gained prominence in a market previously dominated by blockbusters.
+    with row1_col2:
+        st.info("""
+            **2. North America and Europe:**
+            
+            These regions show the most balanced distribution, with significant shares of small, big, and super productions during the DVD era but shifting toward independent and super productions post-DVD.
+
+
+        """)
+
+    with row2_col1:
+        st.info("""
+            **3. Eastern Asia**
+            
+            Eastern Asia displays a steady rise in independent productions and a sharp decline in small productions post-DVD.
+
+
+        """)
+
+    with row2_col2:
+        st.info("""
+            **4. Russia and the UK**
+            
+            Both regions exhibit similar patterns, with a reduction in small and big productions post-DVD, replaced by more independent and super productions.
+        """)
+
+st.markdown("---")
+st.write("")
+st.subheader("Production Shifts")
+st.markdown("##### From Independence to Consolidation")
+st.markdown(""" As we have seen previously, the disapearance of DVDs made it harder for film companies to make a profit. Additionally, 
+movies are becomming increasingly expensive to produce as audiences expect hight quality visuals, and special effects. Achieving these require expensive equipment, talent and technology. 
 """)
-
-# Streaming’s Market Takeover
-st.subheader("Streaming’s Market Takeover")
-st.markdown("""
-With the decline of physical media, new players reshaped the production landscape:
-- **Dominance of Streaming Services**: Companies like Netflix and Amazon emerged as major content producers.
-- **Traditional Studios Adapt**: Legacy studios faced consolidation and strategic realignments to compete in the digital age.
-""")
-
-
-
-
-
-
-
 
 
 # Get mean number of production companies per year
@@ -300,11 +319,6 @@ yearly_avg_companies = (df[df['production_companies'].str.len() > 0].groupby('re
                        .agg({'production_companies': lambda x: x.str.len().mean()})
                        .reset_index())
 
-st.markdown("""
-So, DVDs allowed new players to enter the market, especially for low-budget movies. Interestingly, there’s also been an increase in collaboration between different production companies over time, as evaluated by the number of companies that produced a given movie:
-
-Indeed, we obtain a strong correlation between the number of production companies per movie and the release year. However, let’s check if this is really the case for all production types:
-""")
 
 # Create two columns for the plots
 col1, col2 = st.columns([1, 1])
@@ -319,24 +333,23 @@ with col1:
 # Display the second plot (correlation heatmap) in the second column
 with col2:
     st.plotly_chart(heatmap_fig)
+st.markdown("""
+One startegy adopted by the industry is to collaborate with other production companies to share the cost of making a movie. Indeed, we obtain a strong correlation between the number of production companies per movie and the release year.
 
-# Create columns
-col1, col2 = st.columns([1, 1])
+However, let’s check if this stays true for all production types:
+""")
 
-# Generate the figure from the function
 fig = return_num_companies_per_prod_type(df)
 
-# Display the text in the first column
-with col1:
-    st.markdown("""
-    It looks like bad news for independent productions… Indeed, while we observe a strengthening collaboration between production companies for movies of most production types after the rise of DVDs, companies of low-budget films appear to be left behind.
-    """)
+st.plotly_chart(fig)
 
-# Display the plot in the second column
-with col2:
-    st.plotly_chart(fig)
-
-st.markdown("""But who’s collaborating with whom? We create a network of our companies, linking those that co-produced a movie at least once. The result is 5 clusters, with a clear dominant one. If we take a closer look at who are the major collaborators, we recognize some familiar names - “Paramount”, “20th Century Fox”, or “Columbia Pictures”.  The dominance of these major players in the collaboration space suggests that while the market has become more accessible, true influence in the industry remains concentrated among established giants.""")
+st.markdown("""
+#### Takeaways
+- The rise in collaborations for super and big productions highlights the increasing complexity and scale of films aimed at global audiences.
+- The flat trend for independent films reflects their resource constraints and streamlined approach, which align with their low-budget nature.
+- The decline in collaborations for small productions post-DVD may point to their reduced viability in an era dominated by streaming platforms favoring either blockbusters or lean independent films.    """)
+st.write("")
+st.markdown("""But who’s collaborating with whom? We created a network of our companies, linking those that co-produced a movie at least once. """)
 
 df_graph = df[df['production_companies'].str.len() > 0]
 
@@ -346,7 +359,9 @@ fig = return_collaborations(before_DVD_era_super)
 
 # Display the Plotly figure in Streamlit
 st.plotly_chart(fig, use_container_width=True)
-
+st.markdown("""
+The result is 5 clusters, with a clear dominant one. If we take a closer look at who are the major collaborators, we recognize some familiar names - “Paramount”, “20th Century Fox”, or “Columbia Pictures”.  The dominance of these major players in the collaboration space suggests that while the market has become more accessible, true influence in the industry remains concentrated among established giants.
+""")
 st.header("Genre Evolution: Reflecting Changing Preferences")
 
 # select rows with at least one genre entry
@@ -368,12 +383,14 @@ colImp1, colImp2 = st.columns([1, 2])
 with colImp1:
     st.subheader("The Impact of DVDs on Genre Trends")
     st.markdown("""
-    The advent and rise of DVDs transformed the movie industry, reshaping genre trends across different production types while responding to changing audience preferences.
-
-    First, let’s check the most popular genres for each production type:
-
-    For independent, small, and big production movies, we observe a clear preference for **drama**, **comedy**, and **thriller** movies. In contrast, **super production** movies appear to favour **action** and **adventure** movies. By analyzing the genre preferences across DVD eras, we observe that most remained relatively stable over time:  
-    """)
+        The advent and rise of DVDs transformed the movie industry, reshaping genre trends across different production types while responding to changing audience preferences.
+    
+    First, let's check the most popular genres for each production type:
+    
+    - For independent, small, and big production movies, we observe a clear preference for **drama**, **comedy**, and **thriller** movies
+    - In contrast, **super production** movies appear to favor **action** and **adventure** movies
+    - By analyzing the genre preferences across DVD eras, we observe that most remained relatively stable over time
+""")
 
 # Column 2: First Plot - Genre Proportions by Production Type
 with colImp2:
