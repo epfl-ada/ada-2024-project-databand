@@ -484,10 +484,48 @@ fig_empath = plot_all_features(results, selected_genre)
 # Display the plot
 st.pyplot(fig_empath)
 
-st.markdown("""Drama movies show a strong focus on family and children themes for Independent, Small, and Big productions. While these themes remain stable or slightly grow for Small and Big productions across DVD eras, they decline in prominence for Independent films over time. Super production dramas, on the other hand, were dominated by war, fight, and military themes in the pre-DVD era. Although these themes became less dominant after DVDs, they still stayed among the most popular.
-Action movies reveal shifting trends: Independent productions initially leaned into crime themes during the pre- and DVD eras but later saw a rise in sports and competition themes post-DVD. Small and Big productions also focused on crime early on, with a slight decline post-DVD and an increase in war themes. Super productions transitioned from crime and leadership themes in the pre-DVD era to more war and fight themes during and after the DVD era.
-For adventure movies, themes grow progressively more serious with higher budgets. Independent productions feature lighter themes like friends, vacation, and travel, while super productions center on military, aggression, and monsters. Across all production types, children-themed adventure movies remain a priority, though their popularity declines for Independent and Small productions after the onset of DVDs. Super productions shift from leader and power themes pre-DVD to fight, war, and heroic narratives during the peak and post-DVD eras.
-Ultimately, drama, action, and adventure movies really show how themes evolve depending on budgets and eras. Independent productions often keep things relatable with family, friends, or niche topics, while bigger budgets mean more room for epic themes like war, heroics, and larger-than-life adventures. The DVD era added its own twist, nudging some themes into the spotlight while others quietly stepped back. These trends don’t just reflect industry changes—they also show how audiences’ tastes and cultural landscapes keep shaping the stories we love to watch.""")
+# Drama Section
+with st.expander("🎭 Drama Movies", expanded=True):
+    st.info("""
+        Drama movies show a strong focus on family and children themes for Independent, Small, and Big productions. 
+        While these themes remain stable or slightly grow for Small and Big productions across DVD eras, they decline 
+        in prominence for Independent films over time.
+
+        Super production dramas, on the other hand, were dominated by war, fight, and military themes in the pre-DVD era. 
+        Although these themes became less dominant after DVDs, they still stayed among the most popular.
+    """)
+
+# Action Section
+with st.expander("🔥 Action Movies"):
+    st.info("""
+        Action movies reveal shifting trends: Independent productions initially leaned into crime themes during the pre- and DVD eras 
+        but later saw a rise in sports and competition themes post-DVD. 
+
+        Small and Big productions also focused on crime early on, with a slight decline post-DVD and an increase in war themes. 
+        Super productions transitioned from crime and leadership themes in the pre-DVD era to more war and fight themes during and after the DVD era.
+    """)
+
+# Adventure Section
+with st.expander("🌍 Adventure Movies"):
+    st.info("""
+        For adventure movies, themes grow progressively more serious with higher budgets. Independent productions feature lighter themes 
+        like friends, vacation, and travel, while super productions center on military, aggression, and monsters. 
+
+        Across all production types, children-themed adventure movies remain a priority, though their popularity declines for Independent 
+        and Small productions after the onset of DVDs. Super productions shift from leader and power themes pre-DVD to fight, war, and heroic narratives during the peak and post-DVD eras.
+    """)
+
+# Summary Section
+st.markdown("---")
+st.markdown("""
+Ultimately, drama, action, and adventure movies really show how themes evolve depending on budgets and eras. 
+
+- Independent productions often keep things relatable with family, friends, or niche topics.
+- Bigger budgets mean more room for epic themes like war, heroics, and larger-than-life adventures.
+- The DVD era added its own twist, nudging some themes into the spotlight while others quietly stepped back. 
+
+These trends don’t just reflect industry changes—they also show how audiences’ tastes and cultural landscapes keep shaping the stories we love to watch.
+""")
 
 st.subheader("Trends around world region")
 st.write("")
