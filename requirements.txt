@@ -12,4 +12,4 @@ statsmodels==0.14.4
 nltk==3.9.1
 gensim==4.3.3
 wordcloud==1.9.4
-gdown=5.2.0
+gdown==.2.0
