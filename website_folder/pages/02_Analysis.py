@@ -581,7 +581,7 @@ st.markdown("""
         }
     </style>
 """, unsafe_allow_html=True)
-
+st.balloons()
 # Add the Next button
 if st.button("Appendix →"):
     st.switch_page("appendix_page.py")
