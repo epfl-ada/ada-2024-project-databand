@@ -116,18 +116,54 @@ def remove_genres(df, genres):
     return df
 
 def create_cmu_tmdb_dataset(cmu_movies_path, plots_path, tmdb_path, how_merge):
+    # Google Drive URLs for the files, replace with actual URLs as needed
+    google_drive_urls = {
+        "cmu_movies": "https://drive.google.com/file/d/CMU_MOVIES_FILE_ID/view?usp=drive_link",
+        "plots": "https://drive.google.com/file/d/PLOTS_FILE_ID/view?usp=drive_link",
+        "tmdb": "https://drive.google.com/file/d/TMDB_FILE_ID/view?usp=drive_link",
+    }
+    
+    # Function to download a file from Google Drive if not present
+    def download_if_missing(file_path, google_drive_url):
+        if not os.path.exists(file_path):
+            print(f"File not found at {file_path}, downloading...")
+            file_id = google_drive_url.split('/d/')[1].split('/')[0]
+            gdown.download(f'https://drive.google.com/uc?id={file_id}', file_path, quiet=False)
+            print(f"File downloaded to {file_path}")
+
+    # Check and download the files if missing
+    download_if_missing(cmu_movies_path, google_drive_urls["cmu_movies"])
+    download_if_missing(plots_path, google_drive_urls["plots"])
+    download_if_missing(tmdb_path, google_drive_urls["tmdb"])
+
+    # Load the data
     df_movies = pd.read_csv(cmu_movies_path)
     df_plots = pd.read_csv(plots_path)
     df_tmdb = pd.read_csv(tmdb_path)
+    
+    # Clean TMDB data
     df_tmdb = clean_string_to_list(df_tmdb, TMDB_string_columns)
+
+    # Determine common columns for merging
     common_columns = list(set(df_movies.columns.tolist()) & set(df_tmdb.columns.tolist()))
     common_columns.remove('release_year')
     common_columns.remove('title')
-    df_combined = combine_dataframes(df_movies=df_movies, df_plots=df_plots, df_tmdb=df_tmdb,
-                                     common_columns=common_columns, cutoffyear=2012, how_merge=how_merge)
+    
+    # Combine dataframes
+    df_combined = combine_dataframes(
+        df_movies=df_movies,
+        df_plots=df_plots,
+        df_tmdb=df_tmdb,
+        common_columns=common_columns,
+        cutoffyear=2012,
+        how_merge=how_merge
+    )
+
+    # Annotate and process the combined dataframe
     df_combined = annotate_dvd_era(df_combined)
     df_combined['overview'] = df_combined['summary'].copy()
     df_combined.fillna({'overview': ''}, inplace=True)
+    
     return df_combined
 
 def create_tmdb_dataset(tmdb_path):

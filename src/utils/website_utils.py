@@ -8,8 +8,87 @@ from itertools import combinations
 import numpy as np
 import geopandas as gpd
 from plotly.subplots import make_subplots
+import pandas as pd
 
 from src.utils.data_utils import categorize_budget
+
+
+from plotly.subplots import make_subplots
+import plotly.graph_objects as go
+
+
+def return_movies_prop_per_region(region_props):
+    fig = px.line(
+        region_props[region_props.prop > 0.01],
+        x='release_year',
+        y='prop',
+        color='region',
+        title='Proportion of movies released over time per region',
+        labels={'release_year': 'Release Year', 'prop': 'Proportion'},
+        line_shape='linear'
+    )
+    fig.update_layout(
+        legend_title='Region',
+        xaxis_title='Release Year',
+        yaxis_title='Proportion',
+        legend=dict(x=1.05, y=1, traceorder='normal', orientation='h', title='Region')
+    )
+    return fig
+
+def return_prod_type_prop_per_region(selected_regions, df_countries_filtered):
+    # Initialize the figure
+    fig = make_subplots(
+        rows=1,
+        cols=len(selected_regions),
+        shared_yaxes=True,
+        subplot_titles=selected_regions
+    )
+
+    # Define the colors for production types
+    colors = {
+        'Independent': '#1f77b4',  # Blue
+        'Small': '#ff7f0e',       # Orange
+        'Big': '#2ca02c',         # Green
+        'Super': '#d62728'        # Red
+    }
+
+    # Add a bar trace for each production type in each region
+    for col_idx, region in enumerate(selected_regions, start=1):
+        df_region = df_countries_filtered[df_countries_filtered['region'] == region]
+        for prod_type in ['Independent', 'Small', 'Big', 'Super']:
+            df_prod = df_region[df_region['prod_type'] == prod_type]
+            proportions = df_prod.groupby('dvd_era').size() / len(df_region)
+            
+            # Add trace
+            fig.add_trace(
+                go.Bar(
+                    x=proportions.index,
+                    y=proportions.values,
+                    name=prod_type,  # Proper label for legend
+                    marker_color=colors[prod_type],
+                    showlegend=(col_idx == 1)  # Show legend only for the first column
+                ),
+                row=1,
+                col=col_idx
+            )
+
+    # Update layout
+    fig.update_layout(
+        title="Production Type Proportions for Major Regions",
+        barmode='stack',
+        height=600,
+        width=1200,
+        legend_title="Production Type",
+        showlegend=True
+    )
+
+    # Adjust subplot titles and spacing
+    fig.update_annotations(font_size=12)
+    fig.update_xaxes(title_text="DVD Era")
+    fig.update_yaxes(title_text="Proportion", col=1)
+
+    return fig
+
 
 def return_genre_prop_per_region(selected_regions, countries_genres_props):
     print("Creating genre proportions per region plot...")
@@ -760,3 +839,4 @@ def return_budget_rolling_averages(df):
 
     # Return the plot
     return fig
+
