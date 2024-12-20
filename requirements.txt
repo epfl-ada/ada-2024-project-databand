@@ -101,6 +101,6 @@ wrapt==1.17.0
 zipp==3.21.0
 gdown
 geopandas
-transformers== 4.21.0
+
 
 
