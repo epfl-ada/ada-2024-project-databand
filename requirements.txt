@@ -103,6 +103,7 @@ gdown
 geopandas
 empath
 spacy
+en-core-web-sm
 
 
 

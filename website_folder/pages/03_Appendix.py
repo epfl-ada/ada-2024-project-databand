@@ -1,15 +1,6 @@
 import streamlit as st
 from pathlib import Path
 import sys
-import spacy
-
-from spacy.cli import download
-
-# Download the en_core_web_sm model if not already installed
-try:
-    spacy.load('en_core_web_sm')
-except OSError:
-    download('en_core_web_sm')
 
 from src.models.empath_model import EmpathModel
 
