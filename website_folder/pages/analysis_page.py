@@ -72,9 +72,6 @@ col1, col2 = st.columns([1, 1])
 #- **Recovery Opportunities**: Underperforming films could achieve financial success through strong DVD sales.
 #- **Broader Accessibility**: DVDs expanded the reach of films, particularly benefiting family-friendly and niche genres.
 with col1:
-    st.write("")  
-    st.write("") 
-
     fig_revenue = create_histogram(
         df_filtered,
         x_col='log_revenue',
@@ -87,12 +84,13 @@ with col1:
 
 with col2:
     st.markdown(""" 
-##### The Pre-DVD Era (Red)
-Before the rise of DVDs, the film industry was dominated by theatrical releases, with a significant number of movies achieving mid-to-high revenue levels (log revenue scale of 5–7, equivalent to 100,000-10,000,000 dollars). 
-##### The DVD Era (Blue)
-The introduction of DVDs changed the industry. This era saw a sharp increase in the number of movies generating moderate revenue (log revenue scale of 3–6, roughly 1,000-1,000,000 dollars). DVDs provided smaller-budget and niche films with an alternate revenue stream, democratizing the market and allowing more films to find financial success even if they didn’t dominate at the box office.
-##### The Post-DVD Era (Green)
-With the decline of DVDs and the rise of streaming platforms, the revenue landscape shifted once again. The distribution reveals a drop in high-revenue films, with fewer movies achieving blockbuster-level revenues (log revenue scale above 7). The majority of movies now cluster in the lower revenue ranges (log revenue scale of 3–6), reflecting the challenges faced by filmmakers in the subscription-driven streaming era.
+**The Pre-DVD Era (Red):** Before the rise of DVDs, the film industry was dominated by theatrical releases, with a significant number of movies achieving mid-to-high revenue levels (log revenue scale of 5–7, equivalent to 100,000-10,000,000 dollars). 
+""")
+    st.markdown("""
+**The DVD Era (Blue):** The introduction of DVDs changed the industry. This era saw a sharp increase in the number of movies generating moderate revenue (log revenue scale of 3–6, roughly 1,000-1,000,000 dollars). DVDs provided smaller-budget and niche films with an alternate revenue stream, democratizing the market and allowing more films to find financial success even if they didn’t dominate at the box office.
+""")
+    st.markdown(""" 
+**The Post-DVD Era (Green):** With the decline of DVDs and the rise of streaming platforms, the revenue landscape shifted once again. The distribution reveals a drop in high-revenue films, with fewer movies achieving blockbuster-level revenues (log revenue scale above 7). The majority of movies now cluster in the lower revenue ranges (log revenue scale of 3–6), reflecting the challenges faced by filmmakers in the subscription-driven streaming era.
 """)
 
 
@@ -178,129 +176,33 @@ df['dvd_era'] = pd.Categorical(df['dvd_era'], categories=['pre', 'during', 'post
 df['prod_type'] = pd.Categorical(df['prod_type'], categories=['Independent', 'Small', 'Big', 'Super'], ordered=True)
 
 
-# Filter data
 df_filtered = df[df.budget > 0]
-
-# Calculate proportions
 props = (df_filtered.groupby('dvd_era')['prod_type']
          .value_counts(normalize=True)
          .unstack())
 
-# Create stacked bar plot
-fig = go.Figure()
-
-# Color palette similar to tab20
-colors = [
-    '#1f77b4', '#aec7e8', '#ff7f0e', '#ffbb78',
-    '#2ca02c', '#98df8a', '#d62728', '#ff9896',
-    '#9467bd', '#c5b0d5', '#8c564b', '#c49c94',
-    '#e377c2', '#f7b6d2', '#7f7f7f', '#c7c7c7',
-    '#bcbd22', '#dbdb8d', '#17becf', '#9edae5'
-]
-
-# Add bars for each production type
-for i, prod_type in enumerate(props.columns):
-    fig.add_trace(go.Bar(
-        name=prod_type,
-        x=props.index,
-        y=props[prod_type],
-        marker_color=colors[i % len(colors)]
-    ))
-
-# Update layout
-fig.update_layout(
-    barmode='relative',
-    title={
-        'text': 'Production Type Proportions Across DVD Eras',
-        'x': 0.5,
-        'xanchor': 'center',
-        'font': {'size': 20}
-    },
-    xaxis_title='DVD Era',
-    yaxis_title='Proportion',
-    yaxis_tickformat='.0%',
-    legend_title='Production Types',
-    legend=dict(
-        yanchor="top",
-        y=1,
-        xanchor="left",
-        x=1.02
-    ),
-    template='plotly_white',
-    height=600,
-    margin=dict(r=150)  # Add right margin for legend
-)
-
-# Display the plot
+# Production type proportions across DVD eras
+fig = create_stacked_bar(props)
 st.plotly_chart(fig, use_container_width=True)
 
 st.subheader("Impact globally: ")
 st.write("""But was the movie industry impacted the same way globally? 
 Let's focus on the production countries of our movies. Since there are many, we group them into main global regions:  
 """)
-def plot_world_map(countries_regions):
-    try:
-        # Read the shapefile
-        world = gpd.read_file('data/ne_110m_admin_0_countries.shp', encoding='utf-8')
-        world['SOVEREIGNT'] = world['SOVEREIGNT'].str.lower()
-        
-        # Add region column
-        world['region'] = world['SOVEREIGNT'].map(countries_regions)
-        
-        # Filter out NaN values and reset index
-        world_filtered = world.dropna(subset=['region']).reset_index(drop=True)
-        
-        # Create Plotly choropleth map
-        fig = px.choropleth(
-            world_filtered,
-            geojson=world_filtered.geometry,
-            locations=world_filtered.index,
-            color='region',
-            hover_name='SOVEREIGNT',
-            color_discrete_sequence=px.colors.qualitative.Set3,
-        )
-        
-        # Update layout
-        fig.update_geos(
-            showcoastlines=True,
-            coastlinecolor="Black",
-            showland=True,
-            showframe=False,
-            projection_type="equirectangular"
-        )
-        
-        fig.update_layout(
-            title={
-                'text': 'Production Countries Map Colored by Region',
-                'x': 0.5,
-                'xanchor': 'center',
-                'font': {'size': 20}
-            },
-            height=500,
-            margin={"r": 0, "t": 30, "l": 0, "b": 0},
-            legend_title_text='World Regions',
-            legend=dict(
-                yanchor="top",
-                y=0.99,
-                xanchor="right",
-                x=0.99
-            ),
-            template='plotly_white'
-        )
-        
-        # Display the plot in Streamlit
-        st.plotly_chart(fig, use_container_width=True)
-        
-    except Exception as e:
-        st.error(f"Error loading the map: {str(e)}")
-        st.write("Please ensure the shapefile is in the correct location: data/ne_110m_admin_0_countries.shp")
 
-# Rest of your existing code stays the same...
-# World Map
+# World Map visualization
 try:
     with open('data/countries_to_region.json', 'r') as file:
         countries_regions = json.load(file)
-    plot_world_map(countries_regions)
+    
+    fig, error = create_world_map(countries_regions, 'data/ne_110m_admin_0_countries.shp')
+    
+    if error:
+        st.error(error)
+        st.write("Please ensure the shapefile is in the correct location: data/ne_110m_admin_0_countries.shp")
+    else:
+        st.plotly_chart(fig, use_container_width=True)
+        
 except FileNotFoundError:
     st.error("Could not find the countries_to_region.json file. Please ensure it's in the data directory.")
 
@@ -329,58 +231,8 @@ total_counts = df_countries.groupby(['release_year']).size().reset_index(name='t
 region_prop = region_counts.merge(total_counts, on='release_year')
 region_prop['prop'] = region_prop['count'] / region_prop['total']
 
-# Create Plotly figure
-fig = px.line(
-    region_prop[region_prop.prop > 0.01], 
-    x='release_year', 
-    y='prop',
-    color='region',
-    title='Regional Distribution of Movie Production Over Time',
-    labels={
-        'release_year': 'Release Year',
-        'prop': 'Proportion of Movies',
-        'region': 'Region'
-    },
-    color_discrete_sequence=px.colors.qualitative.Set3
-)
-
-# Update layout
-fig.update_layout(
-    title={
-        'text': 'Regional Distribution of Movie Production Over Time',
-        'x': 0.5,
-        'xanchor': 'center',
-        'font': {'size': 20}
-    },
-    xaxis_title='Release Year',
-    yaxis_title='Proportion of Movies',
-    yaxis_tickformat='.0%',
-    legend_title='Region',
-    legend=dict(
-        yanchor="top",
-        y=0.99,
-        xanchor="right",
-        x=0.99
-    ),
-    template='plotly_white',
-    height=500,
-    margin=dict(t=50, b=50, l=50, r=50)
-)
-
-# Add gridlines
-fig.update_xaxes(
-    showgrid=True,
-    gridwidth=1,
-    gridcolor='rgba(128, 128, 128, 0.2)',
-    dtick=5
-)
-fig.update_yaxes(
-    showgrid=True,
-    gridwidth=1,
-    gridcolor='rgba(128, 128, 128, 0.2)'
-)
-
-# Display the plot
+# Create and display the regional distribution plot
+fig = create_regional_distribution_plot(region_prop)
 st.plotly_chart(fig, use_container_width=True)
 
 st.write("""Interestingly, Eastern Asia and Europe show opposite trends in movie releases around the DVD era: 
@@ -396,83 +248,8 @@ selected_regions = list(region_prop[region_prop.prop > 0.05].region.unique())
 df_countries_filtered = df_countries[(df_countries.region.isin(selected_regions)) 
                                    & (df_countries.budget > 0)]
 
-# Create subplots
-fig = make_subplots(
-    rows=1, 
-    cols=len(selected_regions),
-    subplot_titles=selected_regions,
-    shared_yaxes=True
-)
-
-# Color mapping for production types
-colors = px.colors.qualitative.Set3[:4]
-prod_type_order = ['Independent', 'Small', 'Big', 'Super']
-
-# Create a plot for each region
-for i, region in enumerate(selected_regions):
-    region_data = df_countries_filtered[df_countries_filtered['region'] == region]
-    
-    # Calculate proportions for each DVD era and production type
-    props = (region_data.groupby('dvd_era')['prod_type']
-             .value_counts(normalize=True)
-             .unstack()
-             .fillna(0))
-    
-    # Ensure all production types are present
-    for prod_type in prod_type_order:
-        if prod_type not in props.columns:
-            props[prod_type] = 0
-    
-    # Reorder columns
-    props = props[prod_type_order]
-    
-    # Add bars for each production type
-    for j, prod_type in enumerate(prod_type_order):
-        fig.add_trace(
-            go.Bar(
-                name=prod_type,
-                x=props.index,
-                y=props[prod_type],
-                legendgroup=prod_type,
-                showlegend=(i == 0),  # Show legend only for first region
-                marker_color=colors[j]
-            ),
-            row=1, 
-            col=i+1
-        )
-
-# Update layout
-fig.update_layout(
-    title={
-        'text': 'Production Type Proportions by Region Across DVD Eras',
-        'x': 0.5,
-        'xanchor': 'center',
-        'font': {'size': 20}
-    },
-    barmode='relative',
-    height=500,
-    showlegend=True,
-    legend=dict(
-        yanchor="top",
-        y=0.99,
-        xanchor="right",
-        x=1.02,
-        title="Production Type"
-    ),
-    template='plotly_white',
-    margin=dict(t=100, r=150)  # Add right margin for legend
-)
-
-# Update axes
-for i in range(len(selected_regions)):
-    fig.update_xaxes(title_text="DVD Era", row=1, col=i+1)
-    if i == 0:  # Only add y-axis title to first subplot
-        fig.update_yaxes(title_text="Proportion", row=1, col=1)
-
-# Update y-axes format
-fig.update_yaxes(tickformat='.0%')
-
-# Display the plot
+# Create and display the regional production subplots
+fig = create_regional_production_subplots(df_countries_filtered, selected_regions)
 st.plotly_chart(fig, use_container_width=True)
 
 st.write("""Clearly, DVDs shook up the movie industry in different ways across world regions! Even among our major players—Eastern Asia, Europe, and North America—the trends vary widely. In Eastern Asia, for example, independent movies were already a staple in the pre-DVD era but gave way to super productions once DVDs arrived. In North America, super productions also gained traction post-DVD, but this came hand-in-hand with a significant rise in independent films, mirroring the global trend. Europe, however, stands out with the most surprising shift: independent movies declined, while super productions rose—but only during the DVD era!""")

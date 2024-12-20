@@ -6,6 +6,8 @@ import plotly.express as px
 import networkx as nx
 from itertools import combinations
 import numpy as np
+import geopandas as gpd
+from plotly.subplots import make_subplots
 
 def return_genre_prop_per_region(selected_regions, countries_genres_props):
     print("Creating genre proportions per region plot...")
@@ -454,57 +456,262 @@ def create_line_plot(data, x_col, y_col, color_col, title, labels, color_palette
     return fig
 
 
-# Utility function: Create stacked bar plot
-def create_stacked_bar(data, x_col, y_cols, title, color_palette):
+def create_stacked_bar(props, title='Production Type Proportions Across DVD Eras', 
+                           x_title='DVD Era', y_title='Proportion', legend_title='Production Types'):
+
     fig = go.Figure()
-    for i, col in enumerate(y_cols):
-        fig.add_trace(
-            go.Bar(
-                x=data[x_col],
-                y=data[col],
-                name=col,
-                marker_color=color_palette[i % len(color_palette)],
-            )
+    
+    colors = [
+        '#1f77b4', '#aec7e8', '#ff7f0e', '#ffbb78',
+        '#2ca02c', '#98df8a', '#d62728', '#ff9896',
+        '#9467bd', '#c5b0d5', '#8c564b', '#c49c94',
+        '#e377c2', '#f7b6d2', '#7f7f7f', '#c7c7c7',
+        '#bcbd22', '#dbdb8d', '#17becf', '#9edae5'
+    ]
+    
+    for i, prod_type in enumerate(props.columns):
+        fig.add_trace(go.Bar(
+            name=prod_type,
+            x=props.index,
+            y=props[prod_type],
+            marker_color=colors[i % len(colors)]
+        ))
+    
+    fig.update_layout(
+        barmode='relative',
+        title={
+            'text': title,
+            'x': 0.5,
+            'xanchor': 'center',
+            'font': {'size': 20}
+        },
+        xaxis_title=x_title,
+        yaxis_title=y_title,
+        yaxis_tickformat='.0%',
+        legend_title=legend_title,
+        legend=dict(
+            yanchor="top",
+            y=1,
+            xanchor="left",
+            x=1.02
+        ),
+        template='plotly_white',
+        height=600,
+        margin=dict(r=150)  # Add right margin for legend
+    )
+    
+    return fig
+
+
+def create_world_map(countries_regions, shapefile_path):
+    try:
+        # Read the shapefile
+        world = gpd.read_file(shapefile_path, encoding='utf-8')
+        world['SOVEREIGNT'] = world['SOVEREIGNT'].str.lower()
+        
+        # Add region column
+        world['region'] = world['SOVEREIGNT'].map(countries_regions)
+        
+        # Filter out NaN values and reset index
+        world_filtered = world.dropna(subset=['region']).reset_index(drop=True)
+        
+        # Create Plotly choropleth map
+        fig = px.choropleth(
+            world_filtered,
+            geojson=world_filtered.geometry,
+            locations=world_filtered.index,
+            color='region',
+            hover_name='SOVEREIGNT',
+            color_discrete_sequence=px.colors.qualitative.Set3,
         )
-    fig.update_layout(
-        barmode="relative",
-        template="plotly_white",
-        title=title,
-        xaxis_title=x_col,
-        yaxis_title="Proportion",
-        legend_title="Categories",
-        title_x=0.5,
-        margin=dict(t=50, b=50, l=50, r=50),
-    )
-    fig.update_yaxes(tickformat=".0%")
-    return fig
-
-
-# Utility function: Create choropleth map
-def create_choropleth_map(geo_data, region_mapping, color_palette):
-    geo_data["region"] = geo_data["SOVEREIGNT"].map(region_mapping)
-    geo_data = geo_data.dropna(subset=["region"])
-    fig = px.choropleth(
-        geo_data,
-        geojson=geo_data.geometry,
-        locations=geo_data.index,
-        color="region",
-        hover_name="SOVEREIGNT",
-        color_discrete_sequence=color_palette,
-    )
-    fig.update_geos(
-        showcoastlines=True, coastlinecolor="Black", showland=True, showframe=False
-    )
-    fig.update_layout(
-        template="plotly_white",
-        title="Production Countries by Region",
-        title_x=0.5,
-        margin={"r": 0, "t": 50, "l": 0, "b": 0},
-    )
-    return fig
+        
+        # Update layout
+        fig.update_geos(
+            showcoastlines=True,
+            coastlinecolor="Black",
+            showland=True,
+            showframe=False,
+            projection_type="equirectangular"
+        )
+        
+        fig.update_layout(
+            title={
+                'text': 'Production Countries Map Colored by Region',
+                'x': 0.5,
+                'xanchor': 'center',
+                'font': {'size': 20}
+            },
+            height=500,
+            margin={"r": 0, "t": 30, "l": 0, "b": 0},
+            legend_title_text='World Regions',
+            legend=dict(
+                yanchor="top",
+                y=0.99,
+                xanchor="right",
+                x=0.99
+            ),
+            template='plotly_white'
+        )
+        
+        return fig, None
+        
+    except Exception as e:
+        return None, f"Error loading the map: {str(e)}"
 
 
 # Utility function: Filter data for proportions
 def calculate_proportions(df, base_vars, target_var):
     counts = df.groupby(base_vars)[target_var].value_counts(normalize=True).unstack()
     return counts.reset_index()
+
+def create_regional_distribution_plot(region_prop, min_prop=0.01):
+    # Filter regions by minimum proportion
+    filtered_data = region_prop[region_prop.prop > min_prop]
+    
+    # Create the line plot
+    fig = px.line(
+        filtered_data, 
+        x='release_year', 
+        y='prop',
+        color='region',
+        title='Regional Distribution of Movie Production Over Time',
+        labels={
+            'release_year': 'Release Year',
+            'prop': 'Proportion of Movies',
+            'region': 'Region'
+        },
+        color_discrete_sequence=px.colors.qualitative.Set3
+    )
+
+    # Update layout
+    fig.update_layout(
+        title={
+            'text': 'Regional Distribution of Movie Production Over Time',
+            'x': 0.5,
+            'xanchor': 'center',
+            'font': {'size': 20}
+        },
+        xaxis_title='Release Year',
+        yaxis_title='Proportion of Movies',
+        yaxis_tickformat='.0%',
+        legend_title='Region',
+        legend=dict(
+            yanchor="top",
+            y=0.99,
+            xanchor="right",
+            x=0.99
+        ),
+        template='plotly_white',
+        height=500,
+        margin=dict(t=50, b=50, l=50, r=50)
+    )
+
+    # Add gridlines
+    fig.update_xaxes(
+        showgrid=True,
+        gridwidth=1,
+        gridcolor='rgba(128, 128, 128, 0.2)',
+        dtick=5
+    )
+    fig.update_yaxes(
+        showgrid=True,
+        gridwidth=1,
+        gridcolor='rgba(128, 128, 128, 0.2)'
+    )
+    
+    return fig
+
+def create_regional_production_subplots(df_countries_filtered, selected_regions):
+    """
+    Create subplots showing production type proportions by region across DVD eras.
+    
+    Parameters:
+    -----------
+    df_countries_filtered : pandas.DataFrame
+        Filtered DataFrame containing columns: 'region', 'dvd_era', 'prod_type'
+    selected_regions : list
+        List of regions to create subplots for
+        
+    Returns:
+    --------
+    plotly.graph_objects.Figure
+        The created figure object with subplots
+    """
+    
+    # Create subplots
+    fig = make_subplots(
+        rows=1, 
+        cols=len(selected_regions),
+        subplot_titles=selected_regions,
+        shared_yaxes=True
+    )
+
+    # Color mapping for production types
+    colors = px.colors.qualitative.Set3[:4]
+    prod_type_order = ['Independent', 'Small', 'Big', 'Super']
+
+    # Create a plot for each region
+    for i, region in enumerate(selected_regions):
+        region_data = df_countries_filtered[df_countries_filtered['region'] == region]
+        
+        # Calculate proportions for each DVD era and production type
+        props = (region_data.groupby('dvd_era')['prod_type']
+                 .value_counts(normalize=True)
+                 .unstack()
+                 .fillna(0))
+        
+        # Ensure all production types are present
+        for prod_type in prod_type_order:
+            if prod_type not in props.columns:
+                props[prod_type] = 0
+        
+        # Reorder columns
+        props = props[prod_type_order]
+        
+        # Add bars for each production type
+        for j, prod_type in enumerate(prod_type_order):
+            fig.add_trace(
+                go.Bar(
+                    name=prod_type,
+                    x=props.index,
+                    y=props[prod_type],
+                    legendgroup=prod_type,
+                    showlegend=(i == 0),  # Show legend only for first region
+                    marker_color=colors[j]
+                ),
+                row=1, 
+                col=i+1
+            )
+
+    # Update layout
+    fig.update_layout(
+        title={
+            'text': 'Production Type Proportions by Region Across DVD Eras',
+            'x': 0.5,
+            'xanchor': 'center',
+            'font': {'size': 20}
+        },
+        barmode='relative',
+        height=500,
+        showlegend=True,
+        legend=dict(
+            yanchor="top",
+            y=0.99,
+            xanchor="right",
+            x=1.02,
+            title="Production Type"
+        ),
+        template='plotly_white',
+        margin=dict(t=100, r=150)  # Add right margin for legend
+    )
+
+    # Update axes
+    for i in range(len(selected_regions)):
+        fig.update_xaxes(title_text="DVD Era", row=1, col=i+1)
+        if i == 0:  # Only add y-axis title to first subplot
+            fig.update_yaxes(title_text="Proportion", row=1, col=1)
+
+    # Update y-axes format
+    fig.update_yaxes(tickformat='.0%')
+    
+    return fig
