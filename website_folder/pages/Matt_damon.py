@@ -93,18 +93,59 @@ components.html(
     height=0,
 )
 
-# Section 2: Next Content
-st.markdown(
-    """
-    <div id="section2" style="margin-top: 100vh; padding-top: 50px;">
-        <h2 style="text-align: center; font-family: 'Inter', sans-serif; color: #343a40;">Next Section Content</h2>
-        <p style="font-size: 1.2rem; line-height: 1.6; color: #495057; text-align: center;">
-            This is where the content of the next section would go. You can add graphs, images, or any additional details here.
-        </p>
-    </div>
-    """,
-    unsafe_allow_html=True,
-)
+
+st.markdown("""
+    <style>
+        /* Style the Next button for both light and dark mode */
+        .stButton button {
+            position: fixed;
+            bottom: 40px;
+            right: 40px;
+            background-color: rgba(0, 123, 255, 0.8); /* A nice blue with transparency */
+            color: white;
+            border: none;
+            padding: 0.5rem 2rem;
+            border-radius: 20px;
+            font-size: 16px;
+            font-weight: bold;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.06); /* Subtle shadow */
+            transition: all 0.3s ease;
+        }
+
+        .stButton button:hover {
+            background-color: rgba(30, 144, 255, 1); /* Brighter blue on hover */
+            transform: scale(1.05); /* Slight zoom effect */
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2), 0 2px 4px rgba(0, 0, 0, 0.1); /* Enhanced shadow */
+        }
+
+        /* Ensure compatibility with both light and dark themes */
+        @media (prefers-color-scheme: light) {
+            .stButton button {
+                background-color: rgba(0, 123, 255, 0.9); /* Slightly darker blue for light mode */
+                color: white;
+            }
+
+            .stButton button:hover {
+                background-color: rgba(0, 104, 204, 1); /* Complementary hover effect */
+            }
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .stButton button {
+                background-color: rgba(30, 144, 255, 0.9); /* Brighter blue for dark mode */
+                color: white;
+            }
+
+            .stButton button:hover {
+                background-color: rgba(0, 104, 204, 1); /* Similar complementary effect for dark mode */
+            }
+        }
+    </style>
+""", unsafe_allow_html=True)
+
+# Add the Next button
+if st.button("Next →"):
+    st.switch_page("pages/analysis_page.py")
 
 # Footer
 st.markdown("---")

@@ -217,3 +217,15 @@ st.components.v1.html(css_code + html_code, height=700)
 # Add the Next button
 if st.button("Next →"):
     st.switch_page("pages/Matt_damon.py")
+
+st.markdown(
+    """
+    <div style="position: fixed; bottom: 10px; right: 40px; color: white; text-align: center; font-size: 14px;">
+        Or you can stay here! See if the DVD lands on a corner!
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+
+
+
