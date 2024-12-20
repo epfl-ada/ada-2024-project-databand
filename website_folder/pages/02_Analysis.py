@@ -343,11 +343,43 @@ fig = return_num_companies_per_prod_type(df)
 
 st.plotly_chart(fig)
 
-st.markdown("""
-#### Takeaways
-- The rise in collaborations for super and big productions highlights the increasing complexity and scale of films aimed at global audiences.
-- The flat trend for independent films reflects their resource constraints and streamlined approach, which align with their low-budget nature.
-- The decline in collaborations for small productions post-DVD may point to their reduced viability in an era dominated by streaming platforms favoring either blockbusters or lean independent films.    """)
+regression_data = {
+    'Production': ['Super', 'Big', 'Small', 'Independent'],
+    'R-Squared': [0.427064, 0.839894, 0.569877, 0.710108],
+    'p-value': [6.359316e-07, 6.393431e-20, 5.706316e-10, 5.893297e-14],
+    'Coefficient (slope)': [0.170162, 0.237238, 0.113327, 0.024976]
+}
+df_regression = pd.DataFrame(regression_data)
+
+def format_pvalue(p):
+    if p < 0.001:
+        return "< 0.001"
+    elif p < 0.01:
+        return "< 0.01"
+    elif p < 0.05:
+        return "< 0.05"
+    else:
+        return f"{p:.3f}"
+
+df_regression['R-Squared'] = df_regression['R-Squared'].map('{:.3f}'.format)
+df_regression['p-value'] = df_regression['p-value'].map(format_pvalue)
+df_regression['Coefficient (slope)'] = df_regression['Coefficient (slope)'].map('{:.3f}'.format)
+df_regression.columns = ['Production Type', 'R²', 'p-value', 'Coefficient']
+
+# Display the table with a caption
+st.markdown("### Statistical Analysis (Linear Regression)")
+st.table(df_regression)
+st.markdown("""**Big productions** exhibit the strongest correlation with time (R-squared = 0.839), showing the most rapid increase in collaborations (slope = 0.237). This highlights their growing reliance on partnerships for resource-intensive, mid-budget projects. 
+
+**Super productions** also show a significant relationship (R-squared = 0.427, slope = 0.170), reflecting the complexity of high-budget blockbusters that demand extensive collaboration. 
+
+**Small productions** have a moderate correlation (R-squared = 0.570, slope = 0.113), suggesting a slower increase in partnerships, consistent with their reduced viability in an era dominated by streaming platforms favoring either blockbusters or lean independent films.
+
+**Independent productions**, with a relatively moderate R-squared (0.710) but a flat slope (0.025), indicate minimal growth in collaborations, aligning with their low-budget and lean production models. 
+
+It is important to note that all relationships are statistically significant (p-values < 0.05), underscoring the increasing importance of collaboration for larger productions, while independent and small productions remain less reliant on partnerships due to their constrained resources and focused scopes.
+""")
+
 st.write("")
 st.markdown("""But who’s collaborating with whom? We created a network of our companies, linking those that co-produced a movie at least once. """)
 
@@ -360,7 +392,7 @@ fig = return_collaborations(before_DVD_era_super)
 # Display the Plotly figure in Streamlit
 st.plotly_chart(fig, use_container_width=True)
 st.markdown("""
-The result is 5 clusters, with a clear dominant one. If we take a closer look at who are the major collaborators, we recognize some familiar names - “Paramount”, “20th Century Fox”, or “Columbia Pictures”.  The dominance of these major players in the collaboration space suggests that while the market has become more accessible, true influence in the industry remains concentrated among established giants.
+The network reveals several distinct clusters of production companies that frequently collaborate. Central to the network are legacy studios like 20th Century Fox, Paramount Pictures, and Metro-Goldwyn-Mayer (MGM), which serve as hubs connecting multiple groups. These studios leverage their extensive resources to collaborate widely, forming partnerships essential for producing high-budget blockbuster movies while maintaining their dominance in the industry.
 """)
 st.header("Genre Evolution: Reflecting Changing Preferences")
 
@@ -402,10 +434,12 @@ colTr3, colTr4 = st.columns([1, 2])
 
 # Column 3: Explanatory text for the second plot
 with colTr3:
+    st.write("")
     st.subheader("Genre Trends Across DVD Eras")
-    st.markdown("""
-    By examining the trends of different genres across the DVD eras, we can see how production types influenced genre evolution.
-    While genres like **drama** and **comedy** remain popular across all eras, the **action** and **adventure** genres see more prominence in super productions. The **thriller** genre also gained momentum during the DVD era, with its appeal to a broad audience.  
+    st.markdown("""From this, we see that Independent productions—especially Drama, Comedy, and Horror—thrived, with DVDs making it easier for niche films to reach viewers without the hefty costs of theater releases. For small and big productions, Drama and Comedy remained steady successes, with Drama enjoying a slight boost during the DVD years.
+Super productions, on the other hand, saw Drama take a backseat as Action and Animation consistently stole the spotlight. And it’s no surprise—these big-budget productions have the resources for jaw-dropping special effects and elaborate stunts, catering to global audiences hungry for spectacle.
+That said, chi-square tests show no significant shifts in genre distributions across DVD eras for any production type. So, while some genres seemed to gain momentum with the rise (and fall) of DVDs, production types largely stuck to their strengths over the years.
+
     """)
 
 # Column 4: Second Plot - Genre Trends by Production Type
@@ -414,68 +448,14 @@ with colTr4:
     st.plotly_chart(figTr, use_container_width=True)
 
 
-# Displaying the insights and trends in Streamlit using Markdown
-st.header("Insights and Trends")
 
-# Independent Production Type
-st.markdown("#### 1. Independent Production Type")
-st.markdown("""
-- **Drama and Comedy** remain dominant genres across all eras, with relatively consistent proportions.
-- **Horror** shows a slight increase during the DVD era, likely influenced by the rise of home video markets that cater to niche audiences.
-- **Family and Animation genres** remain underrepresented, likely due to the higher production costs typically required for these genres, which independent productions struggle to afford.
-""")
 
-# Small Production Type
-st.markdown("#### 2. Small Production Type")
-st.markdown("""
-- **Comedy and Drama** dominate, but **Action and Adventure** show slight growth post-DVD, likely driven by increasing audience expectations for higher production values, even in smaller-scale movies.
-- **Family movies** saw a noticeable increase during the DVD era, reflecting the trend of DVDs becoming popular for family-oriented entertainment at home.
-""")
-
-# Big Production Type
-st.markdown("#### 3. Big Production Type")
-st.markdown("""
-- **Action, Adventure, and Fantasy** see notable growth during the DVD era, likely reflecting their appeal as blockbuster genres that drive high sales in physical media markets.
-- **Comedy** shows a slight decline post-DVD, possibly due to the genre's shift to streaming platforms, which became more accessible post-DVD era.
-""")
-
-# Super Production Type
-st.markdown("#### 4. Super Production Type")
-st.markdown("""
-- **Action and Adventure** maintain dominance across all eras, with **Fantasy** showing significant growth during the DVD era.
-- **Science Fiction** remains relatively stable but sees a slight increase post-DVD, reflecting its appeal in the growing digital streaming market.
-- **War and Western genres** remain underrepresented, likely due to limited audience demand in these genres.
-""")
-
-# General Trends
-st.header("General Trends")
-
+st.subheader("Trends around world region")
+st.write("")
 # General Trends Content
 st.markdown("""
-The data reveals that core genres like Comedy, Drama, and Action maintain their relevance across eras, although some shifts in proportions occur based on production type. 
-The DVD era provided a platform for niche genres like Horror and Fantasy to thrive, likely due to their strong replay value and appeal to collectors. 
-Family and Animation genres also experienced a notable boost during this period, reflecting the medium's popularity for family-friendly entertainment. 
-However, the post-DVD era sees some genres, such as Comedy, decline slightly, as they transition to digital-first releases and streaming platforms.
+Now, let’s take a step back and look at genre trends in different world regions. Earlier, we saw that the emergence of various production types followed different patterns across DVD eras if we were to look at, say, Eastern Asia versus North America. Does the same hold true for genres?
 """)
-
-# Diversification Through DVDs
-st.subheader("Diversification Through DVDs")
-st.markdown("""
-The accessibility of DVDs encouraged experimentation with:
-- **Niche Genres**: Documentaries, indie dramas, and anime found dedicated audiences.
-- **Expanded Themes**: Unique storylines thrived in home-viewing markets.
-""")
-
-# Streaming and Globalization
-st.subheader("Streaming and Globalization")
-st.markdown("""
-The post-DVD era saw a shift toward:
-- **Mainstream Genres**: Blockbusters with universal themes became the focus for theatrical releases.
-- **Niche Revival Online**: Streaming platforms supported diverse genres, appealing to segmented audiences.
-""")
-
-# Different Trends per World Region
-st.subheader("Different Trends per World Region")
 
 with open('./data/countries_to_region.json', 'r') as file:
     countries_regions = json.loads(file.read())
@@ -497,36 +477,57 @@ fig = return_genre_prop_per_region(selected_regions, countries_genres_props)
 
 st.plotly_chart(fig)
 
-
-st.header("Insights and Implications")
-
-# Revenue
-st.subheader("Revenue")
-st.markdown("""
-- The DVD era introduced a pivotal revenue stream that benefited a variety of film genres and budgets.
-- Streaming platforms have redefined revenue strategies, emphasizing global reach and licensing deals.
+st.markdown(""" This time around, the differences aren’t quite as dramatic. Drama movies consistently hold the top spot across the board, with an especially strong grip in regions like Europe and South America. Looking back at our earlier plot on production type proportions by region over time, we see that the drop in Drama movies in Eastern Asia and Russia lines up neatly with the decline in independent productions. 
+As for regions like North America and the UK, where super production types have been on the rise, genre trends don’t really reflect this shift. But that’s not too surprising as super productions are often outnumbered by the sheer volume of independent films.
 """)
 
-# Budget
-st.subheader("Budget")
-st.markdown("""
-- DVDs reduced barriers for low and mid-budget films, but their decline shifted the focus to high-budget productions.
-- Streaming services continue to challenge traditional budget allocations with diverse content strategies.
-""")
+st.subheader("What Insights Can We Draw?")
 
-# Production
-st.subheader("Production")
-st.markdown("""
+with st.expander("1. Revenue", expanded=True):
+    st.markdown("""
+    - The DVD era introduced a pivotal revenue stream that benefited a variety of film genres and budgets.
+    - Streaming platforms have redefined revenue strategies, emphasizing global reach and licensing deals.
+    """)
+
+with st.expander("2. Budget"):
+    st.markdown("""
+    - DVDs reduced barriers for low and mid-budget films, but their decline shifted the focus to high-budget productions.
+    - Streaming services continue to challenge traditional budget allocations with diverse content strategies.
+    """)
+
+with st.expander("3. Production"):
+    st.markdown("""
 - Independent studios gained traction during the DVD era, while the post-DVD world has been shaped by streaming giants.
 - The evolution of production dynamics highlights the importance of adapting to changing distribution models.
 """)
 
-# Genre
-st.subheader("Genre")
-st.markdown("""
+with st.expander("4. Genre"):
+    st.markdown("""
 - DVDs fostered genre diversity and creative experimentation, while streaming platforms have revived niche themes.
 - The emphasis on algorithms and mass appeal in streaming may constrain innovation over time.
 """)
+
+st.markdown("""
+<style>
+    h1 {
+        color: #1f77b4;
+        font-family: Arial, sans-serif;
+    }
+    .st-expander {
+        background-color: #f9f9f9;
+        border-radius: 10px;
+        border: 1px solid #ddd;
+        margin-bottom: 10px;
+    }
+    .st-markdown {
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+    }
+</style>
+""", unsafe_allow_html=True)
+
+
+
 
 st.header("Conclusion")
 st.markdown("""The evolution of distribution models—from theatrical releases to DVDs to streaming—has significantly influenced the film industry’s financial strategies, production processes, and creative outputs. While the DVD era marked a golden age for revenue diversification and genre exploration, the rise of digital platforms has introduced new challenges and opportunities. As the industry continues to adapt, understanding these trends will be key to navigating the future of filmmaking.""") 
@@ -580,7 +581,7 @@ st.markdown("""
         }
     </style>
 """, unsafe_allow_html=True)
-
+st.balloons()
 # Add the Next button
 if st.button("Appendix →"):
     st.switch_page("appendix_page.py")
