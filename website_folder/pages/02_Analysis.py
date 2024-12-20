@@ -92,7 +92,17 @@ with col2:
     st.markdown(""" 
 **The Post-DVD Era (Green):** With the decline of DVDs and the rise of streaming platforms, the revenue landscape shifted once again. The distribution reveals a drop in high-revenue films, with fewer movies achieving blockbuster-level revenues (log revenue scale above 7). The majority of movies now cluster in the lower revenue ranges (log revenue scale of 3–6), reflecting the challenges faced by filmmakers in the subscription-driven streaming era.
 """)
-
+st.write("")
+with st.expander("📝 Important Note", expanded=True):
+    st.info(
+        """
+        It is important to note that statistical tests did not reveal significant differences 
+        in revenue distributions between DVD eras. However, our plot still paints an interesting 
+        picture: movies released during the peak DVD era show a broader revenue range and a 
+        slight tilt toward higher earnings compared to pre- and post-DVD eras. It seems that 
+        DVDs really opened up some new opportunities for studios to make more money!
+        """
+    )
 
 # Budget Section
 st.header("Budget Dynamics: Empowerment Through DVDs")
@@ -109,46 +119,71 @@ To find evidence of this trend, we define 4 types of production companies using 
 
 Let’s take a look at how these productions evolve over time:
 """)
+# Calculate rolling averages
+prop_rolling_avg = budget_rolling_averages(df_filtered, window=3)
 
-fig = return_budget_rolling_averages(df)
+# Define categories and their properties
+categories = [
+    ('Independent', 'Independent productions (<0.1x mean budget)', '#9B59B6'),
+    ('Small', 'Small productions (<1x mean budget)', '#E74C3C'),
+    ('Big', 'Big productions (>1x mean budget)', '#28B463'),
+    ('Super', 'Super productions (>5x mean budget)', '#2E86C1')
+]
 
+# Create and display the combined plot
+fig = create_combined_plot(prop_rolling_avg, categories)
 st.plotly_chart(fig, use_container_width=True)
+# fig = return_budget_rolling_averages(df)
 
-
+# st.plotly_chart(fig, use_container_width=True)
 st.markdown("""
+From the plot, we can see a clear rise in movies from independent production companies after DVDs hit the scene, with small productions maintaining a strong presence.
 
-##### 1.Independent Productions 
-Independent films have seen significant growth, rising from 40–50% in 1980–1995 to nearly 70% by 2020, with rapid acceleration post-2010. The DVD era (1995–2005) provided accessible distribution channels, and the rise of streaming platforms like Netflix and Amazon post-2010 created a surge in demand for low-budget content.  
+However, it seems that the fall of DVDs reshaped budget allocations once again… 
 
-##### 2. Small Productions 
-Peaking at 30% during the DVD era (1990s–2005), small productions have declined sharply, making up less than 10% of movies by 2020.  
-DVDs allowed small-budget films to target niche audiences, but streaming platforms now favor either low-budget independents or high-budget blockbusters.  
-   - **Implications**: Small productions are being squeezed out, overshadowed by cheaper independent films and dominant super productions.  
-
-##### 3. Big Productions 
-   - Trend: Once over 35% of movies in the 1980s and 1990s, big productions have steadily declined, dropping below 15% by 2020.  
-   - Drivers: The decline of DVDs reduced mid-budget films' revenue streams, and streaming platforms prioritize independent or blockbuster content.  
-   - Implications: The shrinking space for mid-budget films reflects a shift to extremes in the industry’s financial model.  
-
-##### 4. Super Productions 
-   - Trend: Super productions have grown steadily since the 1980s, accounting for over 6% of movies by 2020, with rapid growth post-2000.  
-   - Drivers: Studios shifted to blockbusters to maximize theatrical revenue as DVDs declined, and in the streaming era, blockbusters drive subscriptions and dominate global viewership.  
-   - Implications: The rise of super productions underscores the industry's focus on fewer, high-budget films with global market appeal.  
+While Small production companies remained consistently prevalent during the DVD era, their popularity took a slight hit when DVD sales started declining. It seems that, without a viable secondary market, these projects struggled to find footing. 
+In contrast, in peak DVD era was also marked with a slight boost in Super production companies, which maintained their influence in the movie industry after DVDs’ downfall. Indeed, some studios focused on large-scale productions with global earning potential.
 """)
-st.markdown("---")
-st.write("""
-Indeed! We can see a clear rise in movies from Independent production companies after DVDs hit the scene, 
-with small productions maintaining a strong presence right up to their golden era. On the flip side, 
-big production movie releases have been steadily tapering off since the DVD revolution.
-""")
-st.subheader("Post-DVD Challenges")
-st.write("""
-However, the fall of DVDs reshaped budget allocations once again… 
-While Small production companies remained consistently prevalent during the DVD era, their popularity took a slight dark turn when DVD sales started declining. It seems that, without a viable secondary market, these projects struggled to find footing. 
-In contrast, the peak DVD era was also marked with a slight boost in Super production companies, which maintained their influence in the movie industry after DVDs’ downfall. Indeed, some studios focused on large-scale productions with global earning potential.
-Let’s summarize all this in a plot: if we compare pre- and post-DVD eras, we can clearly observe that the rise of DVDs was related to the emergence of many more Independent production movies at the cost of Big production movies, and with a small increase in Super production movies.   
 
-Let’s summarize all this in a plot: if we compare pre- and post-DVD eras, we can clearly observe that the rise of DVDs was related to the emergence of many more Independent production movies at the cost of Big production movies, and with a small increase in Super production movies.    
+with st.expander("🔍 Key Observations", expanded=True):
+    row1_col1, row1_col2 = st.columns([1, 1])
+    row2_col1, row2_col2 = st.columns([1, 1])
+
+    # Fill the grid with content
+    with row1_col1:
+        st.info("""
+            **1. Independent Productions**
+            
+            Independent films have seen significant growth, rising from 40–50% in 1980–1995 to nearly 70% by 2020. The DVD era (1995–2005) likely encouraged independent productions by providing an accessible distribution channel, allowing smaller studios to bypass expensive theatrical releases. The rise of streaming platforms like Netflix and Amazon post-2010 also created a surge in demand for low-budget content.
+        """)
+
+    with row1_col2:
+        st.info("""
+            **2. Small Productions**
+            
+            Peaking at 30% during the DVD era (1990s–2005), small productions have declined sharply, making up less than 10% of movies by 2020. DVDs allowed small-budget films to target niche audiences, but streaming platforms now favor either low-budget independents or high-budget blockbusters.
+
+
+        """)
+
+    with row2_col1:
+        st.info("""
+            **3. Big Productions**
+            
+            Once over 35% of movies in the 1980s and 1990s, big productions have steadily declined, dropping below 15% by 2020. The decline of DVDs reduced big/mid-budget films' revenue streams, and streaming platforms prioritize independent or blockbuster content. The shrinking space for mid-budget films reflects a shift to extremes in the industry's financial model.
+
+
+        """)
+
+    with row2_col2:
+        st.info("""
+            **4. Super Productions**
+            
+            Super productions have grown steadily since the 1980s, accounting for over 6% of movies by 2020, with rapid growth post-2000. Studios shifted to blockbusters to maximize theatrical revenue as DVDs declined, and in the streaming era, blockbusters drive subscriptions and dominate global viewership. The rise of super productions underscores the industry's focus on fewer, high-budget films with global market appeal.
+        """)
+
+st.write("""
+Let’s summarize all this in a plot. The film industry has seen a shift in production trends, with independent films and super productions growing in prominence, while small and mid-budget films have declined. 
 """)
 mean_budgets = df[df.budget > 0].groupby('release_year').agg(mean_budget = ('budget', 'mean'))
 df['prod_type'] = df.apply(categorize_production, axis=1, args=(mean_budgets,))
@@ -164,10 +199,10 @@ props = (df_filtered.groupby('dvd_era')['prod_type']
 # Production type proportions across DVD eras
 fig = create_stacked_bar(props)
 st.plotly_chart(fig, use_container_width=True)
+st.markdown("---")
 
-st.subheader("Impact globally: ")
-st.write("""But was the movie industry impacted the same way globally? 
-Let's focus on the production countries of our movies. Since there are many, we group them into main global regions:  
+st.subheader("Was This a Global Phenomenon?")
+st.markdown("""Let's start by focusing on the production countries of our movies. Since there are many, we grouped them into main global regions:  
 """)
 
 # World Map visualization
@@ -186,10 +221,7 @@ try:
 except FileNotFoundError:
     st.error("Could not find the countries_to_region.json file. Please ensure it's in the data directory.")
 
-st.write("""If we look at the proportion of movies released by each major region across the years, 
-we see 3 major film industry players - North America (notably including the United States), 
-Europe, and Eastern Asia (notably including China): 
-""")
+st.markdown("""Now that we have sorted our countries into broader regions, let's take a look at who are the biggest players, i.e. which regions produce the most movies.""")
 
 # Calculate region proportions using the new data processing
 df_countries = df.copy().explode('production_countries')
@@ -213,15 +245,18 @@ region_prop['prop'] = region_prop['count'] / region_prop['total']
 
 # Create and display the regional distribution plot
 fig = create_regional_distribution_plot(region_prop)
-st.plotly_chart(fig, use_container_width=True)
-
-st.write("""Interestingly, Eastern Asia and Europe show opposite trends in movie releases around the DVD era: 
-Eastern Asian releases dipped slightly during this time, while European releases climbed. Meanwhile, 
-North American movies, which have dominated since the mid-80s, hit their golden era in the late 1990s—just 
-as DVDs emerged—and have seen a small but steady decline ever since.
-""")
-
-st.write("""Let's focus on the major film-producing regions and analyze their production types:""")
+plot_col, text_col = st.columns([3, 1]) 
+with plot_col:
+    st.plotly_chart(fig, use_container_width=True)
+with text_col:
+    with st.expander("📊 Regional Trends Analysis", expanded=False):
+        st.info("""
+            Interestingly, Eastern Asia and Europe show opposite trends in movie releases around the DVD era: 
+            Eastern Asian releases dipped slightly during this time, while European releases climbed. Meanwhile, 
+            North American movies, which have dominated since the mid-80s, hit their golden era in the late 1990s—just 
+            as DVDs emerged—and have seen a small but steady decline ever since.
+        """)
+st.markdown("""Let's focus on the biggest film-producing regions, and analyze their composition of production types:""")
 
 # Filter for major regions
 selected_regions = list(region_prop[region_prop.prop > 0.05].region.unique())
@@ -233,9 +268,6 @@ fig = create_regional_production_subplots(df_countries_filtered, selected_region
 st.plotly_chart(fig, use_container_width=True)
 
 st.write("""Clearly, DVDs shook up the movie industry in different ways across world regions! Even among our major players—Eastern Asia, Europe, and North America—the trends vary widely. In Eastern Asia, for example, independent movies were already a staple in the pre-DVD era but gave way to super productions once DVDs arrived. In North America, super productions also gained traction post-DVD, but this came hand-in-hand with a significant rise in independent films, mirroring the global trend. Europe, however, stands out with the most surprising shift: independent movies declined, while super productions rose—but only during the DVD era!""")
-
-
-##################
 
 st.header("Production Shifts: From Independence to Streaming Giants")
 

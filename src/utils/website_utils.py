@@ -811,32 +811,70 @@ def budget_rolling_averages(df, window):
     proportion_rolling = budget_category_proportions.rolling(window=window, center=True).mean()
     return proportion_rolling
 
-def return_budget_rolling_averages(df):
-    proportion_rolling = budget_rolling_averages(df, 3)
+def create_combined_plot(data, categories):
+    """
+    Create a single plot combining all production type trends.
+    
+    Parameters:
+    -----------
+    data : pandas.DataFrame
+        DataFrame containing the rolling averages
+    categories : list
+        List of tuples containing (category, label, color)
+    """
     fig = go.Figure()
-
-    fig.add_trace(go.Scatter(x=proportion_rolling.index, y=proportion_rolling['Independent'], 
-                             mode='lines', name='Independent Productions (<0.1x mean budget)', 
-                             line=dict(color='blue')))
-    fig.add_trace(go.Scatter(x=proportion_rolling.index, y=proportion_rolling['Small'], 
-                             mode='lines', name='Small Productions (<1x mean budget)', 
-                             line=dict(color='orange')))
-    fig.add_trace(go.Scatter(x=proportion_rolling.index, y=proportion_rolling['Big'], 
-                             mode='lines', name='Big Productions (>1x mean budget)', 
-                             line=dict(color='green')))
-    fig.add_trace(go.Scatter(x=proportion_rolling.index, y=proportion_rolling['Super'], 
-                             mode='lines', name='Super Productions (>5x mean budget)', 
-                             line=dict(color='purple')))
-
+    
+    # Add a trace for each category
+    for category, label, color in categories:
+        fig.add_trace(
+            go.Scatter(
+                x=data.index,
+                y=data[category],
+                name=label,
+                line=dict(width=2, color=color),
+                hovertemplate="Year: %{x}<br>" +
+                            f"Proportion: %{{y:.1%}}<br>" +
+                            "<extra></extra>"
+            )
+        )
+    
+    # Update layout
     fig.update_layout(
-        title='Proportions of Different Types of Productions Over the Years (3-year Rolling Average)',
+        title={
+            'text': 'Production Type Proportions Over Time (3-year rolling average)',
+            'x': 0.5,
+            'y': 0.95,
+            'xanchor': 'center',
+            'font': {'size': 20}
+        },
         xaxis_title='Release Year',
         yaxis_title='Proportion',
-        template='plotly_dark',
+        yaxis_tickformat='.0%',
+        template='plotly_white',
+        height=600,  # Made taller for better visibility
         showlegend=True,
-        height=600
+        legend=dict(
+            yanchor="top",
+            y=0.99,
+            xanchor="right",
+            x=0.99,
+            bgcolor="rgba(255, 255, 255, 0.8)"  # Semi-transparent background
+        ),
+        margin=dict(t=80, b=50, l=50, r=50)
     )
-
-    # Return the plot
+    
+    # Add gridlines
+    fig.update_xaxes(
+        showgrid=True,
+        gridwidth=1,
+        gridcolor='rgba(128, 128, 128, 0.2)',
+        dtick=5
+    )
+    fig.update_yaxes(
+        showgrid=True,
+        gridwidth=1,
+        gridcolor='rgba(128, 128, 128, 0.2)'
+    )
+    
     return fig
 
