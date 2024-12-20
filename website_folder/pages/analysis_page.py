@@ -110,29 +110,9 @@ To find evidence of this trend, we define 4 types of production companies using 
 Let’s take a look at how these productions evolve over time:
 """)
 
-prop_rolling_avg = budget_rolling_averages(df_filtered, window=3)
+fig = return_budget_rolling_averages(df)
 
-categories = [
-    ('Independent', 'Independent productions (<0.1x mean budget)', '#9B59B6'),
-    ('Small', 'Small productions (<1x mean budget)', '#E74C3C'),
-    ('Big', 'Big productions (>1x mean budget)', '#28B463'),
-    ('Super', 'Super productions (>5x mean budget)', '#2E86C1')
-]
-
-col1, col2 = st.columns(2)
-for i, (category, label, color) in enumerate(categories):
-    fig = create_category_plot(prop_rolling_avg, category, label, color)
-    
-    if i % 2 == 0:
-        with col1:
-            st.plotly_chart(fig, use_container_width=True)
-    else:
-        with col2:
-            st.plotly_chart(fig, use_container_width=True)
-    
-    # Add a small space between rows
-    if i == 1:
-        st.write("")
+st.plotly_chart(fig, use_container_width=True)
 
 
 st.markdown("""
@@ -501,3 +481,61 @@ st.markdown("""
 
 st.header("Conclusion")
 st.markdown("""The evolution of distribution models—from theatrical releases to DVDs to streaming—has significantly influenced the film industry’s financial strategies, production processes, and creative outputs. While the DVD era marked a golden age for revenue diversification and genre exploration, the rise of digital platforms has introduced new challenges and opportunities. As the industry continues to adapt, understanding these trends will be key to navigating the future of filmmaking.""") 
+
+
+st.markdown("""
+    <style>
+        /* Style the Next button for both light and dark mode */
+        .stButton button {
+            position: fixed;
+            bottom: 40px;
+            right: 40px;
+            background-color: rgba(0, 123, 255, 0.8); /* A nice blue with transparency */
+            color: white;
+            border: none;
+            padding: 0.5rem 2rem;
+            border-radius: 20px;
+            font-size: 16px;
+            font-weight: bold;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.06); /* Subtle shadow */
+            transition: all 0.3s ease;
+        }
+
+        .stButton button:hover {
+            background-color: rgba(30, 144, 255, 1); /* Brighter blue on hover */
+            transform: scale(1.05); /* Slight zoom effect */
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2), 0 2px 4px rgba(0, 0, 0, 0.1); /* Enhanced shadow */
+        }
+
+        /* Ensure compatibility with both light and dark themes */
+        @media (prefers-color-scheme: light) {
+            .stButton button {
+                background-color: rgba(0, 123, 255, 0.9); /* Slightly darker blue for light mode */
+                color: white;
+            }
+
+            .stButton button:hover {
+                background-color: rgba(0, 104, 204, 1); /* Complementary hover effect */
+            }
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .stButton button {
+                background-color: rgba(30, 144, 255, 0.9); /* Brighter blue for dark mode */
+                color: white;
+            }
+
+            .stButton button:hover {
+                background-color: rgba(0, 104, 204, 1); /* Similar complementary effect for dark mode */
+            }
+        }
+    </style>
+""", unsafe_allow_html=True)
+
+# Add the Next button
+if st.button("Appendix →"):
+    st.switch_page("pages/appendix_page.py")
+
+# Footer
+st.markdown("---")
+st.write("Created with ❤️ using Streamlit")

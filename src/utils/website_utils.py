@@ -9,6 +9,8 @@ import numpy as np
 import geopandas as gpd
 from plotly.subplots import make_subplots
 
+from src.utils.data_utils import categorize_budget
+
 def return_genre_prop_per_region(selected_regions, countries_genres_props):
     print("Creating genre proportions per region plot...")
     # Create subplots with one row and len(selected_regions) columns
@@ -714,4 +716,47 @@ def create_regional_production_subplots(df_countries_filtered, selected_regions)
     # Update y-axes format
     fig.update_yaxes(tickformat='.0%')
     
+    return fig
+
+def budget_rolling_averages(df, window):
+    budget_stats = df.groupby('release_year')['budget'].agg(mean_budget='mean').reset_index()
+    df.loc[:, 'budget_category'] = df.apply(categorize_budget, args=(budget_stats,), axis=1)
+
+    # Count the number of each budget category per year
+    budget_category_counts = df.groupby(['release_year', 'budget_category']).size().unstack(fill_value=0)
+
+    # Calculate the proportion of each budget category per year
+    budget_category_proportions = budget_category_counts.div(budget_category_counts.sum(axis=1), axis=0)
+
+    # Calculate the 3-year rolling average for each budget category
+    proportion_rolling = budget_category_proportions.rolling(window=window, center=True).mean()
+    return proportion_rolling
+
+def return_budget_rolling_averages(df):
+    proportion_rolling = budget_rolling_averages(df, 3)
+    fig = go.Figure()
+
+    fig.add_trace(go.Scatter(x=proportion_rolling.index, y=proportion_rolling['Independent'], 
+                             mode='lines', name='Independent Productions (<0.1x mean budget)', 
+                             line=dict(color='blue')))
+    fig.add_trace(go.Scatter(x=proportion_rolling.index, y=proportion_rolling['Small'], 
+                             mode='lines', name='Small Productions (<1x mean budget)', 
+                             line=dict(color='orange')))
+    fig.add_trace(go.Scatter(x=proportion_rolling.index, y=proportion_rolling['Big'], 
+                             mode='lines', name='Big Productions (>1x mean budget)', 
+                             line=dict(color='green')))
+    fig.add_trace(go.Scatter(x=proportion_rolling.index, y=proportion_rolling['Super'], 
+                             mode='lines', name='Super Productions (>5x mean budget)', 
+                             line=dict(color='purple')))
+
+    fig.update_layout(
+        title='Proportions of Different Types of Productions Over the Years (3-year Rolling Average)',
+        xaxis_title='Release Year',
+        yaxis_title='Proportion',
+        template='plotly_dark',
+        showlegend=True,
+        height=600
+    )
+
+    # Return the plot
     return fig
