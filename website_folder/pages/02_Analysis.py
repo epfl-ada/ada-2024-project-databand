@@ -530,7 +530,7 @@ st.markdown("""
 
 
 st.header("Conclusion")
-st.markdown("""The evolution of distribution models—from theatrical releases to DVDs to streaming—has significantly influenced the film industry’s financial strategies, production processes, and creative outputs. While the DVD era marked a golden age for revenue diversification and genre exploration, the rise of digital platforms has introduced new challenges and opportunities. As the industry continues to adapt, understanding these trends will be key to navigating the future of filmmaking.""") 
+st.markdown("""The analysis highlights significant shifts in film production, driven by changing industry dynamics and distribution models. Independent productions have thrived in the streaming era, leveraging cost-effectiveness and catering to diverse audiences, ensuring they remain relevant. While small productions have declined, squeezed between independent films and resource-heavy blockbusters, and big productions face mounting challenges, the industry is far from doomed. Streaming platforms have sustained independent movies, disproving fears of creative stagnation. Although Matt Damon’s prediction about the struggles of small and mid-budget studios holds true, the enduring success of independent films shows the industry’s resilience and ability to adapt.""") 
 
 
 st.markdown("""
@@ -581,7 +581,6 @@ st.markdown("""
         }
     </style>
 """, unsafe_allow_html=True)
-st.balloons()
 # Add the Next button
 if st.button("Appendix →"):
     st.switch_page("appendix_page.py")
