@@ -2,8 +2,6 @@ import streamlit as st
 from pathlib import Path
 import sys
 
-from src.models.empath_model import EmpathModel
-
 # Add project root to Python path
 root_dir = Path(__file__).parent.parent.parent  # Go up two levels from the current file
 sys.path.append(str(root_dir))
@@ -112,14 +110,12 @@ st.plotly_chart(fig)
 
 st.markdown("The CMU dataset reveals a more genre-specific evolution across production types during the DVD era compared to the TMDB dataset's broader narrative. For independent productions, Drama saw significant growth in both datasets, but CMU highlights Thriller as another genre on the rise, whereas TMDB emphasized Comedy and Horror. Small productions maintained a steady trajectory, with Drama experiencing growth in both datasets, though CMU points to a more stable overall landscape. Big productions showed remarkable consistency in the CMU data, with only a minor boost for Thriller, aligning with TMDB’s emphasis on stability for this production type. Super productions, however, diverge noticeably: while TMDB focuses on Action and Animation taking the lead, CMU showcases substantial growth in Adventure, alongside Fantasy and Family, suggesting a shift toward genres with strong imaginative appeal. Both datasets agree on the transformative impact of DVDs, yet CMU paints a picture of subtle, focused changes rather than the broader shifts emphasized in TMDB.")
 
-empathModel = EmpathModel()
+
 
 results = pd.read_csv('data/website_data/CMU/topics_per_genre_prod.csv')
 
-empathModel.plot_all_features(results, 'drama')
-
 # Display the Empath model results
-fig_empath = empathModel.plot_all_features(results, 'drama')
+fig_empath = plot_all_features(results, 'drama')
 st.pyplot(fig_empath)
 
 st.markdown("Similarly to the TMDB dataset, the drama movies in the CMU dataset also emphasize themes of family and community, but the trends show distinct differences across production types. Independent dramas initially focus on themes like family and home, with slight growth in positive emotion, while themes like war and crime see a decline during the DVD era. For Small productions, family and celebration emerge as central themes, with noticeable growth during the DVD years, reinforcing their universal appeal. Big productions maintain a consistent focus on family and war themes, showing stability rather than dramatic shifts. Meanwhile, Super productions take a different turn, with themes like war, sports, and leadership dominating in the pre-DVD era but declining sharply during the DVD period as more diverse themes like friendship and competing gained traction. This shift indicates a movement toward narratives with broader audience appeal, even among high-budget dramas.")

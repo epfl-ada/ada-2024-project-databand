@@ -19,7 +19,7 @@ import plotly.graph_objects as go
 ## Color Palette (Viridis)
 
 palette_seq = px.colors.sequential.Viridis
-palette_for_empath = plt.cm.viridis
+palette = plt.cm.viridis
 
 def get_color_palette(categories):
     """Generate a consistent color mapping using viridis."""
@@ -27,6 +27,36 @@ def get_color_palette(categories):
     return {category: f"rgba({int(color[0] * 255)}, {int(color[1] * 255)}, {int(color[2] * 255)}, 1)" 
             for category, color in zip(categories, palette)}
 
+
+def plot_features_single_prod(self, df, prod_type=None, ax=None):
+    if ax is None:
+        fig, ax = plt.subplots(figsize=(8, 6))
+
+    # Create a normalized colormap for continuous coloring using Viridis
+    unique_words = df['word'].unique()
+    word_to_color = {word: i / len(unique_words) for i, word in enumerate(unique_words)}
+    colors = [palette(word_to_color[word]) for word in df['word']]
+
+    # Plot with continuous colors based on 'word'
+    sns.lineplot(data=df, x='era', y='factor', hue='word', palette=colors, marker='o', legend='full', ax=ax)
+    sns.move_legend(ax, bbox_to_anchor=(1.45, 1), loc='upper right')
+
+    ax.set_title(f'{prod_type} production')
+    ax.set_xlabel('DVD era')
+    ax.set_ylabel('Importance coefficient (normalized)')
+    plt.tight_layout(pad=1)
+
+        
+    return ax
+
+def plot_all_features(self, df, genre, topk=10):
+    prod_types = df.prod_type.unique()
+    fig, axes = plt.subplots(nrows=2, ncols=2, figsize=(16, 10))
+    for j, prod_type in enumerate(prod_types):
+        subset = df[(df['genre'] == genre) & (df['prod_type'] == prod_type)]
+        self.plot_features_single_prod(subset, prod_type, ax=axes.flatten()[j])
+
+    return fig
 
 def return_movies_prop_per_region(region_props):
     """Plot proportion of movies released over time per region."""
